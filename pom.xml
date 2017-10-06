@@ -1,0 +1,71 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <parent>
+        <artifactId>lutece-global-pom</artifactId>
+        <groupId>fr.paris.lutece.tools</groupId>
+        <version>4.0.3</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>fr.paris.lutece.plugins</groupId>
+    <artifactId>module-workflow-directorydemands</artifactId>
+    <packaging>lutece-plugin</packaging>
+    <version>1.0.0-SNAPSHOT</version>
+    <name>Lutece Workflow Directory demands module</name>
+
+    <repositories>
+        <repository>
+            <id>lutece</id>
+            <name>luteceRepository</name>
+            <url>http://dev.lutece.paris.fr/maven_repository</url>
+            <layout>default</layout>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>fr.paris.lutece</groupId>
+            <artifactId>lutece-core</artifactId>
+            <version>[5.1.1,)</version>
+            <type>lutece-core</type>
+        </dependency>
+        <dependency>
+            <groupId>fr.paris.lutece.plugins</groupId>
+            <artifactId>plugin-directory</artifactId>
+            <version>[4.0.9,)</version>
+            <type>lutece-plugin</type>
+        </dependency>
+        <dependency>
+           <groupId>fr.paris.lutece.plugins</groupId>
+            <artifactId>library-identitystore</artifactId>
+            <version>[1.1.5,)</version>
+            <type>jar</type> 
+        </dependency>
+        <dependency>
+            <groupId>fr.paris.lutece.plugins</groupId>
+            <artifactId>plugin-workflow</artifactId>
+            <version>[4.2.3,)</version>
+            <type>lutece-plugin</type>
+        </dependency>
+        <dependency>
+            <groupId>fr.paris.lutece.plugins</groupId>
+            <artifactId>plugin-unittree</artifactId>
+            <version>[1.0.0,)</version>
+            <type>lutece-plugin</type>
+        </dependency>
+    </dependencies>
+
+    <properties>
+        <componentName>workflow-directorydemands</componentName>
+        <jiraProjectName>WFDIRDEMANDS</jiraProjectName>
+        <jiraComponentId>TODO</jiraComponentId>
+    </properties>
+    
+    <scm>
+        <connection>scm:git:https://github.com/lutece-platform/lutece-directory-module-workflow-directorydemands.git</connection>
+        <developerConnection>scm:git:https://github.com/lutece-platform/lutece-directory-module-workflow-directorydemands.git</developerConnection>
+        <url>https://github.com/lutece-platform/lutece-directory-module-workflow-directorydemands.git</url>
+        <tag>HEAD</tag>
+  </scm>
+    
+</project>
