@@ -46,4 +46,33 @@
             p:taskForAutomaticAction="true"
             p:configRequired="false"
             p:formTaskRequired="false"   />
+
+    <!-- Task Assign Up Record -->
+    <bean id="workflow-directorydemands.taskAssignUpRecord"
+            class="fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task.TaskAssignUpRecord"
+            scope="prototype" />
+    <bean id="workflow-directorydemands.taskTypeAssignUpRecord"
+            class="fr.paris.lutece.plugins.workflowcore.business.task.TaskType"
+            p:key="taskAssignUpRecord"
+            p:titleI18nKey="module.workflow.directorydemands.task_assign_up_record.title"
+            p:beanName="workflow-directorydemands.taskAssignUpRecord"
+            p:taskForAutomaticAction="false"
+            p:configRequired="false"
+            p:formTaskRequired="true"   />
+    <bean id="workflow-directorydemands.assignUpRecordTaskComponent"
+        class="fr.paris.lutece.plugins.workflow.modules.directorydemands.web.task.AssignUpRecordTaskComponent"
+        p:taskType-ref="workflow-directorydemands.taskTypeAssignUpRecord" />
+
+    <!-- Task Assign Down Record -->
+    <bean id="workflow-directorydemands.taskAssignDownRecord"
+            class="fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task.TaskAssignDownRecord"
+            scope="prototype" />
+    <bean id="workflow-directorydemands.taskTypeAssignDownRecord"
+            class="fr.paris.lutece.plugins.workflowcore.business.task.TaskType"
+            p:key="taskAssignDownRecord"
+            p:titleI18nKey="module.workflow.directorydemands.task_assign_down_record.title"
+            p:beanName="workflow-directorydemands.taskAssignDownRecord"
+            p:taskForAutomaticAction="false"
+            p:configRequired="false"
+            p:formTaskRequired="false"   />
 </beans>

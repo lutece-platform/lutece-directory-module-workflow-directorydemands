@@ -124,6 +124,22 @@ public final class RecordAssignmentHome
     }
 
     /**
+     * Returns the last record assignment for the specified couple {id record, assignment type}
+     * 
+     * @param nIdRecord
+     *            The record id
+     * @param assignmentType
+     *            The assignment type
+     * @param plugin
+     *            the Plugin
+     * @return the last record assignment
+     */
+    public static RecordAssignment findLast( int nIdRecord, AssignmentType assignmentType, Plugin plugin )
+    {
+        return _dao.loadLast( nIdRecord, assignmentType, plugin );
+    }
+
+    /**
      * Load the data of all the recordAssignment objects and returns them in form of a list
      * 
      * @param plugin
