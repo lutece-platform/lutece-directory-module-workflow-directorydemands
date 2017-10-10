@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2017, Mairie de Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,6 +33,7 @@
  */
 package fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task;
 
+import fr.paris.lutece.plugins.directory.business.Record;
 import fr.paris.lutece.plugins.identitystore.web.rs.dto.AttributeDto;
 import fr.paris.lutece.plugins.identitystore.web.rs.dto.IdentityDto;
 import fr.paris.lutece.plugins.identitystore.web.service.IdentityService;
@@ -43,18 +44,16 @@ import fr.paris.lutece.plugins.workflow.modules.directorydemands.exception.UnitC
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.service.IUnitCodeService;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.service.WorkflowDirectorydemandsPlugin;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.utils.Constants;
-import fr.paris.lutece.plugins.workflowcore.service.task.SimpleTask;
 import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.security.LuteceUser;
 import fr.paris.lutece.portal.service.security.SecurityService;
 import fr.paris.lutece.portal.service.util.AppLogService;
-import java.sql.Timestamp;
 import java.util.Locale;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
-public class TaskAssignRecordToUnit extends SimpleTask
+public class TaskAssignRecordToUnit extends AbstractTaskDirectoryDemands
 {
     // SERVICES
     @Inject
@@ -84,35 +83,40 @@ public class TaskAssignRecordToUnit extends SimpleTask
     @Override
     public void processTask( int nIdResourceHistory, HttpServletRequest request, Locale locale )
     {
-        LuteceUser user = SecurityService.getInstance( ).getRegisteredUser( request );
+        Record record = findRecordByIdHistory( nIdResourceHistory );
 
-        // Get the identity with his/her guid
-        String strGuid = user.getName( );
-        IdentityDto identity = _identityService.getIdentity( strGuid, null, Constants.APPLICATION_CODE );
-        if ( identity != null )
+        if ( record != null )
         {
-            Map<String, AttributeDto> mapAttributeDto = identity.getAttributes( );
-            AttributeDto unitCode = mapAttributeDto.get( Constants.ATTRIBUTE_UNIT_CODE );
-            if ( unitCode != null )
+            LuteceUser user = SecurityService.getInstance( ).getRegisteredUser( request );
+
+            // FIXME : The request is null when the action is automatic
+            // Get the identity with his/her guid
+            String strGuid = user.getName( );
+            IdentityDto identity = _identityService.getIdentity( strGuid, null, Constants.APPLICATION_CODE );
+            if ( identity != null )
             {
-                try
+                Map<String, AttributeDto> mapAttributeDto = identity.getAttributes( );
+                AttributeDto unitCode = mapAttributeDto.get( Constants.ATTRIBUTE_UNIT_CODE );
+                if ( unitCode != null )
                 {
-                    // Get the unit id from unitCode
-                    Integer nIdUnit = _unitCodeService.getIdUnitFromUnitCode( unitCode.getValue( ) );
+                    try
+                    {
+                        // Get the unit id from unitCode
+                        Integer nIdUnit = _unitCodeService.getIdUnitFromUnitCode( unitCode.getValue( ) );
 
-                    RecordAssignment recordAssignment = new RecordAssignment( );
-                    recordAssignment.setIdRecord( nIdResourceHistory );
-                    recordAssignment.setIdAssigneeUnit( nIdUnit );
-                    recordAssignment.setAssignmentType( AssignmentType.CREATION );
-                    recordAssignment.setAssignmentDate( new Timestamp( System.currentTimeMillis( ) ) );
-                    RecordAssignmentHome.create( recordAssignment, WorkflowDirectorydemandsPlugin.getPlugin( ) );
+                        RecordAssignment recordAssignment = new RecordAssignment( );
+                        recordAssignment.setIdRecord( nIdResourceHistory );
+                        recordAssignment.setIdAssigneeUnit( nIdUnit );
+                        recordAssignment.setAssignmentType( AssignmentType.CREATION );
+                        RecordAssignmentHome.create( recordAssignment, WorkflowDirectorydemandsPlugin.getPlugin( ) );
+                    }
+                    catch( UnitCodeNotFoundException e )
+                    {
+                        AppLogService.error( "Unable to find unit with given unit code", e );
+                    }
                 }
-                catch( UnitCodeNotFoundException e )
-                {
-                    AppLogService.error( "Unable to find unit with given unit code", e );
-                }
+
             }
-
         }
     }
 }
