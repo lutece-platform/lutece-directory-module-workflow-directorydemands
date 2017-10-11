@@ -49,13 +49,13 @@ public final class RecordAssignmentDAO implements IRecordAssignmentDAO
 
     // Constants
 
-    private static final String SQL_QUERY_NEW_PK = "SELECT max( id ) FROM workflow_directorydemands_record_assignment";
-    private static final String SQL_QUERY_SELECTALL = "SELECT id, id_record, id_assignee_unit, id_assigner_unit, assignment_date, assignment_type FROM workflow_directorydemands_record_assignment";
+    private static final String SQL_QUERY_NEW_PK = "SELECT max( id ) FROM directory_record_unit_assignment";
+    private static final String SQL_QUERY_SELECTALL = "SELECT id, id_record, id_assignee_unit, id_assigner_unit, assignment_date, assignment_type FROM directory_record_unit_assignment";
     private static final String SQL_QUERY_SELECT = SQL_QUERY_SELECTALL + " WHERE id = ?";
     private static final String SQL_QUERY_SELECT_LAST = SQL_QUERY_SELECTALL + " WHERE id_record = ? AND assignment_type = ? ORDER BY assignment_date DESC";
-    private static final String SQL_QUERY_INSERT = "INSERT INTO workflow_directorydemands_record_assignment ( id, id_record, id_assignee_unit, id_assigner_unit, assignment_date, assignment_type ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ? ) ";
-    private static final String SQL_QUERY_DELETE = "DELETE FROM workflow_directorydemands_record_assignment WHERE id = ? ";
-    private static final String SQL_QUERY_UPDATE = "UPDATE workflow_directorydemands_record_assignment SET id = ?, id_record = ?, id_assignee_unit = ?, id_assigner_unit = ? , assignment_date = ?, assignment_type = ? WHERE id = ?";
+    private static final String SQL_QUERY_INSERT = "INSERT INTO directory_record_unit_assignment ( id, id_record, id_assignee_unit, id_assigner_unit, assignment_date, assignment_type ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ? ) ";
+    private static final String SQL_QUERY_DELETE = "DELETE FROM directory_record_unit_assignment WHERE id = ? ";
+    private static final String SQL_QUERY_UPDATE = "UPDATE directory_record_unit_assignment SET id = ?, id_record = ?, id_assignee_unit = ?, id_assigner_unit = ? , assignment_date = ?, assignment_type = ? WHERE id = ?";
 
     /**
      * Generates a new primary key
