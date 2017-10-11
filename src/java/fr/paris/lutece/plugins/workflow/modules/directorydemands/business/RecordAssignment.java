@@ -44,9 +44,7 @@ public class RecordAssignment
     private int _nId;
     private int _nIdRecord;
     private int _nIdAssigneeUnit;
-    private int _nIdAssigneeUser;
     private int _nIdAssignerUnit;
-    private int _nIdAssignerUser;
     private Timestamp _dateAssignmentDate;
     private AssignmentType _assignmentType;
 
@@ -114,27 +112,6 @@ public class RecordAssignment
     }
 
     /**
-     * Returns the IdAssigneeUser
-     * 
-     * @return The IdAssigneeUser
-     */
-    public int getIdAssigneeUser( )
-    {
-        return _nIdAssigneeUser;
-    }
-
-    /**
-     * Sets the IdAssigneeUser
-     * 
-     * @param nIdAssigneeUser
-     *            The IdAssigneeUser
-     */
-    public void setIdAssigneeUser( int nIdAssigneeUser )
-    {
-        _nIdAssigneeUser = nIdAssigneeUser;
-    }
-
-    /**
      * Returns the IdAssignerUnit
      * 
      * @return The IdAssignerUnit
@@ -153,27 +130,6 @@ public class RecordAssignment
     public void setIdAssignerUnit( int nIdAssignerUnit )
     {
         _nIdAssignerUnit = nIdAssignerUnit;
-    }
-
-    /**
-     * Returns the IdAssignerUser
-     * 
-     * @return The IdAssignerUser
-     */
-    public int getIdAssignerUser( )
-    {
-        return _nIdAssignerUser;
-    }
-
-    /**
-     * Sets the IdAssignerUser
-     * 
-     * @param nIdAssignerUser
-     *            The IdAssignerUser
-     */
-    public void setIdAssignerUser( int nIdAssignerUser )
-    {
-        _nIdAssignerUser = nIdAssignerUser;
     }
 
     /**
