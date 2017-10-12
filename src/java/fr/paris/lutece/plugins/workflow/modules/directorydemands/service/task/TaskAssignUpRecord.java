@@ -76,13 +76,13 @@ public class TaskAssignUpRecord extends AbstractTaskDirectoryDemands
 
         if ( record != null )
         {
-            int nIdAssigneeUnit = NumberUtils.toInt( request.getParameter( AssignUpRecordTaskComponent.PARAMETER_UNIT_ID ) );
-            int nIdAssignerUnit = AssignmentService.findAssignerUnitId( request );
+            int nIdAssignedUnit = NumberUtils.toInt( request.getParameter( AssignUpRecordTaskComponent.PARAMETER_UNIT_ID ) );
+            int nIdAssignorUnit = AssignmentService.findAssignerUnitId( request );
 
             RecordAssignment recordAssignment = new RecordAssignment( );
             recordAssignment.setIdRecord( record.getIdRecord( ) );
-            recordAssignment.setIdAssignedUnit( nIdAssigneeUnit );
-            recordAssignment.setIdAssignorUnit( nIdAssignerUnit );
+            recordAssignment.setIdAssignedUnit( nIdAssignedUnit );
+            recordAssignment.setIdAssignorUnit( nIdAssignorUnit );
             recordAssignment.setAssignmentType( AssignmentType.ASSIGN_UP );
             recordAssignment.setActive( true );
             RecordAssignmentHome.create( recordAssignment, WorkflowDirectorydemandsPlugin.getPlugin( ) );

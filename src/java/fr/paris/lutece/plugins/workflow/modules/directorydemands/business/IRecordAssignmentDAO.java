@@ -77,6 +77,17 @@ public interface IRecordAssignmentDAO
 
     void delete( int nIdRecordAssignment, Plugin plugin );
 
+    /**
+     * Desactivate a record from the table
+     * 
+     * @param recordAssignment
+     *            int identifier of the RecordAssignment to desactivate
+     * @param plugin
+     *            the Plugin
+     */
+    
+    void desactivate( RecordAssignment recordAssignment, Plugin plugin );
+    
     // /////////////////////////////////////////////////////////////////////////
     // Finders
 

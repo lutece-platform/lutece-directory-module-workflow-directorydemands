@@ -104,6 +104,20 @@ public final class RecordAssignmentHome
     {
         _dao.delete( nRecordAssignmentId, plugin );
     }
+    
+    /**
+     * Remove the recordAssignment whose identifier is specified in parameter
+     * 
+     * @param recordAssignment
+     *            The recordAssignment Id
+     * @param plugin
+     *            the Plugin
+     */
+
+    public static void desactivate( RecordAssignment recordAssignment, Plugin plugin )
+    {
+        _dao.desactivate( recordAssignment, plugin );
+    }
 
     // /////////////////////////////////////////////////////////////////////////
     // Finders
