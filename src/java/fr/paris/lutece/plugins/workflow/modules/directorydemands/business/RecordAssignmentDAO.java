@@ -50,12 +50,12 @@ public final class RecordAssignmentDAO implements IRecordAssignmentDAO
     // Constants
 
     private static final String SQL_QUERY_NEW_PK = "SELECT max( id ) FROM directory_record_unit_assignment";
-    private static final String SQL_QUERY_SELECTALL = "SELECT id, id_record, id_assignee_unit, id_assigner_unit, assignment_date, assignment_type FROM directory_record_unit_assignment";
+    private static final String SQL_QUERY_SELECTALL = "SELECT id, id_record, id_assigned_unit, id_assignor_unit, assignment_date, assignment_type, is_active FROM directory_record_unit_assignment";
     private static final String SQL_QUERY_SELECT = SQL_QUERY_SELECTALL + " WHERE id = ?";
     private static final String SQL_QUERY_SELECT_LAST = SQL_QUERY_SELECTALL + " WHERE id_record = ? AND assignment_type = ? ORDER BY assignment_date DESC";
-    private static final String SQL_QUERY_INSERT = "INSERT INTO directory_record_unit_assignment ( id, id_record, id_assignee_unit, id_assigner_unit, assignment_date, assignment_type ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ? ) ";
+    private static final String SQL_QUERY_INSERT = "INSERT INTO directory_record_unit_assignment ( id, id_record, id_assigned_unit, id_assignor_unit, assignment_date, assignment_type, is_active ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ? ) ";
     private static final String SQL_QUERY_DELETE = "DELETE FROM directory_record_unit_assignment WHERE id = ? ";
-    private static final String SQL_QUERY_UPDATE = "UPDATE directory_record_unit_assignment SET id = ?, id_record = ?, id_assignee_unit = ?, id_assigner_unit = ? , assignment_date = ?, assignment_type = ? WHERE id = ?";
+    private static final String SQL_QUERY_UPDATE = "UPDATE directory_record_unit_assignment SET id = ?, id_record = ?, id_assigned_unit = ?, id_assignor_unit = ? , assignment_date = ?, assignment_type = ?, is_active = ? WHERE id = ?";
 
     /**
      * Generates a new primary key
@@ -87,11 +87,12 @@ public final class RecordAssignmentDAO implements IRecordAssignmentDAO
         int nIndex = 1;
         daoUtil.setInt( nIndex++, recordAssignment.getId( ) );
         daoUtil.setInt( nIndex++, recordAssignment.getIdRecord( ) );
-        daoUtil.setInt( nIndex++, recordAssignment.getIdAssigneeUnit( ) );
-        daoUtil.setInt( nIndex++, recordAssignment.getIdAssignerUnit( ) );
+        daoUtil.setInt( nIndex++, recordAssignment.getIdAssignedUnit( ) );
+        daoUtil.setInt( nIndex++, recordAssignment.getIdAssignorUnit( ) );
         daoUtil.setTimestamp( nIndex++, recordAssignment.getAssignmentDate( ) );
-        daoUtil.setString( nIndex, recordAssignment.getAssignmentType( ).getAssignmentTypeCode( ) );
-
+        daoUtil.setString( nIndex++, recordAssignment.getAssignmentType( ).getAssignmentTypeCode( ) );
+        daoUtil.setBoolean( nIndex, recordAssignment.isActive( ) );
+        
         daoUtil.executeUpdate( );
         daoUtil.free( );
     }
@@ -164,11 +165,12 @@ public final class RecordAssignmentDAO implements IRecordAssignmentDAO
         int nIndex = 1;
         daoUtil.setInt( nIndex++, recordAssignment.getId( ) );
         daoUtil.setInt( nIndex++, recordAssignment.getIdRecord( ) );
-        daoUtil.setInt( nIndex++, recordAssignment.getIdAssigneeUnit( ) );
-        daoUtil.setInt( nIndex++, recordAssignment.getIdAssignerUnit( ) );
+        daoUtil.setInt( nIndex++, recordAssignment.getIdAssignedUnit( ) );
+        daoUtil.setInt( nIndex++, recordAssignment.getIdAssignorUnit( ) );
         daoUtil.setTimestamp( nIndex++, recordAssignment.getAssignmentDate( ) );
         daoUtil.setString( nIndex++, recordAssignment.getAssignmentType( ).getAssignmentTypeCode( ) );
         daoUtil.setInt( nIndex, recordAssignment.getId( ) );
+        daoUtil.setBoolean( nIndex, recordAssignment.isActive( ) );
 
         daoUtil.executeUpdate( );
         daoUtil.free( );
@@ -208,11 +210,11 @@ public final class RecordAssignmentDAO implements IRecordAssignmentDAO
         RecordAssignment recordAssignment = new RecordAssignment( );
         recordAssignment.setId( daoUtil.getInt( nIndex++ ) );
         recordAssignment.setIdRecord( daoUtil.getInt( nIndex++ ) );
-        recordAssignment.setIdAssigneeUnit( daoUtil.getInt( nIndex++ ) );
-        recordAssignment.setIdAssignerUnit( daoUtil.getInt( nIndex++ ) );
+        recordAssignment.setIdAssignedUnit( daoUtil.getInt( nIndex++ ) );
+        recordAssignment.setIdAssignorUnit( daoUtil.getInt( nIndex++ ) );
         recordAssignment.setAssignmentDate( daoUtil.getTimestamp( nIndex++ ) );
-        recordAssignment.setAssignmentType( AssignmentType.getFromCode( daoUtil.getString( nIndex ) ) );
-
+        recordAssignment.setAssignmentType( AssignmentType.getFromCode( daoUtil.getString( nIndex++ ) ) );
+        recordAssignment.setActive( daoUtil.getBoolean( nIndex ) );
         return recordAssignment;
     }
 

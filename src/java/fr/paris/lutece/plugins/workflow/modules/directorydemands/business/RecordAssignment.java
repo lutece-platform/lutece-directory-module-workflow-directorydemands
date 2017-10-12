@@ -43,10 +43,11 @@ public class RecordAssignment
     // Variables declarations
     private int _nId;
     private int _nIdRecord;
-    private int _nIdAssigneeUnit;
-    private int _nIdAssignerUnit;
+    private int _nIdAssignedUnit;
+    private int _nIdAssignorUnit;
     private Timestamp _dateAssignmentDate;
     private AssignmentType _assignmentType;
+    private boolean _bIsActive;
 
     /**
      * Returns the Id
@@ -91,45 +92,45 @@ public class RecordAssignment
     }
 
     /**
-     * Returns the IdAssigneeUnit
+     * Returns the IdAssignedUnit
      * 
-     * @return The IdAssigneeUnit
+     * @return The IdAssignedUnit
      */
-    public int getIdAssigneeUnit( )
+    public int getIdAssignedUnit( )
     {
-        return _nIdAssigneeUnit;
+        return _nIdAssignedUnit;
     }
 
     /**
      * Sets the IdAssigneeUnit
      * 
-     * @param nIdAssigneeUnit
+     * @param nIdAssignedUnit
      *            The IdAssigneeUnit
      */
-    public void setIdAssigneeUnit( int nIdAssigneeUnit )
+    public void setIdAssignedUnit( int nIdAssignedUnit )
     {
-        _nIdAssigneeUnit = nIdAssigneeUnit;
+        _nIdAssignedUnit = nIdAssignedUnit;
     }
 
     /**
-     * Returns the IdAssignerUnit
+     * Returns the IdAssignorUnit
      * 
-     * @return The IdAssignerUnit
+     * @return The IdAssignorUnit
      */
-    public int getIdAssignerUnit( )
+    public int getIdAssignorUnit( )
     {
-        return _nIdAssignerUnit;
+        return _nIdAssignorUnit;
     }
 
     /**
      * Sets the IdAssignerUnit
      * 
-     * @param nIdAssignerUnit
+     * @param nIdAssignorUnit
      *            The IdAssignerUnit
      */
-    public void setIdAssignerUnit( int nIdAssignerUnit )
+    public void setIdAssignorUnit( int nIdAssignorUnit )
     {
-        _nIdAssignerUnit = nIdAssignerUnit;
+        _nIdAssignorUnit = nIdAssignorUnit;
     }
 
     /**
@@ -173,5 +174,25 @@ public class RecordAssignment
     {
         this._assignmentType = _assignmentType;
     }
+
+    /**
+     * Return the is active boolean
+     * @return true if active, false otherwise
+     */
+    public boolean isActive()
+    {
+        return _bIsActive;
+    }
+
+    /**
+     * Set the active boolean
+     * @param isActive the active boolean
+     */
+    public void setActive( boolean isActive )
+    {
+        _bIsActive = isActive;
+    }
+    
+    
 
 }

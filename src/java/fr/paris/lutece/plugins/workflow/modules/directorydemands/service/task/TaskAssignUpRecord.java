@@ -33,26 +33,20 @@
  */
 package fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task;
 
-import java.util.List;
 import java.util.Locale;
 
-import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
 import fr.paris.lutece.plugins.directory.business.Record;
-import fr.paris.lutece.plugins.unittree.business.unit.Unit;
-import fr.paris.lutece.plugins.unittree.service.unit.IUnitService;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.AssignmentType;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.RecordAssignment;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.RecordAssignmentHome;
+import fr.paris.lutece.plugins.workflow.modules.directorydemands.service.AssignmentService;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.service.WorkflowDirectorydemandsPlugin;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.web.task.AssignUpRecordTaskComponent;
-import fr.paris.lutece.portal.business.user.AdminUser;
-import fr.paris.lutece.portal.service.admin.AdminUserService;
 import fr.paris.lutece.portal.service.i18n.I18nService;
-import fr.paris.lutece.portal.service.util.AppLogService;
 
 /**
  * This class represents a workflow task to assign a record up
@@ -62,10 +56,6 @@ public class TaskAssignUpRecord extends AbstractTaskDirectoryDemands
 {
     // Messages
     private static final String MESSAGE_TASK_ASSIGN_UP = "module.workflow.directorydemands.task_assign_up_record.title";
-
-    // Services
-    @Inject
-    private IUnitService _unitService;
 
     /**
      * {@inheritDoc}
@@ -87,46 +77,15 @@ public class TaskAssignUpRecord extends AbstractTaskDirectoryDemands
         if ( record != null )
         {
             int nIdAssigneeUnit = NumberUtils.toInt( request.getParameter( AssignUpRecordTaskComponent.PARAMETER_UNIT_ID ) );
-            int nIdAssignerUnit = findAssignerUnitId( request );
+            int nIdAssignerUnit = AssignmentService.findAssignerUnitId( request );
 
             RecordAssignment recordAssignment = new RecordAssignment( );
             recordAssignment.setIdRecord( record.getIdRecord( ) );
-            recordAssignment.setIdAssigneeUnit( nIdAssigneeUnit );
-            recordAssignment.setIdAssignerUnit( nIdAssignerUnit );
+            recordAssignment.setIdAssignedUnit( nIdAssigneeUnit );
+            recordAssignment.setIdAssignorUnit( nIdAssignerUnit );
             recordAssignment.setAssignmentType( AssignmentType.ASSIGN_UP );
+            recordAssignment.setActive( true );
             RecordAssignmentHome.create( recordAssignment, WorkflowDirectorydemandsPlugin.getPlugin( ) );
         }
     }
-
-    /**
-     * Finds the assigner unit id from the logged in user
-     * 
-     * @param request
-     *            the request containing the user
-     * @return the assigner unit id
-     */
-    private int findAssignerUnitId( HttpServletRequest request )
-    {
-        int nIdAssignerUnit = 0;
-        AdminUser adminUser = AdminUserService.getAdminUser( request );
-
-        if ( adminUser != null )
-        {
-            List<Unit> listUnits = _unitService.getUnitsByIdUser( adminUser.getUserId( ), false );
-
-            if ( listUnits != null && !listUnits.isEmpty( ) )
-            {
-                if ( listUnits.size( ) > 1 )
-                {
-                    AppLogService
-                            .error( "TaskAssignUpRecord : Multi affectation is enabled on units. The first unit is used, which can cause weard behaviour." );
-                }
-
-                nIdAssignerUnit = listUnits.get( 0 ).getIdUnit( );
-            }
-        }
-
-        return nIdAssignerUnit;
-    }
-
 }

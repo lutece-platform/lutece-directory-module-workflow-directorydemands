@@ -106,8 +106,9 @@ public class TaskAssignRecordToUnit extends AbstractTaskDirectoryDemands
 
                         RecordAssignment recordAssignment = new RecordAssignment( );
                         recordAssignment.setIdRecord( nIdResourceHistory );
-                        recordAssignment.setIdAssigneeUnit( nIdUnit );
+                        recordAssignment.setIdAssignedUnit( nIdUnit );
                         recordAssignment.setAssignmentType( AssignmentType.CREATION );
+                        recordAssignment.setActive( true );
                         RecordAssignmentHome.create( recordAssignment, WorkflowDirectorydemandsPlugin.getPlugin( ) );
                     }
                     catch( UnitCodeNotFoundException e )
