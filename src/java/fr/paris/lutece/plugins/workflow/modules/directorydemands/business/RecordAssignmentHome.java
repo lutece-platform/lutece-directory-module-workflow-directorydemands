@@ -166,6 +166,26 @@ public final class RecordAssignmentHome
     {
         return _dao.selectRecordAssignmentsList( plugin );
     }
+    
+    /**
+     * Load the data of all the active recordAssignment objects, with given assigned unit id and returns them in form of a list
+     * 
+     * @param nIdAssignedUnit
+     *            the assigned unit id
+     * @param plugin
+     *            the Plugin
+     * @return the list which contains the data of all the active recordAssignment objects with given assigned unit id
+     */
+
+    public static List<RecordAssignment> getRecordAssignmentsListActiveByAssignedUnitId( int nIdAssignedUnit, Plugin plugin )
+    {
+        return _dao.loadByAssignedUnitId( nIdAssignedUnit, plugin );
+    }
+    
+    public static List<RecordAssignment> getRecursiveListActiveByAssignedUnitId( List<Integer> listIdUnits, Plugin plugin )
+    {
+        return _dao.loadRecursiveByAssignedUnitId( listIdUnits, plugin );
+    }
 
     /**
      * Load the data of all the recordAssignment objects and returns them in form of a list

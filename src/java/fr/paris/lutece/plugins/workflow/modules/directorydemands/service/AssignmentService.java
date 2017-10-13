@@ -36,10 +36,13 @@ package fr.paris.lutece.plugins.workflow.modules.directorydemands.service;
 import fr.paris.lutece.plugins.unittree.business.unit.Unit;
 import fr.paris.lutece.plugins.unittree.service.unit.IUnitService;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.RecordAssignment;
+import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.RecordAssignmentHome;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.service.admin.AdminUserService;
 import fr.paris.lutece.portal.service.util.AppLogService;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
@@ -48,6 +51,19 @@ public class AssignmentService
      // Services
     @Inject
     private static IUnitService _unitService;
+    
+    /**
+     * Get the active record assignment list of a given adminUser, recursively over the unit tree
+     * @param adminUser the AdminUser
+     * @return the list of active record assignement list for the given admin user.
+     */
+    public static List<RecordAssignment> getListActiveRecordAssignment( AdminUser adminUser )
+    {        
+        List<Integer> listSubUnitIds = findSubUnitsIds( adminUser );
+
+         return   RecordAssignmentHome
+                        .getRecursiveListActiveByAssignedUnitId( listSubUnitIds, WorkflowDirectorydemandsPlugin.getPlugin( ) );
+    }
     
     /**
      * Finds the assigner unit id from the logged in user with request
@@ -90,5 +106,13 @@ public class AssignmentService
         }
 
         return nIdAssignerUnit;
+    }
+    
+    public static List<Integer> findSubUnitsIds( AdminUser adminUser )
+    {
+        return _unitService.getSubUnits( findAssignerUnitId( adminUser) , false)
+                .stream( )
+                .map( unit -> unit.getIdUnit( ) )
+                .collect( Collectors.toList( ) );
     }
 }

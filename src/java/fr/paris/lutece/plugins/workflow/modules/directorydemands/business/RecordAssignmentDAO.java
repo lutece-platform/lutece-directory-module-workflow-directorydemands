@@ -80,12 +80,6 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
     private static final String SQL_STATE_FROM_PART =  " LEFT JOIN workflow_resource_workflow on directory_record.id_record = workflow_resource_workflow.id_resource ";
     private static final String SQL_STATE_WHERE_PART = "  workflow_resource_workflow.id_state = ? ";
     
-    /*
-
-    and workflow_resource_workflow.id_state in ( 1 , 9 ) 
-
-    */
-    
     
     /**
      * Generates a new primary key
@@ -171,7 +165,7 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
 
         return recordAssignment;
     }
-
+    
     /**
      * {@inheritDoc }
      */
