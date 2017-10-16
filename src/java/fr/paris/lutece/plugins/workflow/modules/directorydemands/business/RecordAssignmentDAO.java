@@ -51,7 +51,7 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
     // Constants
 
     private static final String SQL_QUERY_NEW_PK = "SELECT max( id ) FROM directory_record_unit_assignment";
-    protected static final String SQL_QUERY_SELECTALL = "SELECT id, directory_record_unit_assignment.id_record, id_assigned_unit, id_assignor_unit, assignment_date, assignment_type, is_active FROM directory_record_unit_assignment";
+    private static final String SQL_QUERY_SELECTALL = "SELECT id, directory_record_unit_assignment.id_record, id_assigned_unit, id_assignor_unit, assignment_date, assignment_type, is_active FROM directory_record_unit_assignment";
     private static final String SQL_QUERY_SELECT = SQL_QUERY_SELECTALL + " WHERE id = ?";
     private static final String SQL_QUERY_SELECT_LAST = SQL_QUERY_SELECTALL + " WHERE id_record = ? AND assignment_type = ? ORDER BY assignment_date DESC";
     private static final String SQL_QUERY_INSERT = "INSERT INTO directory_record_unit_assignment ( id, id_record, id_assigned_unit, id_assignor_unit, assignment_date, assignment_type, is_active ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ? ) ";
@@ -80,6 +80,7 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
     private static final String SQL_STATE_FROM_PART =  " LEFT JOIN workflow_resource_workflow on directory_record.id_record = workflow_resource_workflow.id_resource ";
     private static final String SQL_STATE_WHERE_PART = "  workflow_resource_workflow.id_state = ? ";
     
+    private static final String SQL_DEFAULT_ORDER_BY = " order by assignment_date DESC ";
     
     /**
      * Generates a new primary key
@@ -352,7 +353,7 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
         
         
         // prepare & execute query
-        DAOUtil daoUtil = new DAOUtil( sql.toString( ) + whereClause.toString( ) , plugin );
+        DAOUtil daoUtil = new DAOUtil( sql.toString( ) + whereClause.toString( ) + SQL_DEFAULT_ORDER_BY , plugin );
         
         for (int i=0; i< listParameterValues.size( ); i++ ) 
         {
