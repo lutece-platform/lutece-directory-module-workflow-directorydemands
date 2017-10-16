@@ -28,10 +28,16 @@
     <!-- DAO -->
     <bean id="workflow-directorydemands.recordAssignmentDAO"
         class="fr.paris.lutece.plugins.workflow.modules.directorydemands.business.RecordAssignmentDAO" />
+    <bean id="workflow-directorydemands.unitCodeDAO"
+        class="fr.paris.lutece.plugins.workflow.modules.directorydemands.business.unit.UnitCodeDAO" />
+        
+    <!-- Unit Code Attribute -->
+    <bean id="workflow-directorydemands.unitCodeService" class="fr.paris.lutece.plugins.workflow.modules.directorydemands.service.unit.UnitCodeAttributeService" />
+    <bean id="workflow-directorydemands.unitCodeAttributeComponent" class="fr.paris.lutece.plugins.workflow.modules.directorydemands.web.unit.UnitCodeAttributeComponent" />
+    <bean id="workflow-directorydemands.unitCodeAttributeService" class="fr.paris.lutece.plugins.workflow.modules.directorydemands.business.unit.UnitCodeAttribute" />	
 
     <!-- Service -->
-     <bean id="workflow-directorydemands.unitCodeService"
-        class="fr.paris.lutece.plugins.workflow.modules.directorydemands.service.LabelUnitCodeService" />
+     <!--<bean id="workflow-directorydemands.unitCodeService" class="fr.paris.lutece.plugins.workflow.modules.directorydemands.service.LabelUnitCodeService" /> -->
 
     
     <!-- Task Assign Record To Unit -->
