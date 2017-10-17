@@ -41,6 +41,7 @@ import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.service.admin.AdminUserService;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
@@ -54,17 +55,15 @@ public class AssignmentService
     
     /**
      * Get the active record assignment list of a given adminUser, recursively over the unit tree
-     * @param adminUser the AdminUser
+     * @param map
      * @return the list of active record assignement list for the given admin user.
      */
-    public static List<RecordAssignment> getListActiveRecordAssignment( AdminUser adminUser )
+    public static List<RecordAssignment> getRecordAssignmentFiltredList( HashMap<String,Integer> map )
     {        
-        List<Integer> listSubUnitIds = findSubUnitsIds( adminUser );
-
-         return   RecordAssignmentHome
-                        .getRecursiveListActiveByAssignedUnitId( listSubUnitIds, WorkflowDirectorydemandsPlugin.getPlugin( ) );
+        
+        return   RecordAssignmentHome
+                        .getRecordAssignmentsFiltredList( map , WorkflowDirectorydemandsPlugin.getPlugin( ) );
     }
-    
     /**
      * Finds the assigner unit id from the logged in user with request
      * 
