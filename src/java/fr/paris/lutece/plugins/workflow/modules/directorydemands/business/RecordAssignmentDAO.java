@@ -51,7 +51,7 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
     // Constants
 
     private static final String SQL_QUERY_NEW_PK = "SELECT max( id ) FROM directory_record_unit_assignment";
-    private static final String SQL_QUERY_SELECTALL = "SELECT id, directory_record_unit_assignment.id_record, id_assigned_unit, id_assignor_unit, assignment_date, assignment_type, is_active FROM directory_record_unit_assignment";
+    private static final String SQL_QUERY_SELECTALL = "SELECT id, directory_record_unit_assignment.id_record, id_assignor_unit, id_assigned_unit, assignment_date, assignment_type, is_active, u_assignor.label, u_assignor.description, u_assigned.label, u_assigned.description  FROM directory_record_unit_assignment  LEFT JOIN  unittree_unit u_assignor on u_assignor.id_unit = directory_record_unit_assignment.id_assignor_unit   left JOIN  unittree_unit u_assigned on u_assigned.id_unit = directory_record_unit_assignment.id_assigned_unit  ";
     private static final String SQL_QUERY_SELECT = SQL_QUERY_SELECTALL + " WHERE id = ?";
     private static final String SQL_QUERY_SELECT_LAST = SQL_QUERY_SELECTALL + " WHERE id_record = ? AND assignment_type = ? ORDER BY assignment_date DESC";
     private static final String SQL_QUERY_INSERT = "INSERT INTO directory_record_unit_assignment ( id, id_record, id_assigned_unit, id_assignor_unit, assignment_date, assignment_type, is_active ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ? ) ";
@@ -65,7 +65,7 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
     private static final String SQL_END_ADD_CLAUSE =  " ) " ;
     
     private static final String SQL_USER_UNIT_FROM_PART1 = " LEFT JOIN unittree_unit on directory_record_unit_assignment.id_assigned_unit = unittree_unit.id_unit " ;
-    private static final String SQL_USER_UNIT_FROM_PART3 = " LEFT OUTER JOIN unittree_unit parent_unit on unittree_unit.id_parent = parent_unit.id_unit ";
+    private static final String SQL_USER_UNIT_FROM_PART3 = " LEFT JOIN unittree_unit parent_unit on unittree_unit.id_parent = parent_unit.id_unit ";
     private static final String SQL_USER_UNIT_WHERE_PART1 = " id_assigned_unit = ? " ;
     private static final String SQL_USER_UNIT_WHERE_PART2 = " OR unittree_unit.id_parent = ? " ;
     private static final String SQL_USER_UNIT_WHERE_PART3 = " OR parent_unit.id_parent = ? ";
@@ -112,8 +112,8 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
         int nIndex = 1;
         daoUtil.setInt( nIndex++, recordAssignment.getId( ) );
         daoUtil.setInt( nIndex++, recordAssignment.getIdRecord( ) );
-        daoUtil.setInt( nIndex++, recordAssignment.getIdAssignedUnit( ) );
-        daoUtil.setInt( nIndex++, recordAssignment.getIdAssignorUnit( ) );
+        daoUtil.setInt( nIndex++, recordAssignment.getAssignedUnit( ).getIdUnit( ) );
+        daoUtil.setInt( nIndex++, recordAssignment.getAssignorUnit( ).getIdUnit( ) );
         daoUtil.setTimestamp( nIndex++, recordAssignment.getAssignmentDate( ) );
         daoUtil.setString( nIndex++, recordAssignment.getAssignmentType( ).getAssignmentTypeCode( ) );
         daoUtil.setBoolean( nIndex, recordAssignment.isActive( ) );
@@ -205,8 +205,8 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
         int nIndex = 1;
         daoUtil.setInt( nIndex++, recordAssignment.getId( ) );
         daoUtil.setInt( nIndex++, recordAssignment.getIdRecord( ) );
-        daoUtil.setInt( nIndex++, recordAssignment.getIdAssignedUnit( ) );
-        daoUtil.setInt( nIndex++, recordAssignment.getIdAssignorUnit( ) );
+        daoUtil.setInt( nIndex++, recordAssignment.getAssignedUnit( ).getIdUnit( ) );
+        daoUtil.setInt( nIndex++, recordAssignment.getAssignorUnit( ).getIdUnit( ) );
         daoUtil.setTimestamp( nIndex++, recordAssignment.getAssignmentDate( ) );
         daoUtil.setString( nIndex++, recordAssignment.getAssignmentType( ).getAssignmentTypeCode( ) );
         daoUtil.setInt( nIndex, recordAssignment.getId( ) );
@@ -386,11 +386,18 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
         RecordAssignment recordAssignment = new RecordAssignment( );
         recordAssignment.setId( daoUtil.getInt( nIndex++ ) );
         recordAssignment.setIdRecord( daoUtil.getInt( nIndex++ ) );
-        recordAssignment.setIdAssignedUnit( daoUtil.getInt( nIndex++ ) );
-        recordAssignment.setIdAssignorUnit( daoUtil.getInt( nIndex++ ) );
+         
+        recordAssignment.getAssignorUnit( ).setIdUnit( daoUtil.getInt( nIndex++ ) );
+        recordAssignment.getAssignedUnit( ).setIdUnit(  daoUtil.getInt( nIndex++ ) );
         recordAssignment.setAssignmentDate( daoUtil.getTimestamp( nIndex++ ) );
         recordAssignment.setAssignmentType( AssignmentType.getFromCode( daoUtil.getString( nIndex++ ) ) );
         recordAssignment.setActive( daoUtil.getBoolean( nIndex ) );
+        
+        recordAssignment.getAssignorUnit( ).setLabel( daoUtil.getString( nIndex++ ) );
+        recordAssignment.getAssignorUnit( ).setDescription(daoUtil.getString( nIndex++ ) );
+        recordAssignment.getAssignedUnit( ).setLabel( daoUtil.getString( nIndex++ ) );
+        recordAssignment.getAssignedUnit( ).setDescription( daoUtil.getString( nIndex++ ) );
+        
         return recordAssignment;
     }
 

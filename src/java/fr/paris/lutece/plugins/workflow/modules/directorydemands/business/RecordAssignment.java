@@ -33,6 +33,7 @@
  */
 package fr.paris.lutece.plugins.workflow.modules.directorydemands.business;
 
+import fr.paris.lutece.plugins.unittree.business.unit.Unit;
 import java.sql.Timestamp;
 
 /**
@@ -40,15 +41,30 @@ import java.sql.Timestamp;
  */
 public class RecordAssignment
 {
+    private final int CONSTANT_DEFAULT_ID = -1 ;
+    
     // Variables declarations
     private int _nId;
     private int _nIdRecord;
-    private int _nIdAssignedUnit;
-    private int _nIdAssignorUnit;
+    private Unit _assignedUnit;
+    private Unit _assignorUnit;
     private Timestamp _dateAssignmentDate;
     private AssignmentType _assignmentType;
     private boolean _bIsActive;
 
+    /**
+     * Constructor
+     */
+    public RecordAssignment( ) {
+        this._assignedUnit = new Unit( );
+        this._assignorUnit = new Unit( );
+        
+        _assignedUnit.setIdUnit( CONSTANT_DEFAULT_ID );
+        _assignorUnit.setIdUnit( CONSTANT_DEFAULT_ID );
+    }
+
+    
+    
     /**
      * Returns the Id
      * 
@@ -92,45 +108,45 @@ public class RecordAssignment
     }
 
     /**
-     * Returns the IdAssignedUnit
+     * Returns the assignedUnit
      * 
-     * @return The IdAssignedUnit
+     * @return The assignedUnit
      */
-    public int getIdAssignedUnit( )
+    public Unit getAssignedUnit( )
     {
-        return _nIdAssignedUnit;
+        return _assignedUnit;
     }
 
     /**
-     * Sets the IdAssigneeUnit
+     * Sets the assigneeUnit
      * 
-     * @param nIdAssignedUnit
-     *            The IdAssigneeUnit
+     * @param assignedUnit
+     *            The assigneeUnit
      */
-    public void setIdAssignedUnit( int nIdAssignedUnit )
+    public void setAssignedUnit( Unit assignedUnit )
     {
-        _nIdAssignedUnit = nIdAssignedUnit;
+        _assignedUnit = assignedUnit;
     }
 
     /**
-     * Returns the IdAssignorUnit
+     * Returns the assignorUnit
      * 
-     * @return The IdAssignorUnit
+     * @return The assignorUnit
      */
-    public int getIdAssignorUnit( )
+    public Unit getAssignorUnit( )
     {
-        return _nIdAssignorUnit;
+        return _assignorUnit;
     }
 
     /**
-     * Sets the IdAssignerUnit
+     * Sets the assignerUnit
      * 
-     * @param nIdAssignorUnit
-     *            The IdAssignerUnit
+     * @param assignorUnit
+     *            The assignerUnit
      */
-    public void setIdAssignorUnit( int nIdAssignorUnit )
+    public void setAssignorUnit( Unit assignorUnit )
     {
-        _nIdAssignorUnit = nIdAssignorUnit;
+        _assignorUnit = assignorUnit;
     }
 
     /**
@@ -193,6 +209,49 @@ public class RecordAssignment
         _bIsActive = isActive;
     }
     
+    
+    /**
+     * Returns the IdAssignedUnit
+     * 
+     * @return The IdAssignedUnit
+     */
+    public int getIdAssignedUnit( )
+    {
+        return _assignedUnit.getIdUnit( );
+    }
+
+    /**
+     * Sets the IdAssignedUnit
+     * 
+     * @param nIdAssignedUnit
+     *            The IdAssignedUnit
+     */
+    public void setIdAssignedUnit( int nIdAssignedUnit )
+    {
+        _assignedUnit.setIdUnit( nIdAssignedUnit );
+    }
+
+    /**
+     * Returns the IdAssignorUnit
+     * 
+     * @return The IdAssignorUnit
+     */
+    public int getIdAssignorUnit( )
+    {
+        return _assignorUnit.getIdUnit( );
+    }
+
+    /**
+     * Sets the IdAssignorUnit
+     * 
+     * @param nIdAssignorUnit
+     *            The IdAssignorUnit
+     */
+    public void setIdAssignorUnit( int nIdAssignorUnit )
+    {
+        _assignorUnit.setIdUnit( nIdAssignorUnit );
+    }
+
     
 
 }
