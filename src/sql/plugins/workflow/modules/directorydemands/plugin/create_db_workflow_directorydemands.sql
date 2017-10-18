@@ -49,7 +49,15 @@ CREATE TABLE workflow_task_directorydemands_unit_selection_from_ids_cf (
 /*==================================================================*/
 /* Indexes creation for module workflow_directorydemands */
 /*===================================================================*/
- CREATE INDEX index_directory_record_unitassignment_id_record ON directory_record_unit_assignment (id_record);
- CREATE INDEX index_directory_record_unitassignment_id_assigned_unit ON directory_record_unit_assignment (id_assigned_unit,assignment_date);
- CREATE INDEX index_directory_record_unitassignment_id_assignor_unit ON directory_record_unit_assignment (id_assignor_unit,assignment_date);
+ CREATE INDEX index_directory_record_unit_assignment_id_record ON directory_record_unit_assignment (id_record);
+ CREATE INDEX index_directory_record_unit_assignment_id_assigned_unit ON directory_record_unit_assignment (id_assigned_unit,assignment_date);
+ CREATE INDEX index_directory_record_unit_assignment_id_assignor_unit ON directory_record_unit_assignment (id_assignor_unit,assignment_date);
 
+/*==================================================================*/
+/* Create table for unit tree code attribute */
+/*===================================================================*/
+CREATE TABLE unittree_unit_code (
+	id_unit INT DEFAULT 0 NOT NULL,
+	unit_code VARCHAR(255) DEFAULT '' NOT NULL,
+	PRIMARY KEY (id_unit)
+);

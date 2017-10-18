@@ -1,0 +1,24 @@
+	<br/>
+	<p>
+		<strong>#i18n{module.workflow.directorydemands.modify.unit.unitCode.title}</strong>
+	</p>
+	
+	<#if unit?? >
+	<#assign unitCode=unit.getAttribute('workflow-directorydemands.unitCodeUnitAttribute').getAttribute()>
+	<div class="row form-group">
+		<label class="col-xs-12 col-sm-3 control-label" for="label">#i18n{module.workflow.directorydemands.modify.unit.unitCode} : </label>
+		<div class="col-xs-12 col-sm-8">
+			<input class="form-control" value="${unitCode.unitCode!}" name="unit_code" id="unit_code" type="text" />
+		</div>
+	</div>
+	
+	<#else>
+	<div class="row form-group">
+		<label class="col-xs-12 col-sm-3 control-label" for="label">#i18n{module.workflow.directorydemands.modify.unit.unitCode} : </label>
+		<div class="col-xs-12 col-sm-8">
+			<input class="form-control" value="" name="unit_code" id="unit_code" type="text" />
+		</div>
+	</div>
+</div>
+	</div>
+	</#if>

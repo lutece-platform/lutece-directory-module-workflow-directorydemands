@@ -36,6 +36,7 @@ package fr.paris.lutece.plugins.workflow.modules.directorydemands.business;
 
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -165,5 +166,19 @@ public final class RecordAssignmentHome
     {
         return _dao.selectRecordAssignmentsList( plugin );
     }
+    
+    /**
+     * Load the data of all the recordAssignment objects and returns them in form of a list
+     * 
+     * @param map
+     *            the filtering criterias (see IRecordAssignmentDAO.selectRecordAssignmentsFiltredList() javadoc)
+     * @param plugin
+     *            the Plugin
+     * @return the list which contains the data of all the recordAssignment objects
+     */
 
+    public static List<RecordAssignment> getRecordAssignmentsFiltredList( HashMap<String,Integer> map, Plugin plugin )
+    {
+        return _dao.selectRecordAssignmentsFiltredList(map, plugin );
+    }
 }
