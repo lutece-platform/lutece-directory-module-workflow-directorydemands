@@ -31,44 +31,61 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task;
+package fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task.selection;
 
-import javax.inject.Inject;
+import java.util.Locale;
 
-import fr.paris.lutece.plugins.directory.business.Record;
-import fr.paris.lutece.plugins.directory.business.RecordHome;
-import fr.paris.lutece.plugins.workflow.modules.directorydemands.service.WorkflowDirectorydemandsPlugin;
-import fr.paris.lutece.plugins.workflowcore.business.resource.ResourceHistory;
-import fr.paris.lutece.plugins.workflowcore.service.resource.IResourceHistoryService;
-import fr.paris.lutece.plugins.workflowcore.service.task.SimpleTask;
+import javax.servlet.http.HttpServletRequest;
+
+import fr.paris.lutece.plugins.workflowcore.service.task.ITask;
 
 /**
- * This class contains common methods for the tasks of the module
+ * <p>
+ * This class is a handler for unit selection configuration
+ * </p>
+ * <p>
+ * The unit selection configuration is displayed in the configuration of the workflow task to assign a resource to a unit.
+ * </p>
  *
  */
-public abstract class AbstractTaskDirectoryDemands extends SimpleTask
+public interface IConfigurationHandler
 {
-    // Services
-    @Inject
-    private IResourceHistoryService _resourceHistoryService;
+    /**
+     * Gives the title of the unit selection displayed in the configuration form.
+     * 
+     * @param locale
+     *            the locale
+     * @return the title
+     */
+    String getTitle( Locale locale );
 
     /**
-     * Finds the record from the specified history id
+     * Gives the HTML representing the configuration form to display in the workflow task
      * 
-     * @param nIdHistory
-     *            the history id
-     * @return the found record or {@code null} if no record has been found
+     * @param locale
+     *            the locale
+     * @param task
+     *            the task associated to the configuration
+     * @return the HTML in a String
      */
-    protected Record findRecordByIdHistory( int nIdHistory )
-    {
-        Record record = null;
-        ResourceHistory resourceHistory = _resourceHistoryService.findByPrimaryKey( nIdHistory );
+    String getDisplayedForm( Locale locale, ITask task );
 
-        if ( ( resourceHistory != null ) && Record.WORKFLOW_RESOURCE_TYPE.equals( resourceHistory.getResourceType( ) ) )
-        {
-            record = RecordHome.findByPrimaryKey( resourceHistory.getIdResource( ), WorkflowDirectorydemandsPlugin.getPlugin( ) );
-        }
+    /**
+     * Saves the configuration
+     * 
+     * @param request
+     *            the request containing the configuration
+     * @param task
+     *            the task associated to the configuration
+     * @return the error or {@code null} if there is no error
+     */
+    String saveConfiguration( HttpServletRequest request, ITask task );
 
-        return record;
-    }
+    /**
+     * Removes the configuration
+     * 
+     * @param task
+     *            the task associated to the configuration
+     */
+    void removeConfiguration( ITask task );
 }

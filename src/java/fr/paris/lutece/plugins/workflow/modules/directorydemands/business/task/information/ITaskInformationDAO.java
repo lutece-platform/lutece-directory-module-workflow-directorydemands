@@ -31,44 +31,42 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task;
 
-import javax.inject.Inject;
+package fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.information;
 
-import fr.paris.lutece.plugins.directory.business.Record;
-import fr.paris.lutece.plugins.directory.business.RecordHome;
-import fr.paris.lutece.plugins.workflow.modules.directorydemands.service.WorkflowDirectorydemandsPlugin;
-import fr.paris.lutece.plugins.workflowcore.business.resource.ResourceHistory;
-import fr.paris.lutece.plugins.workflowcore.service.resource.IResourceHistoryService;
-import fr.paris.lutece.plugins.workflowcore.service.task.SimpleTask;
+import fr.paris.lutece.portal.service.plugin.Plugin;
 
 /**
- * This class contains common methods for the tasks of the module
- *
+ * This interface provides Data Access methods for {@link TaskInformation} objects
  */
-public abstract class AbstractTaskDirectoryDemands extends SimpleTask
+public interface ITaskInformationDAO
 {
-    // Services
-    @Inject
-    private IResourceHistoryService _resourceHistoryService;
+    String BEAN_NAME = "workflow-directorydemands.taskInformationDAO";
 
     /**
-     * Finds the record from the specified history id
+     * Insert a new record in the table.
+     * 
+     * @param taskInformation
+     *            instance of the TaskInformation object to insert
+     * @param plugin
+     *            the Plugin
+     */
+    void insert( TaskInformation taskInformation, Plugin plugin );
+
+    // /////////////////////////////////////////////////////////////////////////
+    // Finders
+
+    /**
+     * Load the data from the table
      * 
      * @param nIdHistory
-     *            the history id
-     * @return the found record or {@code null} if no record has been found
+     *            The history id
+     * @param nIdTask
+     *            The task id
+     * @param plugin
+     *            the Plugin
+     * @return The instance of the taskInformation
      */
-    protected Record findRecordByIdHistory( int nIdHistory )
-    {
-        Record record = null;
-        ResourceHistory resourceHistory = _resourceHistoryService.findByPrimaryKey( nIdHistory );
+    TaskInformation load( int nIdHistory, int nIdTask, Plugin plugin );
 
-        if ( ( resourceHistory != null ) && Record.WORKFLOW_RESOURCE_TYPE.equals( resourceHistory.getResourceType( ) ) )
-        {
-            record = RecordHome.findByPrimaryKey( resourceHistory.getIdResource( ), WorkflowDirectorydemandsPlugin.getPlugin( ) );
-        }
-
-        return record;
-    }
 }

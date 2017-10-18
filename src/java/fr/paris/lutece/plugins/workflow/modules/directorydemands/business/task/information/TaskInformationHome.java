@@ -31,44 +31,65 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task;
 
-import javax.inject.Inject;
+package fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.information;
 
-import fr.paris.lutece.plugins.directory.business.Record;
-import fr.paris.lutece.plugins.directory.business.RecordHome;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.service.WorkflowDirectorydemandsPlugin;
-import fr.paris.lutece.plugins.workflowcore.business.resource.ResourceHistory;
-import fr.paris.lutece.plugins.workflowcore.service.resource.IResourceHistoryService;
-import fr.paris.lutece.plugins.workflowcore.service.task.SimpleTask;
+import fr.paris.lutece.portal.service.spring.SpringContextService;
 
 /**
- * This class contains common methods for the tasks of the module
- *
+ * This class provides instances management methods (create, find, ...) for {@link TaskInformation} objects
  */
-public abstract class AbstractTaskDirectoryDemands extends SimpleTask
+
+public final class TaskInformationHome
 {
-    // Services
-    @Inject
-    private IResourceHistoryService _resourceHistoryService;
+
+    // Static variable pointed at the DAO instance
+    private static ITaskInformationDAO _dao = SpringContextService.getBean( ITaskInformationDAO.BEAN_NAME );
 
     /**
-     * Finds the record from the specified history id
+     * Private constructor - this class need not be instantiated
+     */
+    private TaskInformationHome( )
+    {
+    }
+
+    /**
+     * Create an instance of the {@code TaskInformation} class
+     * 
+     * @param taskInformation
+     *            The instance of the {@code TaskInformation} which contains the informations to store
+     * @return The instance of {@code taskInformation} which has been created with its primary key.
+     */
+    public static TaskInformation create( TaskInformation taskInformation )
+    {
+        _dao.insert( taskInformation, WorkflowDirectorydemandsPlugin.getPlugin( ) );
+
+        return taskInformation;
+    }
+
+    // /////////////////////////////////////////////////////////////////////////
+    // Finders
+
+    /**
+     * Returns an instance of a {@code TaskInformation} for the specified history id and task id
      * 
      * @param nIdHistory
      *            the history id
-     * @return the found record or {@code null} if no record has been found
+     * @param nIdTask
+     *            the task id
+     * @return an instance of {@code TaskInformation}
      */
-    protected Record findRecordByIdHistory( int nIdHistory )
+    public static TaskInformation find( int nIdHistory, int nIdTask )
     {
-        Record record = null;
-        ResourceHistory resourceHistory = _resourceHistoryService.findByPrimaryKey( nIdHistory );
+        TaskInformation taskInformation = _dao.load( nIdHistory, nIdTask, WorkflowDirectorydemandsPlugin.getPlugin( ) );
 
-        if ( ( resourceHistory != null ) && Record.WORKFLOW_RESOURCE_TYPE.equals( resourceHistory.getResourceType( ) ) )
+        if ( taskInformation == null )
         {
-            record = RecordHome.findByPrimaryKey( resourceHistory.getIdResource( ), WorkflowDirectorydemandsPlugin.getPlugin( ) );
+            taskInformation = new TaskInformation( nIdHistory, nIdTask );
         }
 
-        return record;
+        return taskInformation;
     }
+
 }

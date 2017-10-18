@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2017, Mairie de Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,20 +35,30 @@ package fr.paris.lutece.plugins.workflow.modules.directorydemands.service;
 
 import fr.paris.lutece.plugins.unittree.business.unit.Unit;
 import fr.paris.lutece.plugins.unittree.service.unit.IUnitService;
-import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.RecordAssignment;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.service.admin.AdminUserService;
+import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import java.util.List;
-import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
-public class AssignmentService
+/**
+ * This class provides methods for unit assignment
+ *
+ */
+public final class AssignmentService
 {
-     // Services
-    @Inject
-    private static IUnitService _unitService;
-    
+    // Services
+    private static IUnitService _unitService = SpringContextService.getBean( IUnitService.BEAN_UNIT_SERVICE );
+
+    /**
+     * Constructor
+     */
+    private AssignmentService( )
+    {
+
+    }
+
     /**
      * Finds the assigner unit id from the logged in user with request
      * 
@@ -56,13 +66,13 @@ public class AssignmentService
      *            the request containing the user
      * @return the assigner unit id
      */
-    public static int findAssignerUnitId( HttpServletRequest request )
+    public static Unit findAssignorUnit( HttpServletRequest request )
     {
         AdminUser adminUser = AdminUserService.getAdminUser( request );
 
-        return findAssignerUnitId( adminUser );
+        return findAssignorUnit( adminUser );
     }
-    
+
     /**
      * Finds the assigner unit id from the logged in user
      * 
@@ -70,9 +80,9 @@ public class AssignmentService
      *            the admin user
      * @return the assigner unit id
      */
-    public static int findAssignerUnitId( AdminUser adminUser )
+    public static Unit findAssignorUnit( AdminUser adminUser )
     {
-        int nIdAssignerUnit = 0;
+        Unit unit = null;
         if ( adminUser != null )
         {
             List<Unit> listUnits = _unitService.getUnitsByIdUser( adminUser.getUserId( ), false );
@@ -85,10 +95,10 @@ public class AssignmentService
                             .error( "TaskAssignUpRecord : Multi affectation is enabled on units. The first unit is used, which can cause weard behaviour." );
                 }
 
-                nIdAssignerUnit = listUnits.get( 0 ).getIdUnit( );
+                unit = listUnits.get( 0 );
             }
         }
 
-        return nIdAssignerUnit;
+        return unit;
     }
 }

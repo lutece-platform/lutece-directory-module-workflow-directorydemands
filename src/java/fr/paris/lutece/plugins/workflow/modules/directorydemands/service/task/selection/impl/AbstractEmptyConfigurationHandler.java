@@ -31,44 +31,56 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task;
+package fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task.selection.impl;
 
-import javax.inject.Inject;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
-import fr.paris.lutece.plugins.directory.business.Record;
-import fr.paris.lutece.plugins.directory.business.RecordHome;
-import fr.paris.lutece.plugins.workflow.modules.directorydemands.service.WorkflowDirectorydemandsPlugin;
-import fr.paris.lutece.plugins.workflowcore.business.resource.ResourceHistory;
-import fr.paris.lutece.plugins.workflowcore.service.resource.IResourceHistoryService;
-import fr.paris.lutece.plugins.workflowcore.service.task.SimpleTask;
+import javax.servlet.http.HttpServletRequest;
+
+import fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task.selection.IConfigurationHandler;
+import fr.paris.lutece.plugins.workflowcore.service.task.ITask;
+import fr.paris.lutece.portal.service.template.AppTemplateService;
+import fr.paris.lutece.util.html.HtmlTemplate;
 
 /**
- * This class contains common methods for the tasks of the module
+ * This class is a abstract configuration handler when the configuration is empty
  *
  */
-public abstract class AbstractTaskDirectoryDemands extends SimpleTask
+public abstract class AbstractEmptyConfigurationHandler implements IConfigurationHandler
 {
-    // Services
-    @Inject
-    private IResourceHistoryService _resourceHistoryService;
+    private static final String TEMPLATE_EMPTY_CONFIGURATION = "admin/plugins/workflow/modules/directorydemands/unitselection/config/empty_configuration.html";
 
     /**
-     * Finds the record from the specified history id
-     * 
-     * @param nIdHistory
-     *            the history id
-     * @return the found record or {@code null} if no record has been found
+     * {@inheritDoc}
      */
-    protected Record findRecordByIdHistory( int nIdHistory )
+    @Override
+    public String getDisplayedForm( Locale locale, ITask task )
     {
-        Record record = null;
-        ResourceHistory resourceHistory = _resourceHistoryService.findByPrimaryKey( nIdHistory );
+        Map<String, Object> model = new HashMap<String, Object>( );
 
-        if ( ( resourceHistory != null ) && Record.WORKFLOW_RESOURCE_TYPE.equals( resourceHistory.getResourceType( ) ) )
-        {
-            record = RecordHome.findByPrimaryKey( resourceHistory.getIdResource( ), WorkflowDirectorydemandsPlugin.getPlugin( ) );
-        }
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_EMPTY_CONFIGURATION, locale, model );
 
-        return record;
+        return template.getHtml( );
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String saveConfiguration( HttpServletRequest request, ITask task )
+    {
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void removeConfiguration( ITask task )
+    {
+        // Nothing to do
+    }
+
 }

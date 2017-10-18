@@ -53,7 +53,7 @@ public final class RecordAssignmentDAO implements IRecordAssignmentDAO
     private static final String SQL_QUERY_SELECTALL = "SELECT id, id_record, id_assigned_unit, id_assignor_unit, assignment_date, assignment_type, is_active FROM directory_record_unit_assignment";
     private static final String SQL_QUERY_SELECT = SQL_QUERY_SELECTALL + " WHERE id = ?";
     private static final String SQL_QUERY_SELECT_LAST = SQL_QUERY_SELECTALL + " WHERE id_record = ? AND assignment_type = ? ORDER BY assignment_date DESC";
-    private static final String SQL_QUERY_INSERT = "INSERT INTO directory_record_unit_assignment ( id, id_record, id_assigned_unit, id_assignor_unit, assignment_date, assignment_type, is_active ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ? ) ";
+    private static final String SQL_QUERY_INSERT = "INSERT INTO directory_record_unit_assignment ( id, id_record, id_assigned_unit, id_assignor_unit, assignment_date, assignment_type, is_active ) VALUES ( ?, ?, ?, ?, ?, ?, ? ) ";
     private static final String SQL_QUERY_DELETE = "DELETE FROM directory_record_unit_assignment WHERE id = ? ";
     private static final String SQL_QUERY_DESACTIVATE = "UPDATE directory_record_unit_assignment SET is_active = 0 WHERE id = ? ";
     private static final String SQL_QUERY_UPDATE = "UPDATE directory_record_unit_assignment SET id = ?, id_record = ?, id_assigned_unit = ?, id_assignor_unit = ? , assignment_date = ?, assignment_type = ?, is_active = ? WHERE id = ?";
@@ -93,7 +93,7 @@ public final class RecordAssignmentDAO implements IRecordAssignmentDAO
         daoUtil.setTimestamp( nIndex++, recordAssignment.getAssignmentDate( ) );
         daoUtil.setString( nIndex++, recordAssignment.getAssignmentType( ).getAssignmentTypeCode( ) );
         daoUtil.setBoolean( nIndex, recordAssignment.isActive( ) );
-        
+
         daoUtil.executeUpdate( );
         daoUtil.free( );
     }
@@ -154,7 +154,7 @@ public final class RecordAssignmentDAO implements IRecordAssignmentDAO
         daoUtil.executeUpdate( );
         daoUtil.free( );
     }
-    
+
     /**
      * {@inheritDoc }
      */

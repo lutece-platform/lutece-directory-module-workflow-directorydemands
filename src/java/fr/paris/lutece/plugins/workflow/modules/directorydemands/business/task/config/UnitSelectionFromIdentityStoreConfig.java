@@ -31,44 +31,59 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task;
+package fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.config;
 
-import javax.inject.Inject;
-
-import fr.paris.lutece.plugins.directory.business.Record;
-import fr.paris.lutece.plugins.directory.business.RecordHome;
-import fr.paris.lutece.plugins.workflow.modules.directorydemands.service.WorkflowDirectorydemandsPlugin;
-import fr.paris.lutece.plugins.workflowcore.business.resource.ResourceHistory;
-import fr.paris.lutece.plugins.workflowcore.service.resource.IResourceHistoryService;
-import fr.paris.lutece.plugins.workflowcore.service.task.SimpleTask;
+import fr.paris.lutece.plugins.workflowcore.business.config.TaskConfig;
 
 /**
- * This class contains common methods for the tasks of the module
- *
+ * This class represents the configuration for the unit selection
+ * {@link fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task.selection.impl.UnitSelectionFromIdentityStore UnitSelectionFromIdentityStore}
  */
-public abstract class AbstractTaskDirectoryDemands extends SimpleTask
+public class UnitSelectionFromIdentityStoreConfig extends TaskConfig
 {
-    // Services
-    @Inject
-    private IResourceHistoryService _resourceHistoryService;
+    // Variables declarations
+    private int _nIdDirectoryEntry;
+    private String _strIdentityStoreAttributeKey;
 
     /**
-     * Finds the record from the specified history id
+     * Gives the id of the directory entry
      * 
-     * @param nIdHistory
-     *            the history id
-     * @return the found record or {@code null} if no record has been found
+     * @return The id of the directory entry
      */
-    protected Record findRecordByIdHistory( int nIdHistory )
+    public int getIdDirectoryEntry( )
     {
-        Record record = null;
-        ResourceHistory resourceHistory = _resourceHistoryService.findByPrimaryKey( nIdHistory );
+        return _nIdDirectoryEntry;
+    }
 
-        if ( ( resourceHistory != null ) && Record.WORKFLOW_RESOURCE_TYPE.equals( resourceHistory.getResourceType( ) ) )
-        {
-            record = RecordHome.findByPrimaryKey( resourceHistory.getIdResource( ), WorkflowDirectorydemandsPlugin.getPlugin( ) );
-        }
+    /**
+     * Sets the id of the directory entry
+     * 
+     * @param nIdDirectoryEntry
+     *            The id of the directory entry to set
+     */
+    public void setIdDirectoryEntry( int nIdDirectoryEntry )
+    {
+        _nIdDirectoryEntry = nIdDirectoryEntry;
+    }
 
-        return record;
+    /**
+     * Gives the IdentityStore attribute key
+     * 
+     * @return The IdentityStore attribute key
+     */
+    public String getIdentityStoreAttributeKey( )
+    {
+        return _strIdentityStoreAttributeKey;
+    }
+
+    /**
+     * Sets the IdentityStore attribute key
+     * 
+     * @param strIdentityStoreAttributeKey
+     *            The IdentityStore attribute key
+     */
+    public void setIdentityStoreAttributeKey( String strIdentityStoreAttributeKey )
+    {
+        _strIdentityStoreAttributeKey = strIdentityStoreAttributeKey;
     }
 }

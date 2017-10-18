@@ -31,44 +31,71 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task;
+package fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.config;
 
-import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
-import fr.paris.lutece.plugins.directory.business.Record;
-import fr.paris.lutece.plugins.directory.business.RecordHome;
-import fr.paris.lutece.plugins.workflow.modules.directorydemands.service.WorkflowDirectorydemandsPlugin;
-import fr.paris.lutece.plugins.workflowcore.business.resource.ResourceHistory;
-import fr.paris.lutece.plugins.workflowcore.service.resource.IResourceHistoryService;
-import fr.paris.lutece.plugins.workflowcore.service.task.SimpleTask;
+import fr.paris.lutece.plugins.workflowcore.business.config.TaskConfig;
 
 /**
- * This class contains common methods for the tasks of the module
- *
+ * This class represents the configuration of the task {@link fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task.TaskAssignRecordToUnit
+ * TaskAssignRecordToUnit}
  */
-public abstract class AbstractTaskDirectoryDemands extends SimpleTask
+public class TaskAssignRecordToUnitConfig extends TaskConfig
 {
-    // Services
-    @Inject
-    private IResourceHistoryService _resourceHistoryService;
+    // Variables declarations
+    private String _strAssignmentType;
+    private List<String> _listUnitSelections;
 
     /**
-     * Finds the record from the specified history id
-     * 
-     * @param nIdHistory
-     *            the history id
-     * @return the found record or {@code null} if no record has been found
+     * Constructor
      */
-    protected Record findRecordByIdHistory( int nIdHistory )
+    public TaskAssignRecordToUnitConfig( )
     {
-        Record record = null;
-        ResourceHistory resourceHistory = _resourceHistoryService.findByPrimaryKey( nIdHistory );
+        super( );
+        _listUnitSelections = new ArrayList<>( );
+    }
 
-        if ( ( resourceHistory != null ) && Record.WORKFLOW_RESOURCE_TYPE.equals( resourceHistory.getResourceType( ) ) )
-        {
-            record = RecordHome.findByPrimaryKey( resourceHistory.getIdResource( ), WorkflowDirectorydemandsPlugin.getPlugin( ) );
-        }
+    /**
+     * Gives the assignment type
+     * 
+     * @return The assignment type
+     */
+    public String getAssignmentType( )
+    {
+        return _strAssignmentType;
+    }
 
-        return record;
+    /**
+     * Sets the assignment type
+     * 
+     * @param strAssignmentType
+     *            The assignment type to set
+     */
+    public void setAssignmentType( String strAssignmentType )
+    {
+        _strAssignmentType = strAssignmentType;
+    }
+
+    /**
+     * Gives the unit selections
+     * 
+     * @return The unit selections
+     */
+    public List<String> getUnitSelections( )
+    {
+        return _listUnitSelections;
+    }
+
+    /**
+     * Sets the unit selections
+     * 
+     * @param listUnitSelections
+     *            The unit selections to set
+     */
+    public void setUnitSelections( List<String> listUnitSelections )
+    {
+        _listUnitSelections = listUnitSelections;
     }
 }

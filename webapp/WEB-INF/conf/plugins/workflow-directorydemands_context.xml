@@ -28,10 +28,28 @@
     <!-- DAO -->
     <bean id="workflow-directorydemands.recordAssignmentDAO"
         class="fr.paris.lutece.plugins.workflow.modules.directorydemands.business.RecordAssignmentDAO" />
+    <bean id="workflow-directorydemands.taskInformationDAO"
+        class="fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.information.TaskInformationDAO" />
+    <bean id="workflow-directorydemands.taskAssignRecordToUnitConfigDAO"
+        class="fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.config.TaskAssignRecordToUnitConfigDAO" />
+    <bean id="workflow-directorydemands.unitSelectionFromIdentityStoreConfigDAO"
+        class="fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.config.UnitSelectionFromIdentityStoreConfigDAO" />
 
     <!-- Service -->
      <bean id="workflow-directorydemands.unitCodeService"
         class="fr.paris.lutece.plugins.workflow.modules.directorydemands.service.LabelUnitCodeService" />
+    <bean id="workflow-directorydemands.taskAssignRecordToUnitConfigService"
+        class="fr.paris.lutece.plugins.workflowcore.service.config.TaskConfigService"
+        p:taskConfigDAO-ref="workflow-directorydemands.taskAssignRecordToUnitConfigDAO" />
+    <bean id="workflow-directorydemands.unitSelectionFromIdentityStoreConfigService"
+        class="fr.paris.lutece.plugins.workflowcore.service.config.TaskConfigService"
+        p:taskConfigDAO-ref="workflow-directorydemands.unitSelectionFromIdentityStoreConfigDAO" />
+
+    <!-- Unit Selection -->
+    <bean id="workflow-directorydemands.unitSelection.fromAll"
+        class="fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task.selection.impl.UnitSelectionFromAll" />
+    <bean id="workflow-directorydemands.unitSelection.fromIdentityStore"
+        class="fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task.selection.impl.UnitSelectionFromIdentityStore" />
 
     
     <!-- Task Assign Record To Unit -->
@@ -40,12 +58,46 @@
             scope="prototype" />
     <bean id="workflow-directorydemands.taskTypeAssignRecordToUnit"
             class="fr.paris.lutece.plugins.workflowcore.business.task.TaskType"
-            p:key="taskAssignRecordToUnit" 
+            p:key="taskAssignRecordToUnit"
             p:titleI18nKey="module.workflow.directorydemands.task_assign_record_to_unit.title"
             p:beanName="workflow-directorydemands.taskAssignRecordToUnit"
             p:taskForAutomaticAction="true"
             p:configRequired="false"
             p:formTaskRequired="false"   />
+
+    <!-- Task Assign Record To Unit - Manual -->
+    <bean id="workflow-directorydemands.taskAssignRecordToUnitManual"
+            class="fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task.TaskAssignRecordToUnitManual"
+            scope="prototype" />
+    <bean id="workflow-directorydemands.taskTypeAssignRecordToUnitManual"
+            class="fr.paris.lutece.plugins.workflowcore.business.task.TaskType"
+            p:key="taskAssignRecordToUnitManual"
+            p:titleI18nKey="module.workflow.directorydemands.task_assign_record_to_unit_manual.title"
+            p:beanName="workflow-directorydemands.taskAssignRecordToUnitManual"
+            p:taskForAutomaticAction="false"
+            p:configRequired="true"
+            p:formTaskRequired="true"   />
+    <bean id="workflow-directorydemands.assignRecordToUnitManualTaskComponent"
+        class="fr.paris.lutece.plugins.workflow.modules.directorydemands.web.task.AssignRecordToUnitManualTaskComponent"
+        p:taskType-ref="workflow-directorydemands.taskTypeAssignRecordToUnitManual"
+        p:taskConfigService-ref="workflow-directorydemands.taskAssignRecordToUnitConfigService" />
+
+    <!-- Task Assign Record To Unit - automatic -->
+    <bean id="workflow-directorydemands.taskAssignRecordToUnitAutomatic"
+            class="fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task.TaskAssignRecordToUnitAutomatic"
+            scope="prototype" />
+    <bean id="workflow-directorydemands.taskTypeAssignRecordToUnitAutomatic"
+            class="fr.paris.lutece.plugins.workflowcore.business.task.TaskType"
+            p:key="taskAssignRecordToUnitAutomatic"
+            p:titleI18nKey="module.workflow.directorydemands.task_assign_record_to_unit_automatic.title"
+            p:beanName="workflow-directorydemands.taskAssignRecordToUnitAutomatic"
+            p:taskForAutomaticAction="true"
+            p:configRequired="true"
+            p:formTaskRequired="false"   />
+    <bean id="workflow-directorydemands.assignRecordToUnitAutomaticTaskComponent"
+        class="fr.paris.lutece.plugins.workflow.modules.directorydemands.web.task.AssignRecordToUnitAutomaticTaskComponent"
+        p:taskType-ref="workflow-directorydemands.taskTypeAssignRecordToUnitAutomatic"
+        p:taskConfigService-ref="workflow-directorydemands.taskAssignRecordToUnitConfigService" />
 
     <!-- Task Assign Up Record -->
     <bean id="workflow-directorydemands.taskAssignUpRecord"

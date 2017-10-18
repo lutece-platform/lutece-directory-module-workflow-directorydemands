@@ -33,42 +33,44 @@
  */
 package fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task;
 
-import javax.inject.Inject;
+import java.util.Locale;
 
-import fr.paris.lutece.plugins.directory.business.Record;
-import fr.paris.lutece.plugins.directory.business.RecordHome;
-import fr.paris.lutece.plugins.workflow.modules.directorydemands.service.WorkflowDirectorydemandsPlugin;
-import fr.paris.lutece.plugins.workflowcore.business.resource.ResourceHistory;
-import fr.paris.lutece.plugins.workflowcore.service.resource.IResourceHistoryService;
-import fr.paris.lutece.plugins.workflowcore.service.task.SimpleTask;
+import javax.servlet.http.HttpServletRequest;
+
+import fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task.selection.IUnitSelection;
+import fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task.selection.UnitSelectionService;
+import fr.paris.lutece.portal.service.i18n.I18nService;
 
 /**
- * This class contains common methods for the tasks of the module
+ * This class represents a task to manually assign a record to a unit
  *
  */
-public abstract class AbstractTaskDirectoryDemands extends SimpleTask
+public class TaskAssignRecordToUnitManual extends AbstractTaskAssignRecordToUnit
 {
-    // Services
-    @Inject
-    private IResourceHistoryService _resourceHistoryService;
+    // Message
+    private static final String MESSAGE_TASK_TITLE = "module.workflow.directorydemands.task_assign_record_to_unit_manual.title";
+
+    // Parameters
+    private static final String PARAMETER_UNIT_SELECTION_ID = "task_assign_record_to_unit_selection_id";
 
     /**
-     * Finds the record from the specified history id
-     * 
-     * @param nIdHistory
-     *            the history id
-     * @return the found record or {@code null} if no record has been found
+     * {@inheritDoc}
      */
-    protected Record findRecordByIdHistory( int nIdHistory )
+    @Override
+    public String getTitle( Locale locale )
     {
-        Record record = null;
-        ResourceHistory resourceHistory = _resourceHistoryService.findByPrimaryKey( nIdHistory );
-
-        if ( ( resourceHistory != null ) && Record.WORKFLOW_RESOURCE_TYPE.equals( resourceHistory.getResourceType( ) ) )
-        {
-            record = RecordHome.findByPrimaryKey( resourceHistory.getIdResource( ), WorkflowDirectorydemandsPlugin.getPlugin( ) );
-        }
-
-        return record;
+        return I18nService.getLocalizedString( MESSAGE_TASK_TITLE, locale );
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected IUnitSelection fetchUnitSelection( HttpServletRequest request )
+    {
+        String strUnitSelectionId = request.getParameter( PARAMETER_UNIT_SELECTION_ID );
+
+        return UnitSelectionService.getInstance( ).find( strUnitSelectionId );
+    }
+
 }

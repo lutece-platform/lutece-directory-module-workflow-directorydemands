@@ -35,11 +35,14 @@ package fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task;
 
 import java.util.Locale;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
 import fr.paris.lutece.plugins.directory.business.Record;
+import fr.paris.lutece.plugins.unittree.business.unit.Unit;
+import fr.paris.lutece.plugins.unittree.service.unit.IUnitService;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.AssignmentType;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.RecordAssignment;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.RecordAssignmentHome;
@@ -54,6 +57,10 @@ import fr.paris.lutece.portal.service.i18n.I18nService;
  */
 public class TaskAssignUpRecord extends AbstractTaskDirectoryDemands
 {
+    // Services
+    @Inject
+    private static IUnitService _unitService;
+
     // Messages
     private static final String MESSAGE_TASK_ASSIGN_UP = "module.workflow.directorydemands.task_assign_up_record.title";
 
@@ -76,16 +83,30 @@ public class TaskAssignUpRecord extends AbstractTaskDirectoryDemands
 
         if ( record != null )
         {
-            int nIdAssignedUnit = NumberUtils.toInt( request.getParameter( AssignUpRecordTaskComponent.PARAMETER_UNIT_ID ) );
-            int nIdAssignorUnit = AssignmentService.findAssignerUnitId( request );
+            Unit unitAssigned = findAssignedUnit( request );
+            Unit unitAssignor = AssignmentService.findAssignorUnit( request );
 
             RecordAssignment recordAssignment = new RecordAssignment( );
             recordAssignment.setIdRecord( record.getIdRecord( ) );
-            recordAssignment.setIdAssignedUnit( nIdAssignedUnit );
-            recordAssignment.setIdAssignorUnit( nIdAssignorUnit );
+            recordAssignment.setIdAssignedUnit( unitAssigned.getIdUnit( ) );
+            recordAssignment.setIdAssignorUnit( unitAssignor.getIdUnit( ) );
             recordAssignment.setAssignmentType( AssignmentType.ASSIGN_UP );
             recordAssignment.setActive( true );
             RecordAssignmentHome.create( recordAssignment, WorkflowDirectorydemandsPlugin.getPlugin( ) );
         }
+    }
+
+    /**
+     * Finds the assigned unit
+     * 
+     * @param request
+     *            the request
+     * @return the assigned unit
+     */
+    private Unit findAssignedUnit( HttpServletRequest request )
+    {
+        int nIdAssigneeUnit = NumberUtils.toInt( request.getParameter( AssignUpRecordTaskComponent.PARAMETER_UNIT_ID ) );
+
+        return _unitService.getUnit( nIdAssigneeUnit, false );
     }
 }

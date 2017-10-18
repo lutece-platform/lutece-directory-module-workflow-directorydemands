@@ -31,44 +31,48 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task;
-
-import javax.inject.Inject;
-
-import fr.paris.lutece.plugins.directory.business.Record;
-import fr.paris.lutece.plugins.directory.business.RecordHome;
-import fr.paris.lutece.plugins.workflow.modules.directorydemands.service.WorkflowDirectorydemandsPlugin;
-import fr.paris.lutece.plugins.workflowcore.business.resource.ResourceHistory;
-import fr.paris.lutece.plugins.workflowcore.service.resource.IResourceHistoryService;
-import fr.paris.lutece.plugins.workflowcore.service.task.SimpleTask;
+package fr.paris.lutece.plugins.workflow.modules.directorydemands.exception;
 
 /**
- * This class contains common methods for the tasks of the module
+ * This class represents an exception when the assignment is not possible
  *
  */
-public abstract class AbstractTaskDirectoryDemands extends SimpleTask
+public class AssignmentNotPossibleException extends Exception
 {
-    // Services
-    @Inject
-    private IResourceHistoryService _resourceHistoryService;
+    /**
+     * Generated serial ID
+     */
+    private static final long serialVersionUID = 4587278974855585273L;
 
     /**
-     * Finds the record from the specified history id
-     * 
-     * @param nIdHistory
-     *            the history id
-     * @return the found record or {@code null} if no record has been found
+     * Constructor
      */
-    protected Record findRecordByIdHistory( int nIdHistory )
+    public AssignmentNotPossibleException( )
     {
-        Record record = null;
-        ResourceHistory resourceHistory = _resourceHistoryService.findByPrimaryKey( nIdHistory );
+        super( );
+    }
 
-        if ( ( resourceHistory != null ) && Record.WORKFLOW_RESOURCE_TYPE.equals( resourceHistory.getResourceType( ) ) )
-        {
-            record = RecordHome.findByPrimaryKey( resourceHistory.getIdResource( ), WorkflowDirectorydemandsPlugin.getPlugin( ) );
-        }
+    /**
+     * Constructor
+     * 
+     * @param strMessage
+     *            the message associated to the exception
+     */
+    public AssignmentNotPossibleException( String strMessage )
+    {
+        super( strMessage );
+    }
 
-        return record;
+    /**
+     * Constructor
+     * 
+     * @param strMessage
+     *            the message associated to the exception
+     * @param exception
+     *            the original exception
+     */
+    public AssignmentNotPossibleException( String strMessage, Exception exception )
+    {
+        super( strMessage, exception );
     }
 }

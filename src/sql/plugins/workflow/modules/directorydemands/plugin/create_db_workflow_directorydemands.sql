@@ -1,8 +1,8 @@
 /*==================================================================*/
-/* Table structure for table workflow_directorydemands_record_assignment   */
+/* Table structure for table directory_record_unit_assignment   */
 /*==================================================================*/
 DROP TABLE IF EXISTS directory_record_unit_assignment;
-CREATE TABLE directory_record_unitassignment (
+CREATE TABLE directory_record_unit_assignment (
   id int(11) NOT NULL DEFAULT '0',
   id_record int(11) NOT NULL DEFAULT '0',
   id_assignor_unit int(11) NOT NULL DEFAULT '0',
@@ -11,6 +11,39 @@ CREATE TABLE directory_record_unitassignment (
   assignment_date TIMESTAMP  ,
   is_active SMALLINT NOT NULL DEFAULT '0',
   PRIMARY KEY (id)
+ ) ;
+ 
+/*==================================================================*/
+/* Table structure for table workflow_task_directorydemands_information   */
+/*==================================================================*/
+DROP TABLE IF EXISTS workflow_task_directorydemands_information;
+CREATE TABLE workflow_task_directorydemands_information (
+  id_history int(11) NOT NULL DEFAULT '0',
+  id_task int(11) NOT NULL DEFAULT '0',
+  information_key VARCHAR(255) NOT NULL,
+  information_value VARCHAR(255) NULL
+ ) ;
+ 
+/*==================================================================*/
+/* Table structure for table workflow_task_directorydemands_assign_to_unit_cf   */
+/*==================================================================*/
+DROP TABLE IF EXISTS workflow_task_directorydemands_assign_to_unit_cf;
+CREATE TABLE workflow_task_directorydemands_assign_to_unit_cf (
+  id_task int(11) NOT NULL DEFAULT '0',
+  assignment_type VARCHAR(50) NULL,
+  unit_selections VARCHAR(1000) NULL,
+  PRIMARY KEY (id_task)
+ ) ;
+ 
+/*==================================================================*/
+/* Table structure for table workflow_task_directorydemands_unit_selection_from_ids_cf   */
+/*==================================================================*/
+DROP TABLE IF EXISTS workflow_task_directorydemands_unit_selection_from_ids_cf;
+CREATE TABLE workflow_task_directorydemands_unit_selection_from_ids_cf (
+  id_task int(11) NOT NULL DEFAULT '0',
+  id_directory_entry int(11) NULL,
+  ids_attribute_key VARCHAR(255) NULL,
+  PRIMARY KEY (id_task)
  ) ;
 
 /*==================================================================*/
