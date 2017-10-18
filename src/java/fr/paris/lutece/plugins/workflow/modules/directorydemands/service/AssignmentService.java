@@ -83,9 +83,16 @@ public final class AssignmentService
      */
     public static Unit findAssignorUnit( HttpServletRequest request )
     {
-        AdminUser adminUser = AdminUserService.getAdminUser( request );
+        Unit unit = null;
 
-        return findAssignorUnit( adminUser );
+        if ( request != null )
+        {
+            AdminUser adminUser = AdminUserService.getAdminUser( request );
+
+            unit = findAssignorUnit( adminUser );
+        }
+
+        return unit;
     }
 
     /**

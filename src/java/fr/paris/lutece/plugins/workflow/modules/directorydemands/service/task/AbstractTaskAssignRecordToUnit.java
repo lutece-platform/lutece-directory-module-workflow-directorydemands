@@ -65,6 +65,8 @@ public abstract class AbstractTaskAssignRecordToUnit extends AbstractTaskDirecto
     private static final String TASK_INFORMATION_ASSIGNED_UNIT = "ASSIGNED_UNIT";
     private static final String TASK_INFORMATION_ASSIGNOR_UNIT = "ASSIGNOR_UNIT";
 
+    private static final int UNSET_ID = -1;
+
     // Services
     @Inject
     private IUnitService _unitService;
@@ -102,7 +104,16 @@ public abstract class AbstractTaskAssignRecordToUnit extends AbstractTaskDirecto
                 RecordAssignment recordAssignment = new RecordAssignment( );
                 recordAssignment.setIdRecord( record.getIdRecord( ) );
                 recordAssignment.setIdAssignedUnit( unitAssigned.getIdUnit( ) );
-                recordAssignment.setIdAssignorUnit( unitAssignor.getIdUnit( ) );
+
+                if ( unitAssignor == null )
+                {
+                    recordAssignment.setIdAssignorUnit( UNSET_ID );
+                }
+                else
+                {
+                    recordAssignment.setIdAssignorUnit( unitAssignor.getIdUnit( ) );
+                }
+
                 recordAssignment.setAssignmentType( assignmentType );
                 recordAssignment.setActive( true );
                 RecordAssignmentHome.create( recordAssignment, WorkflowDirectorydemandsPlugin.getPlugin( ) );
@@ -141,7 +152,11 @@ public abstract class AbstractTaskAssignRecordToUnit extends AbstractTaskDirecto
     {
         TaskInformation taskInformation = new TaskInformation( nIdResourceHistory, getId( ) );
         taskInformation.add( TASK_INFORMATION_ASSIGNED_UNIT, unitAssigned.getLabel( ) );
-        taskInformation.add( TASK_INFORMATION_ASSIGNOR_UNIT, unitAssignor.getLabel( ) );
+
+        if ( unitAssignor != null )
+        {
+            taskInformation.add( TASK_INFORMATION_ASSIGNOR_UNIT, unitAssignor.getLabel( ) );
+        }
 
         TaskInformationHome.create( taskInformation );
     }
