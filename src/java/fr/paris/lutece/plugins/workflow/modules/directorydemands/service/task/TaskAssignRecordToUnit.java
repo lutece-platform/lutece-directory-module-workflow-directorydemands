@@ -51,12 +51,14 @@ import fr.paris.lutece.portal.service.util.AppLogService;
 import java.util.Locale;
 import java.util.Map;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
 public class TaskAssignRecordToUnit extends AbstractTaskDirectoryDemands
 {
     // SERVICES
     @Inject
+    @Named( "workflow-directorydemands.identitystore.service" )
     private IdentityService _identityService;
     @Inject
     private IUnitCodeService _unitCodeService;
