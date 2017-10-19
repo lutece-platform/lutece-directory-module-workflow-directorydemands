@@ -94,8 +94,8 @@ public interface IUnitSelection
     /**
      * Selects the unit the resource will be assigned to
      * 
-     * @param nIdResourceHistory
-     *            the resource history id
+     * @param nIdResource
+     *            the resource id
      * @param request
      *            the request containing information to select the unit. WARNING : if the unit selection is automatic, the request is {@code null}.
      * @param task
@@ -104,5 +104,5 @@ public interface IUnitSelection
      * @throws AssignmentNotPossibleException
      *             if the assignment is not possible
      */
-    int select( int nIdResourceHistory, HttpServletRequest request, ITask task ) throws AssignmentNotPossibleException;
+    int select( int nIdResource, HttpServletRequest request, ITask task ) throws AssignmentNotPossibleException;
 }

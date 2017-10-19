@@ -41,7 +41,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
-import fr.paris.lutece.plugins.directory.business.Record;
 import fr.paris.lutece.plugins.unittree.business.unit.Unit;
 import fr.paris.lutece.plugins.unittree.service.unit.IUnitService;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.AssignmentType;
@@ -52,7 +51,9 @@ import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.i
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.information.TaskInformationHome;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.exception.AssignmentNotPossibleException;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task.selection.IUnitSelection;
+import fr.paris.lutece.plugins.workflowcore.business.resource.ResourceHistory;
 import fr.paris.lutece.plugins.workflowcore.service.config.ITaskConfigService;
+import fr.paris.lutece.plugins.workflowcore.service.resource.IResourceHistoryService;
 import fr.paris.lutece.portal.service.util.AppException;
 
 /**
@@ -74,6 +75,8 @@ public abstract class AbstractTaskAssignRecordToUnit extends AbstractTaskDirecto
     @Inject
     @Named( "workflow-directorydemands.taskAssignRecordToUnitConfigService" )
     private ITaskConfigService _taskConfigService;
+    @Inject
+    private IResourceHistoryService _resourceHistoryService;
 
     /**
      * {@inheritDoc}
@@ -81,15 +84,15 @@ public abstract class AbstractTaskAssignRecordToUnit extends AbstractTaskDirecto
     @Override
     public void processTask( int nIdResourceHistory, HttpServletRequest request, Locale locale )
     {
-        Record record = findRecordByIdHistory( nIdResourceHistory );
+        ResourceHistory resourceHistory = _resourceHistoryService.findByPrimaryKey( nIdResourceHistory );
 
-        if ( record != null )
+        if ( resourceHistory != null )
         {
             try
             {
                 IUnitSelection unitSelection = fetchUnitSelection( request );
 
-                int nIdUnit = unitSelection.select( nIdResourceHistory, request, this );
+                int nIdUnit = unitSelection.select( resourceHistory.getIdResource( ), request, this );
 
                 Unit unitAssigned = _unitService.getUnit( nIdUnit, false );
 
@@ -98,12 +101,12 @@ public abstract class AbstractTaskAssignRecordToUnit extends AbstractTaskDirecto
                     throw new AppException( "The target unit does not exist" );
                 }
 
-                List<RecordAssignment> listRecordAssignment = RecordAssignmentHome.findRecordAssignmentsByRecordId( record.getIdRecord( ) );
+                List<RecordAssignment> listRecordAssignment = RecordAssignmentHome.findRecordAssignmentsByRecordId( resourceHistory.getIdResource( ) );
                 Unit unitAssignor = findAssignorUnit( listRecordAssignment );
                 TaskAssignRecordToUnitConfig config = getConfig( );
                 AssignmentType assignmentType = AssignmentType.getFromCode( config.getAssignmentType( ) );
 
-                RecordAssignment recordAssignment = createRecordAssignment( record, assignmentType, unitAssignor, unitAssigned );
+                RecordAssignment recordAssignment = createRecordAssignment( resourceHistory.getIdResource( ), assignmentType, unitAssignor, unitAssigned );
                 manageRecordAssignments( listRecordAssignment, recordAssignment );
 
                 saveTaskInformation( nIdResourceHistory, unitAssigned, unitAssignor );
@@ -158,8 +161,8 @@ public abstract class AbstractTaskAssignRecordToUnit extends AbstractTaskDirecto
     /**
      * Creates a record assignment
      * 
-     * @param record
-     *            the record associated to the record assignment
+     * @param nIdResource
+     *            the resource id
      * @param assignmentType
      *            the assignment type of the record assignment
      * @param unitAssignor
@@ -168,10 +171,10 @@ public abstract class AbstractTaskAssignRecordToUnit extends AbstractTaskDirecto
      *            the assigned unit
      * @return the created record assignment
      */
-    private RecordAssignment createRecordAssignment( Record record, AssignmentType assignmentType, Unit unitAssignor, Unit unitAssigned )
+    private RecordAssignment createRecordAssignment( int nIdResource, AssignmentType assignmentType, Unit unitAssignor, Unit unitAssigned )
     {
         RecordAssignment recordAssignment = new RecordAssignment( );
-        recordAssignment.setIdRecord( record.getIdRecord( ) );
+        recordAssignment.setIdRecord( nIdResource );
         recordAssignment.setIdAssignedUnit( unitAssigned.getIdUnit( ) );
 
         if ( unitAssignor == null )

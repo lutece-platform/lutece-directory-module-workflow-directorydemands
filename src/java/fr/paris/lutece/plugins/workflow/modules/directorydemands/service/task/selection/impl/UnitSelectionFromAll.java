@@ -116,7 +116,7 @@ public class UnitSelectionFromAll implements IUnitSelection
      * {@inheritDoc}
      */
     @Override
-    public int select( int nIdResourceHistory, HttpServletRequest request, ITask task ) throws AssignmentNotPossibleException
+    public int select( int nIdResource, HttpServletRequest request, ITask task ) throws AssignmentNotPossibleException
     {
         int nIdUnit = NumberUtils.toInt( request.getParameter( PARAMETER_UNIT_ID ), UNSET_ID );
 
@@ -175,7 +175,7 @@ public class UnitSelectionFromAll implements IUnitSelection
          * {@inheritDoc}
          */
         @Override
-        public String getDisplayedForm( Locale locale, ITask task )
+        public String getDisplayedForm( int nIdResource, Locale locale, ITask task )
         {
             Map<String, Object> model = new HashMap<String, Object>( );
             ReferenceList listUnits = buildUnitlist( );

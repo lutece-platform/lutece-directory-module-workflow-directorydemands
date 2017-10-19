@@ -87,7 +87,7 @@ public class AssignRecordToUnitManualTaskComponent extends AbstractAssignRecordT
                     ITaskFormHandler taskFormHandler = unitSelection.getTaskFormHandler( );
 
                     listProcessedUnitSelectionForm.add( new ProcessedUnitSelection( unitSelection.getId( ), taskFormHandler.getTitle( locale ), taskFormHandler
-                            .getDisplayedForm( locale, task ) ) );
+                            .getDisplayedForm( nIdResource, locale, task ) ) );
                 }
                 catch( AssignmentNotPossibleException e )
                 {

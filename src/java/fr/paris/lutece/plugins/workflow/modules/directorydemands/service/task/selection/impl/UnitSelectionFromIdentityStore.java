@@ -133,10 +133,10 @@ public class UnitSelectionFromIdentityStore implements IUnitSelection
      * {@inheritDoc}
      */
     @Override
-    public int select( int nIdResourceHistory, HttpServletRequest request, ITask task ) throws AssignmentNotPossibleException
+    public int select( int nIdResource, HttpServletRequest request, ITask task ) throws AssignmentNotPossibleException
     {
         UnitSelectionFromIdentityStoreConfig config = findConfig( task );
-        Record record = findRecordByIdHistory( nIdResourceHistory );
+        Record record = RecordHome.findByPrimaryKey( nIdResource, WorkflowDirectorydemandsPlugin.getPlugin( ) );
         String strConnectionId = findFieldValue( config.getIdDirectoryEntry( ), record );
 
         if ( StringUtils.isEmpty( strConnectionId ) )
@@ -197,26 +197,6 @@ public class UnitSelectionFromIdentityStore implements IUnitSelection
         }
 
         return config;
-    }
-
-    /**
-     * Finds the record associated to the specified history id
-     * 
-     * @param nIdHistory
-     *            the history id
-     * @return the record or {@null} if no record has been found
-     */
-    private Record findRecordByIdHistory( int nIdHistory )
-    {
-        Record record = null;
-        ResourceHistory resourceHistory = _resourceHistoryService.findByPrimaryKey( nIdHistory );
-
-        if ( resourceHistory != null && Record.WORKFLOW_RESOURCE_TYPE.equals( resourceHistory.getResourceType( ) ) )
-        {
-            record = RecordHome.findByPrimaryKey( resourceHistory.getIdResource( ), WorkflowDirectorydemandsPlugin.getPlugin( ) );
-        }
-
-        return record;
     }
 
     /**
@@ -349,7 +329,7 @@ public class UnitSelectionFromIdentityStore implements IUnitSelection
          * {@inheritDoc}
          */
         @Override
-        public String getDisplayedForm( Locale locale, ITask task )
+        public String getDisplayedForm( int nIdResource, Locale locale, ITask task )
         {
             return StringUtils.EMPTY;
         }

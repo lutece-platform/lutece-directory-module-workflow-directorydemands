@@ -61,6 +61,8 @@ public interface ITaskFormHandler
     /**
      * Gives the HTML representing the form to display in the task form
      * 
+     * @param nIdResource
+     *            the resource id
      * @param locale
      *            the locale
      * @param task
@@ -69,5 +71,5 @@ public interface ITaskFormHandler
      * @throws AssignmentNotPossibleException
      *             if the assignment is not possible
      */
-    String getDisplayedForm( Locale locale, ITask task ) throws AssignmentNotPossibleException;
+    String getDisplayedForm( int nIdResource, Locale locale, ITask task ) throws AssignmentNotPossibleException;
 }
