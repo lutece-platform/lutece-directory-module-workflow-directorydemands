@@ -152,4 +152,16 @@ public interface IRecordAssignmentDAO
 
     List<RecordAssignment> selectRecordAssignmentsFiltredList( HashMap<String,Integer> filterParameters, Plugin plugin );
     
+
+    /**
+     * Loads the record assignment associated to the specified record if
+     * 
+     * @param nIdRecord
+     *            the record id
+     * @param plugin
+     *            the plugin
+     * @return the list of record assignments
+     */
+    List<RecordAssignment> selectRecordAssignmentsByRecordId( int nIdRecord, Plugin plugin );
+
 }

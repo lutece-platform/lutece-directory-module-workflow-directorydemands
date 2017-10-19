@@ -54,6 +54,7 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
     private static final String SQL_QUERY_SELECTALL = "SELECT id, directory_record_unit_assignment.id_record, id_assignor_unit, id_assigned_unit, assignment_date, assignment_type, is_active, u_assignor.label, u_assignor.description, u_assigned.label, u_assigned.description  FROM directory_record_unit_assignment  LEFT JOIN  unittree_unit u_assignor on u_assignor.id_unit = directory_record_unit_assignment.id_assignor_unit   left JOIN  unittree_unit u_assigned on u_assigned.id_unit = directory_record_unit_assignment.id_assigned_unit  ";
     private static final String SQL_QUERY_SELECT = SQL_QUERY_SELECTALL + " WHERE id = ?";
     private static final String SQL_QUERY_SELECT_LAST = SQL_QUERY_SELECTALL + " WHERE id_record = ? AND assignment_type = ? ORDER BY assignment_date DESC";
+    private static final String SQL_QUERY_SELECT_BY_ID_RECORD = SQL_QUERY_SELECTALL + " WHERE id_record = ?  ORDER BY assignment_date ASC";
     private static final String SQL_QUERY_INSERT = "INSERT INTO directory_record_unit_assignment ( id, id_record, id_assigned_unit, id_assignor_unit, assignment_date, assignment_type, is_active ) VALUES ( ?, ?, ?, ?, ?, ?, ? ) ";
     private static final String SQL_QUERY_DELETE = "DELETE FROM directory_record_unit_assignment WHERE id = ? ";
     private static final String SQL_QUERY_DESACTIVATE = "UPDATE directory_record_unit_assignment SET is_active = 0 WHERE id = ? ";
@@ -360,6 +361,27 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
             daoUtil.setInt( i+1, listParameterValues.get( i ) );
         }
         
+        daoUtil.executeQuery( );
+
+        while ( daoUtil.next( ) )
+        {
+            listRecordAssignments.add( dataToRecordAssignment( daoUtil ) );
+        }
+
+        daoUtil.free( );
+
+        return listRecordAssignments;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<RecordAssignment> selectRecordAssignmentsByRecordId( int nIdRecord, Plugin plugin )
+    {
+        List<RecordAssignment> listRecordAssignments = new ArrayList<>( );
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_ID_RECORD, plugin );
+        daoUtil.setInt( 1, nIdRecord );
         daoUtil.executeQuery( );
 
         while ( daoUtil.next( ) )

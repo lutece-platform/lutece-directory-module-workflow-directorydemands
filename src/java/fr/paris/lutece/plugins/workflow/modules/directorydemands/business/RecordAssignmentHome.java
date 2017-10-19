@@ -177,8 +177,22 @@ public final class RecordAssignmentHome
      * @return the list which contains the data of all the recordAssignment objects
      */
 
-    public static List<RecordAssignment> getRecordAssignmentsFiltredList( HashMap<String,Integer> map, Plugin plugin )
+    public static List<RecordAssignment> getRecordAssignmentsFiltredList( HashMap<String, Integer> map, Plugin plugin )
     {
-        return _dao.selectRecordAssignmentsFiltredList(map, plugin );
+        return _dao.selectRecordAssignmentsFiltredList( map, plugin );
+    }
+
+    /**
+     * Loads the record assignment associated to the specified record if
+     * 
+     * @param nIdRecord
+     *            the record id
+     * @param plugin
+     *            the plugin
+     * @return the list of record assignments
+     */
+    public static List<RecordAssignment> findRecordAssignmentsByRecordId( int nIdRecord, Plugin plugin )
+    {
+        return _dao.selectRecordAssignmentsByRecordId( nIdRecord, plugin );
     }
 }

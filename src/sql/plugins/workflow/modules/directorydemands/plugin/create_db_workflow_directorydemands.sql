@@ -8,7 +8,7 @@ CREATE TABLE directory_record_unit_assignment (
   id_assignor_unit int(11) NOT NULL DEFAULT '0',
   id_assigned_unit int(11) NOT NULL DEFAULT '0',
   assignment_type VARCHAR(50) NOT NULL DEFAULT '',
-  assignment_date TIMESTAMP  ,
+  assignment_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
   is_active SMALLINT NOT NULL DEFAULT '0',
   PRIMARY KEY (id)
  ) ;
