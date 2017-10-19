@@ -41,8 +41,8 @@ import java.sql.Timestamp;
  */
 public class RecordAssignment
 {
-    private final int CONSTANT_DEFAULT_ID = -1 ;
-    
+    private final int CONSTANT_DEFAULT_ID = -1;
+
     // Variables declarations
     private int _nId;
     private int _nIdRecord;
@@ -55,16 +55,15 @@ public class RecordAssignment
     /**
      * Constructor
      */
-    public RecordAssignment( ) {
+    public RecordAssignment( )
+    {
         this._assignedUnit = new Unit( );
         this._assignorUnit = new Unit( );
-        
+
         _assignedUnit.setIdUnit( CONSTANT_DEFAULT_ID );
         _assignorUnit.setIdUnit( CONSTANT_DEFAULT_ID );
     }
 
-    
-    
     /**
      * Returns the Id
      * 
@@ -193,23 +192,25 @@ public class RecordAssignment
 
     /**
      * Return the is active boolean
+     * 
      * @return true if active, false otherwise
      */
-    public boolean isActive()
+    public boolean isActive( )
     {
         return _bIsActive;
     }
 
     /**
      * Set the active boolean
-     * @param isActive the active boolean
+     * 
+     * @param isActive
+     *            the active boolean
      */
     public void setActive( boolean isActive )
     {
         _bIsActive = isActive;
     }
-    
-    
+
     /**
      * Returns the IdAssignedUnit
      * 
@@ -251,7 +252,5 @@ public class RecordAssignment
     {
         _assignorUnit.setIdUnit( nIdAssignorUnit );
     }
-
-    
 
 }

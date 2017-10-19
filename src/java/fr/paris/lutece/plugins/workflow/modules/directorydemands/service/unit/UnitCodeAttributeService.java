@@ -33,7 +33,6 @@
  */
 package fr.paris.lutece.plugins.workflow.modules.directorydemands.service.unit;
 
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -56,6 +55,7 @@ public class UnitCodeAttributeService implements IUnitAttributeService, IUnitCod
 
     // Markers
     public static final String MARK_UNIT_CODE = "unit_code";
+
     /**
      * {@inheritDoc}
      */
@@ -138,7 +138,6 @@ public class UnitCodeAttributeService implements IUnitAttributeService, IUnitCod
             unit.addAttribute( unitCodeAttribute );
         }
 
-        
     }
 
     /**
@@ -157,19 +156,21 @@ public class UnitCodeAttributeService implements IUnitAttributeService, IUnitCod
     public void moveSubTree( Unit unitToMove, Unit newUnitParent )
     {
     }
-    
+
     @Override
     public Integer getIdUnitFromUnitCode( String strUnitCode ) throws UnitCodeNotFoundException
     {
         return UnitCodeHome.loadByCode( strUnitCode ).getIdUnit( );
     }
-    
+
     /**
      * Get the unit code of the given unit
-     * @param unit the unit
+     * 
+     * @param unit
+     *            the unit
      * @return the unit code
      */
-    public UnitCode getUnitCode ( Unit unit )
+    public UnitCode getUnitCode( Unit unit )
     {
         return UnitCodeHome.loadByUnit( unit );
     }

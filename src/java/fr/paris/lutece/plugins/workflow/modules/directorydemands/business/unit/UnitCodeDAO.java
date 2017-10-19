@@ -109,7 +109,6 @@ public class UnitCodeDAO implements IUnitCodeDAO
             int nIndex = 1;
             daoUtil.setString( nIndex++, unitCode.getUnitCode( ) );
             daoUtil.setInt( nIndex++, unitCode.getIdUnit( ) );
-            
 
             daoUtil.executeUpdate( );
             daoUtil.free( );

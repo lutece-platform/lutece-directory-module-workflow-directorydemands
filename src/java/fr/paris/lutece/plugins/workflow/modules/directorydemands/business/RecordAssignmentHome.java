@@ -105,7 +105,7 @@ public final class RecordAssignmentHome
     {
         _dao.delete( nRecordAssignmentId, plugin );
     }
-    
+
     /**
      * Remove the recordAssignment whose identifier is specified in parameter
      * 
@@ -166,7 +166,7 @@ public final class RecordAssignmentHome
     {
         return _dao.selectRecordAssignmentsList( plugin );
     }
-    
+
     /**
      * Load the data of all the recordAssignment objects and returns them in form of a list
      * 

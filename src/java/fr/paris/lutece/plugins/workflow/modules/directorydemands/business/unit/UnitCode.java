@@ -40,16 +40,19 @@ public class UnitCode
 
     /**
      * Get the id unit
+     * 
      * @return the id unit
      */
-    public int getIdUnit()
+    public int getIdUnit( )
     {
         return _nIdUnit;
     }
 
     /**
      * Set the id of the unit
-     * @param nIdUnit the id of the unit
+     * 
+     * @param nIdUnit
+     *            the id of the unit
      */
     public void setIdUnit( int nIdUnit )
     {
@@ -58,16 +61,19 @@ public class UnitCode
 
     /**
      * Get the technical code of the unit
+     * 
      * @return the unit code
      */
-    public String getUnitCode()
+    public String getUnitCode( )
     {
         return _strUnitCode;
     }
 
     /**
      * Set the technical code of the unit
-     * @param strUnitCode the unit code
+     * 
+     * @param strUnitCode
+     *            the unit code
      */
     public void setUnitCode( String strUnitCode )
     {

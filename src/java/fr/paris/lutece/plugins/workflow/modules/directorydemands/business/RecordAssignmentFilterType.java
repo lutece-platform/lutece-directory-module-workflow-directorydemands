@@ -35,14 +35,13 @@ package fr.paris.lutece.plugins.workflow.modules.directorydemands.business;
 
 public enum RecordAssignmentFilterType
 {
-    USER_UNIT_ID ( "USER_UNIT_ID" ), // user unit Id (from unittree)
-    RECURSIVE_SEARCH_DEPTH  ( "RECURSIVE_SEARCH_DEPTH" ), // depth of recursive search of the children units of the user unit (1,2 or 3)
-    ACTIVE_RECORDS_ONLY ( "ACTIVE_RECORDS_ONLY" ) , //active records only (true/false)
-    FILTER_PERIOD ( "FILTER_PERIOD" ), // filter records by period : NONE, LAST_DAY, LAST_WEEK, LAST_MONTH
-    DIRECTORY_ID ( "DIRECTORY_ID" ) , // specify a particular directory to filter records
-    STATE_ID ( "STATE_ID" ), // specify a particular state to filter records
+    USER_UNIT_ID( "USER_UNIT_ID" ), // user unit Id (from unittree)
+    RECURSIVE_SEARCH_DEPTH( "RECURSIVE_SEARCH_DEPTH" ), // depth of recursive search of the children units of the user unit (1,2 or 3)
+    ACTIVE_RECORDS_ONLY( "ACTIVE_RECORDS_ONLY" ), // active records only (true/false)
+    FILTER_PERIOD( "FILTER_PERIOD" ), // filter records by period : NONE, LAST_DAY, LAST_WEEK, LAST_MONTH
+    DIRECTORY_ID( "DIRECTORY_ID" ), // specify a particular directory to filter records
+    STATE_ID( "STATE_ID" ), // specify a particular state to filter records
     ;
-    
 
     private String _strRecordAssignmentFilterTypeCode;
 
@@ -90,12 +89,15 @@ public enum RecordAssignmentFilterType
         }
         return null;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Enum#toString()
      */
     @Override
-    public String toString() {
+    public String toString( )
+    {
         return _strRecordAssignmentFilterTypeCode;
     }
 }

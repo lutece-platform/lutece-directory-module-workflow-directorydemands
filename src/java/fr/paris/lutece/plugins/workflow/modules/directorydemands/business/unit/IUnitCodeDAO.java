@@ -73,13 +73,15 @@ public interface IUnitCodeDAO
      *            the plugin
      */
     void mergeConfiguration( UnitCode technicalCode, Plugin plugin );
-    
+
     /**
      * Load unitCode from code
      * 
-     * @param strCode the code
+     * @param strCode
+     *            the code
      * 
-     * @param plugin the plugin
+     * @param plugin
+     *            the plugin
      * 
      * @return the unitCode
      */

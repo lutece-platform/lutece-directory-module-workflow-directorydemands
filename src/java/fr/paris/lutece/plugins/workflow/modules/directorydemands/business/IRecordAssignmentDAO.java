@@ -86,9 +86,9 @@ public interface IRecordAssignmentDAO
      * @param plugin
      *            the Plugin
      */
-    
+
     void desactivate( RecordAssignment recordAssignment, Plugin plugin );
-    
+
     // /////////////////////////////////////////////////////////////////////////
     // Finders
 
@@ -144,14 +144,13 @@ public interface IRecordAssignmentDAO
      *
      * 
      * @param filterParameters
-     *              map of the fitlering parameters
+     *            map of the fitlering parameters
      * @param plugin
      *            the Plugin
      * @return The List which contains the data of all the recordAssignment objects
      */
 
-    List<RecordAssignment> selectRecordAssignmentsFiltredList( HashMap<String,Integer> filterParameters, Plugin plugin );
-    
+    List<RecordAssignment> selectRecordAssignmentsFiltredList( HashMap<String, Integer> filterParameters, Plugin plugin );
 
     /**
      * Loads the record assignment associated to the specified record if

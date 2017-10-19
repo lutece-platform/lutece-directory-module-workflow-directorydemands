@@ -72,25 +72,25 @@ public class TaskAssignDownRecord extends AbstractTaskDirectoryDemands
     public void processTask( int nIdResourceHistory, HttpServletRequest request, Locale locale )
     {
         Record record = findRecordByIdHistory( nIdResourceHistory );
-        
+
         if ( record != null )
         {
-            //First Desactivate previous record assignment
+            // First Desactivate previous record assignment
             RecordAssignment recordAssignment = RecordAssignmentHome.findLast( record.getIdRecord( ), AssignmentType.ASSIGN_UP,
                     WorkflowDirectorydemandsPlugin.getPlugin( ) );
 
             RecordAssignmentHome.desactivate( recordAssignment, WorkflowDirectorydemandsPlugin.getPlugin( ) );
             int nIdAssignorUnit = recordAssignment.getIdAssignorUnit( );
             int nIdAssignedUnit = recordAssignment.getIdAssignedUnit( );
-            
-            //Then add a new recordassignment for the assign_down action.
+
+            // Then add a new recordassignment for the assign_down action.
             recordAssignment = new RecordAssignment( );
             recordAssignment.setIdAssignedUnit( nIdAssignorUnit );
             recordAssignment.setIdAssignorUnit( nIdAssignedUnit );
             recordAssignment.setAssignmentType( AssignmentType.ASSIGN_DOWN );
             recordAssignment.setActive( true );
             RecordAssignmentHome.create( recordAssignment, WorkflowDirectorydemandsPlugin.getPlugin( ) );
-            
+
         }
     }
 
