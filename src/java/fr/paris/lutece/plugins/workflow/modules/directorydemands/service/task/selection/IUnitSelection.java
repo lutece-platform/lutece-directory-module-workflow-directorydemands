@@ -97,7 +97,7 @@ public interface IUnitSelection
      * @param nIdResourceHistory
      *            the resource history id
      * @param request
-     *            the request containing information to select the unit
+     *            the request containing information to select the unit. WARNING : if the unit selection is automatic, the request is {@code null}.
      * @param task
      *            the task associated to the unit selection
      * @return the id of the unit
