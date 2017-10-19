@@ -41,11 +41,7 @@ import fr.paris.lutece.plugins.directory.business.Record;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.AssignmentType;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.RecordAssignment;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.RecordAssignmentHome;
-import fr.paris.lutece.plugins.workflow.modules.directorydemands.service.AssignmentService;
-import fr.paris.lutece.plugins.workflow.modules.directorydemands.service.WorkflowDirectorydemandsPlugin;
-import fr.paris.lutece.plugins.workflow.modules.directorydemands.web.task.AssignUpRecordTaskComponent;
 import fr.paris.lutece.portal.service.i18n.I18nService;
-import org.apache.commons.lang3.math.NumberUtils;
 
 /**
  * This class represents a workflow task to reply to an assigned up record
@@ -76,10 +72,9 @@ public class TaskAssignDownRecord extends AbstractTaskDirectoryDemands
         if ( record != null )
         {
             // First Desactivate previous record assignment
-            RecordAssignment recordAssignment = RecordAssignmentHome.findLast( record.getIdRecord( ), AssignmentType.ASSIGN_UP,
-                    WorkflowDirectorydemandsPlugin.getPlugin( ) );
+            RecordAssignment recordAssignment = RecordAssignmentHome.findLast( record.getIdRecord( ), AssignmentType.ASSIGN_UP );
 
-            RecordAssignmentHome.desactivate( recordAssignment, WorkflowDirectorydemandsPlugin.getPlugin( ) );
+            RecordAssignmentHome.desactivate( recordAssignment );
             int nIdAssignorUnit = recordAssignment.getIdAssignorUnit( );
             int nIdAssignedUnit = recordAssignment.getIdAssignedUnit( );
 
@@ -89,7 +84,7 @@ public class TaskAssignDownRecord extends AbstractTaskDirectoryDemands
             recordAssignment.setIdAssignorUnit( nIdAssignedUnit );
             recordAssignment.setAssignmentType( AssignmentType.ASSIGN_DOWN );
             recordAssignment.setActive( true );
-            RecordAssignmentHome.create( recordAssignment, WorkflowDirectorydemandsPlugin.getPlugin( ) );
+            RecordAssignmentHome.create( recordAssignment );
 
         }
     }

@@ -42,7 +42,6 @@ import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.Record
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.RecordAssignmentHome;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.exception.UnitCodeNotFoundException;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.service.IUnitCodeService;
-import fr.paris.lutece.plugins.workflow.modules.directorydemands.service.WorkflowDirectorydemandsPlugin;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.utils.Constants;
 import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.security.LuteceUser;
@@ -111,7 +110,7 @@ public class TaskAssignRecordToUnit extends AbstractTaskDirectoryDemands
                         recordAssignment.setIdAssignedUnit( nIdUnit );
                         recordAssignment.setAssignmentType( AssignmentType.CREATION );
                         recordAssignment.setActive( true );
-                        RecordAssignmentHome.create( recordAssignment, WorkflowDirectorydemandsPlugin.getPlugin( ) );
+                        RecordAssignmentHome.create( recordAssignment );
                     }
                     catch( UnitCodeNotFoundException e )
                     {

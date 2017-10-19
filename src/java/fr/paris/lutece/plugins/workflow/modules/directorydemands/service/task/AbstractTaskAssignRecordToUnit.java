@@ -51,7 +51,6 @@ import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.c
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.information.TaskInformation;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.information.TaskInformationHome;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.exception.AssignmentNotPossibleException;
-import fr.paris.lutece.plugins.workflow.modules.directorydemands.service.WorkflowDirectorydemandsPlugin;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task.selection.IUnitSelection;
 import fr.paris.lutece.plugins.workflowcore.service.config.ITaskConfigService;
 import fr.paris.lutece.portal.service.util.AppException;
@@ -99,8 +98,7 @@ public abstract class AbstractTaskAssignRecordToUnit extends AbstractTaskDirecto
                     throw new AppException( "The target unit does not exist" );
                 }
 
-                List<RecordAssignment> listRecordAssignment = RecordAssignmentHome.findRecordAssignmentsByRecordId( record.getIdRecord( ),
-                        WorkflowDirectorydemandsPlugin.getPlugin( ) );
+                List<RecordAssignment> listRecordAssignment = RecordAssignmentHome.findRecordAssignmentsByRecordId( record.getIdRecord( ) );
                 Unit unitAssignor = findAssignorUnit( listRecordAssignment );
                 TaskAssignRecordToUnitConfig config = getConfig( );
                 AssignmentType assignmentType = AssignmentType.getFromCode( config.getAssignmentType( ) );
@@ -213,7 +211,7 @@ public abstract class AbstractTaskAssignRecordToUnit extends AbstractTaskDirecto
         // ASSIGN DOWN are not recorded
         if ( AssignmentType.ASSIGN_DOWN != recordAssignmentNew.getAssignmentType( ) )
         {
-            RecordAssignmentHome.create( recordAssignmentNew, WorkflowDirectorydemandsPlugin.getPlugin( ) );
+            RecordAssignmentHome.create( recordAssignmentNew );
         }
     }
 
@@ -300,7 +298,7 @@ public abstract class AbstractTaskAssignRecordToUnit extends AbstractTaskDirecto
     {
         for ( RecordAssignment recordAssignment : listRecordAssignment )
         {
-            RecordAssignmentHome.desactivate( recordAssignment, WorkflowDirectorydemandsPlugin.getPlugin( ) );
+            RecordAssignmentHome.desactivate( recordAssignment );
         }
     }
 

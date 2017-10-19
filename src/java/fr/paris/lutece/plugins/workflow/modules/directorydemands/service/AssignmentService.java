@@ -72,7 +72,7 @@ public final class AssignmentService
     public static List<RecordAssignment> getRecordAssignmentFiltredList( HashMap<String, Integer> map )
     {
 
-        return RecordAssignmentHome.getRecordAssignmentsFiltredList( map, WorkflowDirectorydemandsPlugin.getPlugin( ) );
+        return RecordAssignmentHome.getRecordAssignmentsFiltredList( map );
     }
 
     /**

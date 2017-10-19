@@ -34,6 +34,7 @@
 
 package fr.paris.lutece.plugins.workflow.modules.directorydemands.business;
 
+import fr.paris.lutece.plugins.workflow.modules.directorydemands.service.WorkflowDirectorydemandsPlugin;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
 import java.util.HashMap;
@@ -45,6 +46,7 @@ import java.util.List;
 
 public final class RecordAssignmentHome
 {
+    private static final Plugin _plugin = WorkflowDirectorydemandsPlugin.getPlugin( );
 
     // Static variable pointed at the DAO instance
 
@@ -63,14 +65,12 @@ public final class RecordAssignmentHome
      * 
      * @param recordAssignment
      *            The instance of the RecordAssignment which contains the informations to store
-     * @param plugin
-     *            the Plugin
      * @return The instance of recordAssignment which has been created with its primary key.
      */
 
-    public static RecordAssignment create( RecordAssignment recordAssignment, Plugin plugin )
+    public static RecordAssignment create( RecordAssignment recordAssignment )
     {
-        _dao.insert( recordAssignment, plugin );
+        _dao.insert( recordAssignment, _plugin );
 
         return recordAssignment;
     }
@@ -80,14 +80,12 @@ public final class RecordAssignmentHome
      * 
      * @param recordAssignment
      *            The instance of the RecordAssignment which contains the data to store
-     * @param plugin
-     *            the Plugin
      * @return The instance of the recordAssignment which has been updated
      */
 
-    public static RecordAssignment update( RecordAssignment recordAssignment, Plugin plugin )
+    public static RecordAssignment update( RecordAssignment recordAssignment )
     {
-        _dao.store( recordAssignment, plugin );
+        _dao.store( recordAssignment, _plugin );
 
         return recordAssignment;
     }
@@ -97,13 +95,11 @@ public final class RecordAssignmentHome
      * 
      * @param nRecordAssignmentId
      *            The recordAssignment Id
-     * @param plugin
-     *            the Plugin
      */
 
-    public static void remove( int nRecordAssignmentId, Plugin plugin )
+    public static void remove( int nRecordAssignmentId )
     {
-        _dao.delete( nRecordAssignmentId, plugin );
+        _dao.delete( nRecordAssignmentId, _plugin );
     }
 
     /**
@@ -111,13 +107,11 @@ public final class RecordAssignmentHome
      * 
      * @param recordAssignment
      *            The recordAssignment Id
-     * @param plugin
-     *            the Plugin
      */
-
-    public static void desactivate( RecordAssignment recordAssignment, Plugin plugin )
+    // TODO : rename this method
+    public static void desactivate( RecordAssignment recordAssignment )
     {
-        _dao.desactivate( recordAssignment, plugin );
+        _dao.desactivate( recordAssignment, _plugin );
     }
 
     // /////////////////////////////////////////////////////////////////////////
@@ -128,14 +122,12 @@ public final class RecordAssignmentHome
      * 
      * @param nKey
      *            The recordAssignment primary key
-     * @param plugin
-     *            the Plugin
      * @return an instance of RecordAssignment
      */
 
-    public static RecordAssignment findByPrimaryKey( int nKey, Plugin plugin )
+    public static RecordAssignment findByPrimaryKey( int nKey )
     {
-        return _dao.load( nKey, plugin );
+        return _dao.load( nKey, _plugin );
     }
 
     /**
@@ -145,26 +137,22 @@ public final class RecordAssignmentHome
      *            The record id
      * @param assignmentType
      *            The assignment type
-     * @param plugin
-     *            the Plugin
      * @return the last record assignment
      */
-    public static RecordAssignment findLast( int nIdRecord, AssignmentType assignmentType, Plugin plugin )
+    public static RecordAssignment findLast( int nIdRecord, AssignmentType assignmentType )
     {
-        return _dao.loadLast( nIdRecord, assignmentType, plugin );
+        return _dao.loadLast( nIdRecord, assignmentType, _plugin );
     }
 
     /**
      * Load the data of all the recordAssignment objects and returns them in form of a list
      * 
-     * @param plugin
-     *            the Plugin
      * @return the list which contains the data of all the recordAssignment objects
      */
 
-    public static List<RecordAssignment> getRecordAssignmentsList( Plugin plugin )
+    public static List<RecordAssignment> getRecordAssignmentsList( )
     {
-        return _dao.selectRecordAssignmentsList( plugin );
+        return _dao.selectRecordAssignmentsList( _plugin );
     }
 
     /**
@@ -172,14 +160,12 @@ public final class RecordAssignmentHome
      * 
      * @param map
      *            the filtering criterias (see IRecordAssignmentDAO.selectRecordAssignmentsFiltredList() javadoc)
-     * @param plugin
-     *            the Plugin
      * @return the list which contains the data of all the recordAssignment objects
      */
 
-    public static List<RecordAssignment> getRecordAssignmentsFiltredList( HashMap<String, Integer> map, Plugin plugin )
+    public static List<RecordAssignment> getRecordAssignmentsFiltredList( HashMap<String, Integer> map )
     {
-        return _dao.selectRecordAssignmentsFiltredList( map, plugin );
+        return _dao.selectRecordAssignmentsFiltredList( map, _plugin );
     }
 
     /**
@@ -187,12 +173,10 @@ public final class RecordAssignmentHome
      * 
      * @param nIdRecord
      *            the record id
-     * @param plugin
-     *            the plugin
      * @return the list of record assignments
      */
-    public static List<RecordAssignment> findRecordAssignmentsByRecordId( int nIdRecord, Plugin plugin )
+    public static List<RecordAssignment> findRecordAssignmentsByRecordId( int nIdRecord )
     {
-        return _dao.selectRecordAssignmentsByRecordId( nIdRecord, plugin );
+        return _dao.selectRecordAssignmentsByRecordId( nIdRecord, _plugin );
     }
 }

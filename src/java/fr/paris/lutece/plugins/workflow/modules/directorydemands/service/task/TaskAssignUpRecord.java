@@ -47,7 +47,6 @@ import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.Assign
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.RecordAssignment;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.RecordAssignmentHome;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.service.AssignmentService;
-import fr.paris.lutece.plugins.workflow.modules.directorydemands.service.WorkflowDirectorydemandsPlugin;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.web.task.AssignUpRecordTaskComponent;
 import fr.paris.lutece.portal.service.i18n.I18nService;
 
@@ -92,7 +91,7 @@ public class TaskAssignUpRecord extends AbstractTaskDirectoryDemands
             recordAssignment.setIdAssignorUnit( unitAssignor.getIdUnit( ) );
             recordAssignment.setAssignmentType( AssignmentType.ASSIGN_UP );
             recordAssignment.setActive( true );
-            RecordAssignmentHome.create( recordAssignment, WorkflowDirectorydemandsPlugin.getPlugin( ) );
+            RecordAssignmentHome.create( recordAssignment );
         }
     }
 
