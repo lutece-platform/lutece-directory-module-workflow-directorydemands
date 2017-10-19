@@ -62,9 +62,7 @@ import fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task.se
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task.selection.ITaskFormHandler;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task.selection.IUnitSelection;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.utils.Constants;
-import fr.paris.lutece.plugins.workflowcore.business.resource.ResourceHistory;
 import fr.paris.lutece.plugins.workflowcore.service.config.ITaskConfigService;
-import fr.paris.lutece.plugins.workflowcore.service.resource.IResourceHistoryService;
 import fr.paris.lutece.plugins.workflowcore.service.task.ITask;
 import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
@@ -82,8 +80,6 @@ public class UnitSelectionFromIdentityStore implements IUnitSelection
     @Inject
     @Named( "workflow-directorydemands.unitSelectionFromIdentityStoreConfigService" )
     private ITaskConfigService _taskConfigService;
-    @Inject
-    private IResourceHistoryService _resourceHistoryService;
     @Inject
     @Named( "workflow-directorydemands.identitystore.service" )
     private IdentityService _identityService;
