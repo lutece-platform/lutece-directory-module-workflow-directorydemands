@@ -38,8 +38,8 @@ import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.util.sql.DAOUtil;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * This class provides Data Access methods for RecordAssignment objects
@@ -61,18 +61,15 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
     private static final String SQL_QUERY_UPDATE = "UPDATE directory_record_unit_assignment SET id = ?, id_record = ?, id_assigned_unit = ?, id_assignor_unit = ? , assignment_date = ?, assignment_type = ?, is_active = ? WHERE id = ?";
 
     // SQL parts to filter recordAssignments
-    private static final String SQL_WHERE_BASE = " WHERE 1 ";
-    private static final String SQL_ADD_CLAUSE = " AND ( ";
-    private static final String SQL_END_ADD_CLAUSE = " ) ";
-
-    private static final String SQL_USER_UNIT_FROM_PART1 = " LEFT JOIN unittree_unit on directory_record_unit_assignment.id_assigned_unit = unittree_unit.id_unit ";
-    private static final String SQL_USER_UNIT_FROM_PART3 = " LEFT JOIN unittree_unit parent_unit on unittree_unit.id_parent = parent_unit.id_unit ";
-    private static final String SQL_USER_UNIT_WHERE_PART1 = " id_assigned_unit = ? ";
-    private static final String SQL_USER_UNIT_WHERE_PART2 = " OR unittree_unit.id_parent = ? ";
-    private static final String SQL_USER_UNIT_WHERE_PART3 = " OR parent_unit.id_parent = ? ";
-
-    private static final String SQL_ACTIVE_RECORDS_ONLY_WHERE_PART = " directory_record_unit_assignment.is_active = ? ";
-
+    private static final String SQL_WHERE_BASE = " WHERE 1 " ;
+    private static final String SQL_ADD_CLAUSE =  " AND ( " ;
+    private static final String SQL_END_ADD_CLAUSE =  " ) " ;
+    
+    private static final String SQL_USER_UNIT_WHERE_PART1 = " id_assigned_unit in (?" ;
+    private static final String SQL_USER_UNIT_WHERE_PART2 = ") " ;
+    
+    private static final String SQL_ACTIVE_RECORDS_ONLY_WHERE_PART = " directory_record_unit_assignment.is_active = 1 ";
+    
     private static final String SQL_FILTER_PERIOD_WHERE_PART = " directory_record.date_creation  >= date_add( current_timestamp , INTERVAL -? DAY) ";
 
     private static final String SQL_DIRECTORY_FROM_PART = "  LEFT JOIN directory_record  on directory_record.id_record = directory_record_unit_assignment.id_record ";
@@ -241,128 +238,100 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
      * {@inheritDoc }
      */
     @Override
-    public List<RecordAssignment> selectRecordAssignmentsFiltredList( HashMap<String, Integer> filterParameters, Plugin plugin )
+
+    public List<RecordAssignment> selectRecordAssignmentsFiltredList( RecordAssignmentFilter filterParameters, Plugin plugin )
     {
         List<RecordAssignment> listRecordAssignments = new ArrayList<>( );
-        List<Integer> listParameterValues = new ArrayList<>( );
-
+                
         StringBuilder sql = new StringBuilder( SQL_QUERY_SELECTALL );
         StringBuilder whereClause = new StringBuilder( SQL_WHERE_BASE );
 
         boolean DirectoryRecordJoinAdded = false;
         
-        /* FILTER MAP DEFINITION         
-        
-            * key USER_UNIT = user unit (from unittree)
-            * key RECURSIVE_SEARCH_DEPTH = depth of recursive search of the children units of the user unit (1,2 or 3)
-            * key ACTIVE_RECORDS_ONLY = active records only (true/false)
-            * key FILTER_PERIOD = filter records by period :
-                    NONE : none
-                    LAST_DAY : records created since last day
-                    LAST_WEEK : records created since last week
-                    LAST_MONTH : records created since last month
-            * key DIRECTORY_ID = specify a particular directory to filter records
-            * key STATE_ID = specify a particular state to filter records
-        
-        */
-        
         // User unit
-        if ( filterParameters.containsKey( RecordAssignmentFilterType.USER_UNIT_ID.toString( ) )
-                && filterParameters.containsKey( RecordAssignmentFilterType.RECURSIVE_SEARCH_DEPTH.toString( ) ) )
+        if ( ! filterParameters.getUserUnitIdList( ).isEmpty( ) )
         {
-            int depth = filterParameters.get( RecordAssignmentFilterType.RECURSIVE_SEARCH_DEPTH.toString( ) );
-
             whereClause.append( SQL_ADD_CLAUSE );
-
-            if ( depth >= 1 ) // get the records assigned to the unit
-            {
-                sql.append( SQL_USER_UNIT_FROM_PART1 );
-                whereClause.append( SQL_USER_UNIT_WHERE_PART1 );
-                listParameterValues.add( filterParameters.get( RecordAssignmentFilterType.USER_UNIT_ID.toString( ) ) );
+            String strUnitWhereClause = SQL_USER_UNIT_WHERE_PART1 ;
+            if (filterParameters.getUserUnitIdList( ).size( ) > 1 ) {
+                StringBuilder additionnalParameters = new StringBuilder( );
+                for (int i=0; i< filterParameters.getUserUnitIdList( ).size( ) -1; i++) 
+                {
+                    additionnalParameters.append(  ", ?");
+                }
+                strUnitWhereClause += additionnalParameters + SQL_USER_UNIT_WHERE_PART2;
             }
-
-            if ( depth >= 2 ) // get the records assigned to the sub units
-            {
-                whereClause.append( SQL_USER_UNIT_WHERE_PART2 );
-                listParameterValues.add( filterParameters.get( RecordAssignmentFilterType.USER_UNIT_ID.toString( ) ) );
-            }
-
-            if ( depth >= 3 ) // get the records assigned to the sub/sub units
-            {
-                sql.append( SQL_USER_UNIT_FROM_PART3 );
-                whereClause.append( SQL_USER_UNIT_WHERE_PART3 );
-                listParameterValues.add( filterParameters.get( RecordAssignmentFilterType.USER_UNIT_ID.toString( ) ) );
-            }
-
-            whereClause.append( SQL_END_ADD_CLAUSE );
+            whereClause.append( strUnitWhereClause );
+            whereClause.append( SQL_END_ADD_CLAUSE ) ;            
         }
 
         // ACTIVE_RECORDS_ONLY
-        if ( filterParameters.containsKey( RecordAssignmentFilterType.ACTIVE_RECORDS_ONLY.toString( ) ) )
+        if ( filterParameters.isActiveRecordsOnly( ) )
         {
-            int activeOnly = filterParameters.get( RecordAssignmentFilterType.ACTIVE_RECORDS_ONLY.toString( ) );
-
-            whereClause.append( SQL_ADD_CLAUSE );
-            whereClause.append( SQL_ACTIVE_RECORDS_ONLY_WHERE_PART );
-            whereClause.append( SQL_END_ADD_CLAUSE );
-
-            listParameterValues.add( activeOnly );
+            whereClause.append ( SQL_ADD_CLAUSE );
+            whereClause.append ( SQL_ACTIVE_RECORDS_ONLY_WHERE_PART );
+            whereClause.append ( SQL_END_ADD_CLAUSE );
         }
 
         // period
-        if ( filterParameters.containsKey( RecordAssignmentFilterType.FILTER_PERIOD.toString( ) ) )
+        if ( filterParameters.getNumberOfDays( ) > 0 )
         {
-            int nbOfDays = filterParameters.get( RecordAssignmentFilterType.FILTER_PERIOD.toString( ) );
 
-            if ( nbOfDays > 0 )
-            {
-                sql.append( SQL_DIRECTORY_FROM_PART );
+                sql.append( SQL_DIRECTORY_FROM_PART ) ; 
                 DirectoryRecordJoinAdded = true;
                 whereClause.append( SQL_ADD_CLAUSE );
                 whereClause.append( SQL_FILTER_PERIOD_WHERE_PART );
                 whereClause.append( SQL_END_ADD_CLAUSE );
-                listParameterValues.add( nbOfDays );
-            }
-
         }
 
         // directory ( + state )
-        if ( filterParameters.containsKey( RecordAssignmentFilterType.DIRECTORY_ID.toString( ) ) )
+        if ( filterParameters.getDirectoryId( ) > 0 )
         {
-            int directoryId = filterParameters.get( RecordAssignmentFilterType.DIRECTORY_ID.toString( ) );
 
-            if ( !DirectoryRecordJoinAdded )
-                sql.append( SQL_DIRECTORY_FROM_PART );
-            whereClause.append( SQL_ADD_CLAUSE );
-            whereClause.append( SQL_DIRECTORY_WHERE_PART );
-            whereClause.append( SQL_END_ADD_CLAUSE );
-
-            listParameterValues.add( directoryId );
-
-            // state
-            if ( filterParameters.containsKey( RecordAssignmentFilterType.STATE_ID.toString( ) ) )
+            if (!DirectoryRecordJoinAdded) sql.append( SQL_DIRECTORY_FROM_PART ) ;
+            whereClause.append( SQL_ADD_CLAUSE ) ;
+            whereClause.append( SQL_DIRECTORY_WHERE_PART ) ;
+            whereClause.append( SQL_END_ADD_CLAUSE ) ;          
+            
+            // state 
+            if ( filterParameters.getStateId( ) > 0 )
             {
-                int stateId = filterParameters.get( RecordAssignmentFilterType.STATE_ID.toString( ) );
+                sql.append( SQL_STATE_FROM_PART ) ;
+                whereClause.append( SQL_ADD_CLAUSE ) ;
+                whereClause.append( SQL_STATE_WHERE_PART ) ;
+                whereClause.append( SQL_END_ADD_CLAUSE ) ;          
+            }            
+        }
+        
+        String strOrderBy = SQL_DEFAULT_ORDER_BY ;
+        if ( !StringUtils.isBlank( filterParameters.getOrderBy( ) ) )  strOrderBy = filterParameters.getOrderBy( );
+        
+        // prepare & execute query
+        DAOUtil daoUtil = new DAOUtil( sql.toString( ) + whereClause.toString( ) + strOrderBy , plugin );
 
-                sql.append( SQL_STATE_FROM_PART );
-                whereClause.append( SQL_ADD_CLAUSE );
-                whereClause.append( SQL_STATE_WHERE_PART );
-                whereClause.append( SQL_END_ADD_CLAUSE );
-
-                listParameterValues.add( stateId );
+        int i=1;
+        if ( !filterParameters.getUserUnitIdList( ).isEmpty( ) ) 
+        {
+            for (Integer unitId : filterParameters.getUserUnitIdList( )) 
+            {
+                daoUtil.setInt(i++, unitId );
             }
         }
-
-        // prepare & execute query
-        DAOUtil daoUtil = new DAOUtil( sql.toString( ) + whereClause.toString( ) + SQL_DEFAULT_ORDER_BY, plugin );
-
-        for ( int i = 0; i < listParameterValues.size( ); i++ )
-        {
-            daoUtil.setInt( i + 1, listParameterValues.get( i ) );
+        
+        if ( filterParameters.getNumberOfDays( ) > 0 )
+            daoUtil.setInt( i++, filterParameters.getNumberOfDays( ) );
+        
+        if ( filterParameters.getDirectoryId( ) > 0 ) {
+            daoUtil.setInt( i++, filterParameters.getDirectoryId( ) );
+            if ( filterParameters.getStateId( ) > 0 )
+                daoUtil.setInt( i++, filterParameters.getStateId( ) );
         }
-
+            
+            
+        // execute query
         daoUtil.executeQuery( );
 
+        // fetch results
         while ( daoUtil.next( ) )
         {
             listRecordAssignments.add( dataToRecordAssignment( daoUtil ) );
@@ -393,7 +362,7 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
 
         return listRecordAssignments;
     }
-
+    
     /**
      * Creates a {@code RecordAssignment} object from the data of the specified {@code DAOUtil}
      * 
@@ -413,7 +382,7 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
         recordAssignment.getAssignedUnit( ).setIdUnit( daoUtil.getInt( nIndex++ ) );
         recordAssignment.setAssignmentDate( daoUtil.getTimestamp( nIndex++ ) );
         recordAssignment.setAssignmentType( AssignmentType.getFromCode( daoUtil.getString( nIndex++ ) ) );
-        recordAssignment.setActive( daoUtil.getBoolean( nIndex ) );
+        recordAssignment.setActive( daoUtil.getBoolean( nIndex++ ) );
 
         recordAssignment.getAssignorUnit( ).setLabel( daoUtil.getString( nIndex++ ) );
         recordAssignment.getAssignorUnit( ).setDescription( daoUtil.getString( nIndex++ ) );

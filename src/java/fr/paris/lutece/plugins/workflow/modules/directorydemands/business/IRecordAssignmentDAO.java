@@ -149,8 +149,7 @@ public interface IRecordAssignmentDAO
      *            the Plugin
      * @return The List which contains the data of all the recordAssignment objects
      */
-
-    List<RecordAssignment> selectRecordAssignmentsFiltredList( HashMap<String, Integer> filterParameters, Plugin plugin );
+    List<RecordAssignment> selectRecordAssignmentsFiltredList( RecordAssignmentFilter filterParameters, Plugin plugin );
 
     /**
      * Loads the record assignment associated to the specified record if

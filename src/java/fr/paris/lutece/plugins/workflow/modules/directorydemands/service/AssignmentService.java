@@ -36,12 +36,13 @@ package fr.paris.lutece.plugins.workflow.modules.directorydemands.service;
 import fr.paris.lutece.plugins.unittree.business.unit.Unit;
 import fr.paris.lutece.plugins.unittree.service.unit.IUnitService;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.RecordAssignment;
+import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.RecordAssignmentFilter;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.RecordAssignmentHome;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.service.admin.AdminUserService;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.portal.service.util.AppLogService;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
@@ -69,10 +70,11 @@ public final class AssignmentService
      * @param map
      * @return the list of active record assignement list for the given admin user.
      */
-    public static List<RecordAssignment> getRecordAssignmentFiltredList( HashMap<String, Integer> map )
-    {
-
-        return RecordAssignmentHome.getRecordAssignmentsFiltredList( map );
+    public static List<RecordAssignment> getRecordAssignmentFiltredList( RecordAssignmentFilter filter )
+    {        
+        
+        return   RecordAssignmentHome
+                        .getRecordAssignmentsFiltredList( filter , WorkflowDirectorydemandsPlugin.getPlugin( ) );
     }
 
     /**
@@ -125,10 +127,53 @@ public final class AssignmentService
         return unit;
     }
     
+    /**
+     * find SubUnits Ids
+     * 
+     * @param adminUser
+     * @return 
+     */
     public static List<Integer> findSubUnitsIds( AdminUser adminUser )
     {
-        return _unitService.getSubUnits( findAssignorUnit( adminUser).getIdUnit( ) , false)
+        return _unitService.getSubUnits( findAssignorUnit( adminUser ).getIdUnit( ) , false)
                 .stream( )
+                .map( unit -> unit.getIdUnit( ) )
+                .collect( Collectors.toList( ) );
+    }
+    
+    /**
+     * add recursively All SubUnits Ids
+     * 
+     * @param unitList 
+     */
+    private static List<Unit>  getAllSubUnitsIds( List<Unit> unitList ) 
+    {
+        List<Unit> returnUnitList = new ArrayList<Unit>( );
+        returnUnitList.addAll( unitList );
+        
+                
+        for ( Unit unit : unitList ) {
+            List<Unit> subUnitList = _unitService.getSubUnits( unit.getIdUnit( ) , false ) ;
+            if ( !subUnitList.isEmpty( ) ) {
+                returnUnitList.addAll ( getAllSubUnitsIds( subUnitList ) );
+            }            
+        }  
+        
+        return returnUnitList ;
+    }
+    
+    /**
+     * find All SubUnits Ids (recursively)
+     * 
+     * @param adminUser
+     * @return 
+     */
+    public static List<Integer> findAllSubUnitsIds( AdminUser adminUser )
+    {
+        List<Unit> userDirectUnitList = _unitService.getUnitsByIdUser( adminUser.getUserId( ), false );
+        List<Unit> userAllUnitList = getAllSubUnitsIds( userDirectUnitList ) ;
+                 
+        return userAllUnitList.stream( )
                 .map( unit -> unit.getIdUnit( ) )
                 .collect( Collectors.toList( ) );
     }
