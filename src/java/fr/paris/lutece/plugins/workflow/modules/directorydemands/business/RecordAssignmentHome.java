@@ -156,17 +156,20 @@ public final class RecordAssignmentHome
     /**
      * Load the data of all the recordAssignment objects and returns them in form of a list
      * 
-     * @param map
-     *            the filtering criterias (see IRecordAssignmentDAO.selectRecordAssignmentsFiltredList() javadoc)
+
+     * @param filter 
+     *            the filtering criterias 
+     * @param plugin
+     *            the Plugin
      * @return the list which contains the data of all the recordAssignment objects
      */
 
-    public static List<RecordAssignment> getRecordAssignmentsFiltredList( HashMap<String, Integer> map )
+    public static List<RecordAssignment> getRecordAssignmentsFiltredList( RecordAssignmentFilter filter, Plugin plugin )
     {
-        return _dao.selectRecordAssignmentsFiltredList( map, _plugin );
+        return _dao.selectRecordAssignmentsFiltredList(filter, plugin );
     }
-
-    /**
+    
+        /**
      * Loads the record assignment associated to the specified record if
      * 
      * @param nIdRecord
