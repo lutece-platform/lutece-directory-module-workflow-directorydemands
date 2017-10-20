@@ -93,6 +93,11 @@ public abstract class AbstractTaskAssignRecordToUnit extends AbstractTaskDirecto
             {
                 IUnitSelection unitSelection = fetchUnitSelection( request );
 
+                if ( unitSelection == null )
+                {
+                    throw new AppException( "There is no unit selection" );
+                }
+
                 int nIdUnit = unitSelection.select( resourceHistory.getIdResource( ), request, this );
 
                 Unit unitAssigned = _unitService.getUnit( nIdUnit, false );
