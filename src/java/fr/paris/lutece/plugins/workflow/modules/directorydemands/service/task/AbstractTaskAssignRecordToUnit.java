@@ -62,12 +62,13 @@ import fr.paris.lutece.portal.service.util.AppException;
  */
 public abstract class AbstractTaskAssignRecordToUnit extends AbstractTaskDirectoryDemands
 {
+    public static final int UNSET_ASSIGNED_UNIT_ID = -1;
+
     // Informations
     private static final String TASK_INFORMATION_ASSIGNED_UNIT = "ASSIGNED_UNIT";
     private static final String TASK_INFORMATION_ASSIGNOR_UNIT = "ASSIGNOR_UNIT";
 
-    private static final int UNSET_ID = -1;
-    private static final int UNFOUND_INDEX = UNSET_ID;
+    private static final int UNFOUND_INDEX = UNSET_ASSIGNED_UNIT_ID;
 
     // Services
     @Inject
@@ -179,7 +180,7 @@ public abstract class AbstractTaskAssignRecordToUnit extends AbstractTaskDirecto
 
         if ( unitAssignor == null )
         {
-            recordAssignment.setIdAssignorUnit( UNSET_ID );
+            recordAssignment.setIdAssignorUnit( UNSET_ASSIGNED_UNIT_ID );
         }
         else
         {

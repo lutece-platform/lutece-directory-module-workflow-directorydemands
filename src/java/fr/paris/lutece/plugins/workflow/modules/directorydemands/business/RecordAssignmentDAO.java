@@ -34,6 +34,7 @@
 
 package fr.paris.lutece.plugins.workflow.modules.directorydemands.business;
 
+import fr.paris.lutece.plugins.unittree.business.unit.Unit;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.util.sql.DAOUtil;
 
@@ -51,9 +52,12 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
     // Constants
 
     private static final String SQL_QUERY_NEW_PK = "SELECT max( id ) FROM directory_record_unit_assignment";
-    private static final String SQL_QUERY_SELECTALL = "SELECT id, directory_record_unit_assignment.id_record, id_assignor_unit, id_assigned_unit, assignment_date, assignment_type, is_active, u_assignor.label, u_assignor.description, u_assigned.label, u_assigned.description  FROM directory_record_unit_assignment  LEFT JOIN  unittree_unit u_assignor on u_assignor.id_unit = directory_record_unit_assignment.id_assignor_unit   left JOIN  unittree_unit u_assigned on u_assigned.id_unit = directory_record_unit_assignment.id_assigned_unit  ";
+    private static final String SQL_QUERY_SELECTALL = "SELECT id, directory_record_unit_assignment.id_record, id_assignor_unit, id_assigned_unit, assignment_date, assignment_type, is_active,"
+            + " u_assignor.id_parent as id_parent_assignor_unit, u_assignor.label as label_assignor_unit, u_assignor.description as description_assignor_unit,"
+            + " u_assigned.id_parent as id_parent_assigned_unit, u_assigned.label as label_assigned_unit, u_assigned.description as description_assigned_unit"
+            + " FROM directory_record_unit_assignment  LEFT JOIN  unittree_unit u_assignor on u_assignor.id_unit = directory_record_unit_assignment.id_assignor_unit   left JOIN  unittree_unit u_assigned on u_assigned.id_unit = directory_record_unit_assignment.id_assigned_unit  ";
     private static final String SQL_QUERY_SELECT = SQL_QUERY_SELECTALL + " WHERE id = ?";
-    private static final String SQL_QUERY_SELECT_LAST = SQL_QUERY_SELECTALL + " WHERE id_record = ? AND assignment_type = ? ORDER BY assignment_date DESC";
+    private static final String SQL_QUERY_SELECT_CURRENT = SQL_QUERY_SELECTALL + " WHERE id_record = ? AND is_active = 1 ORDER BY assignment_date DESC";
     private static final String SQL_QUERY_SELECT_BY_ID_RECORD = SQL_QUERY_SELECTALL + " WHERE id_record = ?  ORDER BY assignment_date ASC";
     private static final String SQL_QUERY_INSERT = "INSERT INTO directory_record_unit_assignment ( id, id_record, id_assigned_unit, id_assignor_unit, assignment_date, assignment_type, is_active ) VALUES ( ?, ?, ?, ?, ?, ?, ? ) ";
     private static final String SQL_QUERY_DELETE = "DELETE FROM directory_record_unit_assignment WHERE id = ? ";
@@ -149,11 +153,10 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
      * {@inheritDoc }
      */
     @Override
-    public RecordAssignment loadLast( int nIdRecord, AssignmentType assignmentType, Plugin plugin )
+    public RecordAssignment loadCurrentAssignment( int nIdRecord, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_LAST, plugin );
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_CURRENT, plugin );
         daoUtil.setInt( 1, nIdRecord );
-        daoUtil.setString( 2, assignmentType.getAssignmentTypeCode( ) );
         daoUtil.executeQuery( );
 
         RecordAssignment recordAssignment = null;
@@ -403,22 +406,24 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
      */
     private RecordAssignment dataToRecordAssignment( DAOUtil daoUtil )
     {
-        int nIndex = 1;
-
         RecordAssignment recordAssignment = new RecordAssignment( );
-        recordAssignment.setId( daoUtil.getInt( nIndex++ ) );
-        recordAssignment.setIdRecord( daoUtil.getInt( nIndex++ ) );
+        recordAssignment.setId( daoUtil.getInt( "id" ) );
+        recordAssignment.setIdRecord( daoUtil.getInt( "id_record" ) );
+        recordAssignment.setAssignmentDate( daoUtil.getTimestamp( "assignment_date" ) );
+        recordAssignment.setAssignmentType( AssignmentType.getFromCode( daoUtil.getString( "assignment_type" ) ) );
+        recordAssignment.setActive( daoUtil.getBoolean( "is_active" ) );
 
-        recordAssignment.getAssignorUnit( ).setIdUnit( daoUtil.getInt( nIndex++ ) );
-        recordAssignment.getAssignedUnit( ).setIdUnit( daoUtil.getInt( nIndex++ ) );
-        recordAssignment.setAssignmentDate( daoUtil.getTimestamp( nIndex++ ) );
-        recordAssignment.setAssignmentType( AssignmentType.getFromCode( daoUtil.getString( nIndex++ ) ) );
-        recordAssignment.setActive( daoUtil.getBoolean( nIndex ) );
+        Unit unitAssignor = recordAssignment.getAssignorUnit( );
+        unitAssignor.setIdUnit( daoUtil.getInt( "id_assignor_unit" ) );
+        unitAssignor.setIdParent( daoUtil.getInt( "id_parent_assignor_unit" ) );
+        unitAssignor.setLabel( daoUtil.getString( "label_assignor_unit" ) );
+        unitAssignor.setDescription( daoUtil.getString( "description_assignor_unit" ) );
 
-        recordAssignment.getAssignorUnit( ).setLabel( daoUtil.getString( nIndex++ ) );
-        recordAssignment.getAssignorUnit( ).setDescription( daoUtil.getString( nIndex++ ) );
-        recordAssignment.getAssignedUnit( ).setLabel( daoUtil.getString( nIndex++ ) );
-        recordAssignment.getAssignedUnit( ).setDescription( daoUtil.getString( nIndex++ ) );
+        Unit unitAssigned = recordAssignment.getAssignedUnit( );
+        unitAssigned.setIdUnit( daoUtil.getInt( "id_assigned_unit" ) );
+        unitAssigned.setIdParent( daoUtil.getInt( "id_parent_assigned_unit" ) );
+        unitAssigned.setLabel( daoUtil.getString( "label_assigned_unit" ) );
+        unitAssigned.setDescription( daoUtil.getString( "description_assigned_unit" ) );
 
         return recordAssignment;
     }

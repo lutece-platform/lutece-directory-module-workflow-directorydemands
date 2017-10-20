@@ -105,17 +105,15 @@ public interface IRecordAssignmentDAO
     RecordAssignment load( int nKey, Plugin plugin );
 
     /**
-     * Loads the last record assignment for the specified couple {id record, assignment type}
+     * Loads the current record assignment for the specified record id
      * 
      * @param nIdRecord
      *            The record id
-     * @param assignmentType
-     *            The assignment type
      * @param plugin
      *            the Plugin
      * @return The last record assignment
      */
-    RecordAssignment loadLast( int nIdRecord, AssignmentType assignmentType, Plugin plugin );
+    RecordAssignment loadCurrentAssignment( int nIdRecord, Plugin plugin );
 
     /**
      * Load the data of all the recordAssignment objects and returns them as a List

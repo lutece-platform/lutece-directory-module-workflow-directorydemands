@@ -131,17 +131,15 @@ public final class RecordAssignmentHome
     }
 
     /**
-     * Returns the last record assignment for the specified couple {id record, assignment type}
+     * Returns the current record assignment for the specified record id
      * 
      * @param nIdRecord
      *            The record id
-     * @param assignmentType
-     *            The assignment type
      * @return the last record assignment
      */
-    public static RecordAssignment findLast( int nIdRecord, AssignmentType assignmentType )
+    public static RecordAssignment findCurrentAssignment( int nIdRecord )
     {
-        return _dao.loadLast( nIdRecord, assignmentType, _plugin );
+        return _dao.loadCurrentAssignment( nIdRecord, _plugin );
     }
 
     /**
