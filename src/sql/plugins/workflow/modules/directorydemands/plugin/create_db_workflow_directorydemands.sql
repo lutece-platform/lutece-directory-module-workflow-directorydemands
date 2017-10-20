@@ -34,17 +34,6 @@ CREATE TABLE workflow_task_directorydemands_assign_to_unit_cf (
   unit_selections VARCHAR(1000) NULL,
   PRIMARY KEY (id_task)
  ) ;
- 
-/*==================================================================*/
-/* Table structure for table workflow_task_directorydemands_unit_selection_from_ids_cf   */
-/*==================================================================*/
-DROP TABLE IF EXISTS workflow_task_directorydemands_unit_selection_from_ids_cf;
-CREATE TABLE workflow_task_directorydemands_unit_selection_from_ids_cf (
-  id_task int(11) NOT NULL DEFAULT '0',
-  id_directory_entry int(11) NULL,
-  ids_attribute_key VARCHAR(255) NULL,
-  PRIMARY KEY (id_task)
- ) ;
 
 /*==================================================================*/
 /* Indexes creation for module workflow_directorydemands */

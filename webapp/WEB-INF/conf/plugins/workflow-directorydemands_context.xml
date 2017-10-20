@@ -34,8 +34,6 @@
         class="fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.information.TaskInformationDAO" />
     <bean id="workflow-directorydemands.taskAssignRecordToUnitConfigDAO"
         class="fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.config.TaskAssignRecordToUnitConfigDAO" />
-    <bean id="workflow-directorydemands.unitSelectionFromIdentityStoreConfigDAO"
-        class="fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.config.UnitSelectionFromIdentityStoreConfigDAO" />
         
     <!-- Unit Code Attribute -->
     <bean id="workflow-directorydemands.unitCodeService" class="fr.paris.lutece.plugins.workflow.modules.directorydemands.service.unit.UnitCodeAttributeService" />
@@ -47,9 +45,6 @@
     <bean id="workflow-directorydemands.taskAssignRecordToUnitConfigService"
         class="fr.paris.lutece.plugins.workflowcore.service.config.TaskConfigService"
         p:taskConfigDAO-ref="workflow-directorydemands.taskAssignRecordToUnitConfigDAO" />
-    <bean id="workflow-directorydemands.unitSelectionFromIdentityStoreConfigService"
-        class="fr.paris.lutece.plugins.workflowcore.service.config.TaskConfigService"
-        p:taskConfigDAO-ref="workflow-directorydemands.unitSelectionFromIdentityStoreConfigDAO" />
 
     <!-- Unit Selection -->
     <bean id="workflow-directorydemands.unitSelection.fromAll"

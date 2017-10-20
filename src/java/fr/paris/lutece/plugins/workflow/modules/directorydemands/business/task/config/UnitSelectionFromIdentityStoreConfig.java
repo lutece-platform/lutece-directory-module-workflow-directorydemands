@@ -33,37 +33,42 @@
  */
 package fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.config;
 
-import fr.paris.lutece.plugins.workflowcore.business.config.TaskConfig;
+import fr.paris.lutece.portal.service.util.AppPropertiesService;
 
 /**
  * This class represents the configuration for the unit selection
  * {@link fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task.selection.impl.UnitSelectionFromIdentityStore UnitSelectionFromIdentityStore}
  */
-public class UnitSelectionFromIdentityStoreConfig extends TaskConfig
+public class UnitSelectionFromIdentityStoreConfig
 {
+    // Properties
+    private static final String PROPERTY_APPLICATION_CODE = "workflow-directorydemands.unit.selection.from.identitystore.applicationCode";
+    private static final String PROPERTY_DIRECTORY_ENTRY_TITLE = "workflow-directorydemands.unit.selection.from.identitystore.directory.entry.title";
+    private static final String PROPERTY_IDENTITYSTORE_ATTRIBUTE_KEY = "workflow-directorydemands.unit.selection.from.identitystore.identitystore.attribute.key";
+
     // Variables declarations
-    private int _nIdDirectoryEntry;
-    private String _strIdentityStoreAttributeKey;
+    private static final String _strApplicationCode = AppPropertiesService.getProperty( PROPERTY_APPLICATION_CODE );
+    private static final String _strDirectoryEntryTitle = AppPropertiesService.getProperty( PROPERTY_DIRECTORY_ENTRY_TITLE );
+    private static final String _strIdentityStoreAttributeKey = AppPropertiesService.getProperty( PROPERTY_IDENTITYSTORE_ATTRIBUTE_KEY );
 
     /**
-     * Gives the id of the directory entry
+     * Gives the application code
      * 
-     * @return The id of the directory entry
+     * @return the application code
      */
-    public int getIdDirectoryEntry( )
+    public String getApplicationCode( )
     {
-        return _nIdDirectoryEntry;
+        return _strApplicationCode;
     }
 
     /**
-     * Sets the id of the directory entry
+     * Gives the title of the directory entry
      * 
-     * @param nIdDirectoryEntry
-     *            The id of the directory entry to set
+     * @return The title of the directory entry
      */
-    public void setIdDirectoryEntry( int nIdDirectoryEntry )
+    public String getDirectoryEntryTitle( )
     {
-        _nIdDirectoryEntry = nIdDirectoryEntry;
+        return _strDirectoryEntryTitle;
     }
 
     /**
@@ -74,16 +79,5 @@ public class UnitSelectionFromIdentityStoreConfig extends TaskConfig
     public String getIdentityStoreAttributeKey( )
     {
         return _strIdentityStoreAttributeKey;
-    }
-
-    /**
-     * Sets the IdentityStore attribute key
-     * 
-     * @param strIdentityStoreAttributeKey
-     *            The IdentityStore attribute key
-     */
-    public void setIdentityStoreAttributeKey( String strIdentityStoreAttributeKey )
-    {
-        _strIdentityStoreAttributeKey = strIdentityStoreAttributeKey;
     }
 }

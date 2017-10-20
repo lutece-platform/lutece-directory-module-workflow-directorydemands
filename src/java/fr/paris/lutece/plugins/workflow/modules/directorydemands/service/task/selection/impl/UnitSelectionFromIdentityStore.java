@@ -33,18 +33,18 @@
  */
 package fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task.selection.impl;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 
+import fr.paris.lutece.plugins.directory.business.EntryFilter;
+import fr.paris.lutece.plugins.directory.business.EntryHome;
+import fr.paris.lutece.plugins.directory.business.IEntry;
 import fr.paris.lutece.plugins.directory.business.Record;
 import fr.paris.lutece.plugins.directory.business.RecordField;
 import fr.paris.lutece.plugins.directory.business.RecordFieldFilter;
@@ -61,12 +61,9 @@ import fr.paris.lutece.plugins.workflow.modules.directorydemands.service.Workflo
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task.selection.IConfigurationHandler;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task.selection.ITaskFormHandler;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task.selection.IUnitSelection;
-import fr.paris.lutece.plugins.workflow.modules.directorydemands.utils.Constants;
-import fr.paris.lutece.plugins.workflowcore.service.config.ITaskConfigService;
 import fr.paris.lutece.plugins.workflowcore.service.task.ITask;
 import fr.paris.lutece.portal.service.i18n.I18nService;
-import fr.paris.lutece.portal.service.template.AppTemplateService;
-import fr.paris.lutece.util.html.HtmlTemplate;
+import fr.paris.lutece.portal.service.plugin.Plugin;
 
 /**
  * This class is a unit selection using IdentityStore
@@ -78,9 +75,6 @@ public class UnitSelectionFromIdentityStore implements IUnitSelection
 
     // Services
     @Inject
-    @Named( "workflow-directorydemands.unitSelectionFromIdentityStoreConfigService" )
-    private ITaskConfigService _taskConfigService;
-    @Inject
     @Named( "workflow-directorydemands.identitystore.service" )
     private IdentityService _identityService;
     @Inject
@@ -88,6 +82,8 @@ public class UnitSelectionFromIdentityStore implements IUnitSelection
 
     private final IConfigurationHandler _configurationHandler = new ConfigurationHandler( );
     private final ITaskFormHandler _taskFormHandler = new TaskFormHandler( );
+    private final UnitSelectionFromIdentityStoreConfig _config = new UnitSelectionFromIdentityStoreConfig( );
+    private final Plugin _plugin = WorkflowDirectorydemandsPlugin.getPlugin( );
 
     /**
      * {@inheritDoc}
@@ -131,28 +127,28 @@ public class UnitSelectionFromIdentityStore implements IUnitSelection
     @Override
     public int select( int nIdResource, HttpServletRequest request, ITask task ) throws AssignmentNotPossibleException
     {
-        UnitSelectionFromIdentityStoreConfig config = findConfig( task );
-        Record record = RecordHome.findByPrimaryKey( nIdResource, WorkflowDirectorydemandsPlugin.getPlugin( ) );
-        String strConnectionId = findFieldValue( config.getIdDirectoryEntry( ), record );
+        Record record = RecordHome.findByPrimaryKey( nIdResource, _plugin );
+        String strConnectionId = findFieldValue( _config.getDirectoryEntryTitle( ), record );
 
         if ( StringUtils.isEmpty( strConnectionId ) )
         {
-            throw new AssignmentNotPossibleException( "No value in the directory entry number " + config.getIdDirectoryEntry( ) );
+            throw new AssignmentNotPossibleException( "No value in the directory entry " + _config.getDirectoryEntryTitle( ) );
         }
 
-        IdentityDto identity = _identityService.getIdentity( strConnectionId, null, Constants.APPLICATION_CODE );
-        AttributeDto attributeDto = identity.getAttributes( ).get( config.getIdentityStoreAttributeKey( ) );
+        IdentityDto identity = _identityService.getIdentity( strConnectionId, null, _config.getApplicationCode( ) );
+        AttributeDto attributeDto = identity.getAttributes( ).get( _config.getIdentityStoreAttributeKey( ) );
 
         if ( attributeDto == null )
         {
-            throw new AssignmentNotPossibleException( "The identity attribute " + config.getIdentityStoreAttributeKey( ) + "does not exist" );
+            throw new AssignmentNotPossibleException( "The identity attribute " + _config.getIdentityStoreAttributeKey( ) + " does not exist for the identity "
+                    + identity.getConnectionId( ) );
         }
 
         String strUnitCode = attributeDto.getValue( );
 
         if ( StringUtils.isEmpty( strUnitCode ) )
         {
-            throw new AssignmentNotPossibleException( "No value in the identity attribute " + config.getIdentityStoreAttributeKey( ) );
+            throw new AssignmentNotPossibleException( "No value in the identity attribute " + _config.getIdentityStoreAttributeKey( ) );
         }
 
         int nIdUnit = 0;
@@ -163,67 +159,71 @@ public class UnitSelectionFromIdentityStore implements IUnitSelection
         }
         catch( UnitCodeNotFoundException e )
         {
-            throw new AssignmentNotPossibleException( "The identity attribute " + config.getIdentityStoreAttributeKey( ) + "does not contain a valid unit", e );
+            throw new AssignmentNotPossibleException( "The identity attribute " + _config.getIdentityStoreAttributeKey( ) + " does not contain a valid unit", e );
         }
 
         return nIdUnit;
     }
 
     /**
-     * <p>
-     * Finds the configuration associated to the specified task.
-     * </p>
-     * <p>
-     * If no configuration exists for the task, creates an empty one.
-     * </p>
+     * Finds the field value of the record entry with the specified title
      * 
-     * @param task
-     *            the task
-     * @return the configuration
-     */
-    private UnitSelectionFromIdentityStoreConfig findConfig( ITask task )
-    {
-        UnitSelectionFromIdentityStoreConfig config = _taskConfigService.findByPrimaryKey( task.getId( ) );
-
-        if ( config == null )
-        {
-            config = new UnitSelectionFromIdentityStoreConfig( );
-            config.setIdTask( task.getId( ) );
-            _taskConfigService.create( config );
-        }
-
-        return config;
-    }
-
-    /**
-     * Finds the field value of the record entry
-     * 
-     * @param nIdEntry
-     *            the entry id
+     * @param strEntryTitle
+     *            the entry title
      * @param record
      *            the record
      * @return the field value
+     * @throws AssignmentNotPossibleException
+     *             if no entry with specified title exists
      */
-    private String findFieldValue( int nIdEntry, Record record )
+    private String findFieldValue( String strEntryTitle, Record record ) throws AssignmentNotPossibleException
     {
         String strRecordFieldValue = StringUtils.EMPTY;
 
-        RecordFieldFilter recordFieldFilter = new RecordFieldFilter( );
-        recordFieldFilter.setIdDirectory( record.getDirectory( ).getIdDirectory( ) );
-        recordFieldFilter.setIdEntry( nIdEntry );
-        recordFieldFilter.setIdRecord( record.getIdRecord( ) );
-
-        List<RecordField> listRecordFields = RecordFieldHome.getRecordFieldList( recordFieldFilter, WorkflowDirectorydemandsPlugin.getPlugin( ) );
-
-        if ( listRecordFields != null && !listRecordFields.isEmpty( ) && listRecordFields.get( 0 ) != null )
+        if ( !StringUtils.isEmpty( strEntryTitle ) )
         {
-            RecordField recordField = listRecordFields.get( 0 );
-            strRecordFieldValue = recordField.getValue( );
+            // RecordField
+            EntryFilter entryFilter = new EntryFilter( );
+            entryFilter.setIdDirectory( record.getDirectory( ).getIdDirectory( ) );
 
-            if ( recordField.getField( ) != null )
+            List<IEntry> listEntries = EntryHome.getEntryList( entryFilter, _plugin );
+            boolean bEntryFound = false;
+
+            for ( IEntry entry : listEntries )
             {
-                strRecordFieldValue = recordField.getField( ).getTitle( );
+                if ( strEntryTitle.equals( entry.getTitle( ) ) )
+                {
+                    RecordFieldFilter recordFieldFilter = new RecordFieldFilter( );
+                    recordFieldFilter.setIdDirectory( record.getDirectory( ).getIdDirectory( ) );
+                    recordFieldFilter.setIdEntry( entry.getIdEntry( ) );
+                    recordFieldFilter.setIdRecord( record.getIdRecord( ) );
+
+                    List<RecordField> listRecordFields = RecordFieldHome.getRecordFieldList( recordFieldFilter, _plugin );
+
+                    if ( ( listRecordFields != null ) && !listRecordFields.isEmpty( ) && ( listRecordFields.get( 0 ) != null ) )
+                    {
+                        RecordField recordFieldId = listRecordFields.get( 0 );
+                        strRecordFieldValue = recordFieldId.getValue( );
+
+                        if ( recordFieldId.getField( ) != null )
+                        {
+                            strRecordFieldValue = recordFieldId.getField( ).getTitle( );
+                        }
+                    }
+
+                    bEntryFound = true;
+                    break;
+                }
             }
+
+            if ( !bEntryFound )
+            {
+                throw new AssignmentNotPossibleException( "The directory entry " + strEntryTitle + " does not exist" );
+            }
+        }
+        else
+        {
+            throw new AssignmentNotPossibleException( "The directory entry title is empty" );
         }
 
         return strRecordFieldValue;
@@ -233,21 +233,10 @@ public class UnitSelectionFromIdentityStore implements IUnitSelection
      * This class is a configuration handler for the {@link UnitSelectionFromIdentityStore} class
      *
      */
-    private class ConfigurationHandler implements IConfigurationHandler
+    private static class ConfigurationHandler extends AbstractEmptyConfigurationHandler
     {
         // Messages
         private static final String MESSAGE_TITLE = "module.workflow.directorydemands.unit_selection.from_ids.config.title";
-
-        // Parameters
-        private static final String PARAMETER_DIRECTORY_ENTRY_ID = "directory_entry_id";
-        private static final String PARAMETER_IDENTITY_STORE_ATTRIBUTE_KEY = "ids_attribute_key";
-
-        // Templates
-        private static final String TEMPLATE_CONFIG = "admin/plugins/workflow/modules/directorydemands/unitselection/config/unit_selection_from_identitystore_configuration.html";
-
-        // Markers
-        private static final String MARK_DIRECTORY_ENTRY_ID = PARAMETER_DIRECTORY_ENTRY_ID;
-        private static final String MARK_IDENTITY_STORE_ATTRIBUTE_KEY = PARAMETER_IDENTITY_STORE_ATTRIBUTE_KEY;
 
         /**
          * {@inheritDoc}
@@ -256,49 +245,6 @@ public class UnitSelectionFromIdentityStore implements IUnitSelection
         public String getTitle( Locale locale )
         {
             return I18nService.getLocalizedString( MESSAGE_TITLE, locale );
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String getDisplayedForm( Locale locale, ITask task )
-        {
-            UnitSelectionFromIdentityStoreConfig config = findConfig( task );
-
-            Map<String, Object> model = new HashMap<String, Object>( );
-            model.put( MARK_DIRECTORY_ENTRY_ID, config.getIdDirectoryEntry( ) );
-            model.put( MARK_IDENTITY_STORE_ATTRIBUTE_KEY, config.getIdentityStoreAttributeKey( ) );
-
-            HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CONFIG, locale, model );
-
-            return template.getHtml( );
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String saveConfiguration( HttpServletRequest request, ITask task )
-        {
-            int nIdDirectoryEntry = NumberUtils.toInt( request.getParameter( PARAMETER_DIRECTORY_ENTRY_ID ) );
-            String strIdentityStoreAttributeKey = request.getParameter( PARAMETER_IDENTITY_STORE_ATTRIBUTE_KEY );
-
-            UnitSelectionFromIdentityStoreConfig config = findConfig( task );
-            config.setIdDirectoryEntry( nIdDirectoryEntry );
-            config.setIdentityStoreAttributeKey( strIdentityStoreAttributeKey );
-            _taskConfigService.update( config );
-
-            return null;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void removeConfiguration( ITask task )
-        {
-            _taskConfigService.remove( task.getId( ) );
         }
 
     }
