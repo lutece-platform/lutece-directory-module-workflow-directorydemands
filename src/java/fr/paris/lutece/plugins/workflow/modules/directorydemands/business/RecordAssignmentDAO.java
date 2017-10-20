@@ -253,14 +253,15 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
         {
             whereClause.append( SQL_ADD_CLAUSE );
             String strUnitWhereClause = SQL_USER_UNIT_WHERE_PART1 ;
+            
+            StringBuilder additionnalParameters = new StringBuilder( );
             if (filterParameters.getUserUnitIdList( ).size( ) > 1 ) {
-                StringBuilder additionnalParameters = new StringBuilder( );
                 for (int i=0; i< filterParameters.getUserUnitIdList( ).size( ) -1; i++) 
                 {
                     additionnalParameters.append(  ", ?");
                 }
-                strUnitWhereClause += additionnalParameters + SQL_USER_UNIT_WHERE_PART2;
             }
+            strUnitWhereClause += additionnalParameters + SQL_USER_UNIT_WHERE_PART2;
             whereClause.append( strUnitWhereClause );
             whereClause.append( SQL_END_ADD_CLAUSE ) ;            
         }
