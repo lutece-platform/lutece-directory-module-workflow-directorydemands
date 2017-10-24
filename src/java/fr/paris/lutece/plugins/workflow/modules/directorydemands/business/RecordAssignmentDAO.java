@@ -82,7 +82,16 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
     private static final String SQL_STATE_FROM_PART = " LEFT JOIN workflow_resource_workflow on directory_record.id_record = workflow_resource_workflow.id_resource ";
     private static final String SQL_STATE_WHERE_PART = "  workflow_resource_workflow.id_state = ? ";
 
-    private static final String SQL_DEFAULT_ORDER_BY = " order by assignment_date DESC ";
+    private static final String SQL_DEFAULT_ORDER_BY = " order by assignment_date ";
+    private static final String SQL_ORDER_BY_CREATED = " order by assignment_date ";
+    private static final String SQL_ORDER_BY_ASSIGNED = " order by u_assigned.label ";
+    private static final String SQL_DESC = " DESC ";
+    private static final String SQL_ASC = " ASC ";
+    
+    private static final String PARAMETER_SORT_BY_CREATED = "created" ;
+    private static final String PARAMETER_SORT_BY_ASSIGNED = "assigned" ;
+    
+    
 
     /**
      * Generates a new primary key
@@ -307,8 +316,20 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
             }            
         }
         
-        String strOrderBy = SQL_DEFAULT_ORDER_BY ;
-        if ( !StringUtils.isBlank( filterParameters.getOrderBy( ) ) )  strOrderBy = filterParameters.getOrderBy( );
+        String strOrderBy = SQL_DEFAULT_ORDER_BY + SQL_DESC ;
+        if ( !StringUtils.isBlank( filterParameters.getOrderBy( ) ) )  
+        {
+            String strParam = filterParameters.getOrderBy( );
+            if ( PARAMETER_SORT_BY_CREATED.equals( strParam ) )
+            {
+                strOrderBy = SQL_ORDER_BY_CREATED + (filterParameters.isAsc( )?SQL_ASC:SQL_DESC);                        
+            }
+            else if ( PARAMETER_SORT_BY_ASSIGNED.equals( strParam ) ) 
+            {
+                strOrderBy = SQL_ORDER_BY_ASSIGNED + (filterParameters.isAsc( )?SQL_ASC:SQL_DESC);                        
+            }
+                
+        }
         
         // prepare & execute query
         DAOUtil daoUtil = new DAOUtil( sql.toString( ) + whereClause.toString( ) + strOrderBy , plugin );

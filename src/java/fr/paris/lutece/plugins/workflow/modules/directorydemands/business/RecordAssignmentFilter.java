@@ -20,6 +20,7 @@ public class RecordAssignmentFilter {
     private int _nDirectoryId ; // specify a particular directory to filter records
     private int _nStateId ; // specify a particular state to filter records
     private String _strOrderBy ; // sort records
+    private boolean _bAsc ; // sort records order (ASC = true)
 
     /**
      * get User Unit Id list
@@ -147,6 +148,25 @@ public class RecordAssignmentFilter {
     {
         this._strOrderBy = orderBy;
     }
+
+    /**
+     * get the Asc order
+     * 
+     * @return 
+     */
+    public boolean isAsc() {
+        return _bAsc;
+    }
+
+    /**
+     * set the Asc order
+     * 
+     * @param _bAsc 
+     */
+    public void setAsc(boolean _bAsc) {
+        this._bAsc = _bAsc;
+    }
+    
     
     
 }
