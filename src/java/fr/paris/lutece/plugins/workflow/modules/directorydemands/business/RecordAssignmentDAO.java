@@ -76,9 +76,12 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
     
     private static final String SQL_FILTER_PERIOD_WHERE_PART = " directory_record.date_creation  >= date_add( current_timestamp , INTERVAL -? DAY) ";
 
-    private static final String SQL_DIRECTORY_FROM_PART = "  LEFT JOIN directory_record  on directory_record.id_record = directory_record_unit_assignment.id_record ";
-    private static final String SQL_DIRECTORY_WHERE_PART = " directory_record.id_directory = ? ";
+    private static final String SQL_DIRECTORY_RECORD_FROM_PART = "  LEFT JOIN directory_record  on directory_record.id_record = directory_record_unit_assignment.id_record ";
+    private static final String SQL_DIRECTORY_RECORD_WHERE_PART = " directory_record.id_directory = ? ";
 
+    private static final String SQL_DIRECTORY_FROM_PART = "  LEFT JOIN directory_directory  on directory_directory.id_directory = directory_record.id_directory ";
+    private static final String SQL_DIRECTORY_WHERE_PART = " directory_directory.is_enabled = ? ";
+    
     private static final String SQL_STATE_FROM_PART = " LEFT JOIN workflow_resource_workflow on directory_record.id_record = workflow_resource_workflow.id_resource ";
     private static final String SQL_STATE_WHERE_PART = "  workflow_resource_workflow.id_state = ? ";
 
@@ -290,10 +293,23 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
         if ( filterParameters.getNumberOfDays( ) > 0 )
         {
 
-                sql.append( SQL_DIRECTORY_FROM_PART ) ; 
+                sql.append( SQL_DIRECTORY_RECORD_FROM_PART ) ; 
                 DirectoryRecordJoinAdded = true;
                 whereClause.append( SQL_ADD_CLAUSE );
                 whereClause.append( SQL_FILTER_PERIOD_WHERE_PART );
+                whereClause.append( SQL_END_ADD_CLAUSE );
+        }
+        
+        // active directory
+        if ( filterParameters.isActiveDirectory() )
+        {
+                if ( !DirectoryRecordJoinAdded ) {
+                    sql.append( SQL_DIRECTORY_RECORD_FROM_PART ) ;
+                    DirectoryRecordJoinAdded = true;
+                }
+                sql.append( SQL_DIRECTORY_FROM_PART ) ; 
+                whereClause.append( SQL_ADD_CLAUSE );
+                whereClause.append( SQL_DIRECTORY_WHERE_PART );
                 whereClause.append( SQL_END_ADD_CLAUSE );
         }
 
@@ -301,10 +317,15 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
         if ( filterParameters.getDirectoryId( ) > 0 )
         {
 
-            if (!DirectoryRecordJoinAdded) sql.append( SQL_DIRECTORY_FROM_PART ) ;
+            if ( !DirectoryRecordJoinAdded ) {
+                    sql.append( SQL_DIRECTORY_RECORD_FROM_PART ) ;
+                }
             whereClause.append( SQL_ADD_CLAUSE ) ;
-            whereClause.append( SQL_DIRECTORY_WHERE_PART ) ;
-            whereClause.append( SQL_END_ADD_CLAUSE ) ;          
+            whereClause.append( SQL_DIRECTORY_RECORD_WHERE_PART ) ;
+            whereClause.append( SQL_END_ADD_CLAUSE ) ;   
+            
+                    
+            
             
             // state 
             if ( filterParameters.getStateId( ) > 0 )
@@ -346,8 +367,12 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
         if ( filterParameters.getNumberOfDays( ) > 0 )
             daoUtil.setInt( i++, filterParameters.getNumberOfDays( ) );
         
+        if ( filterParameters.isActiveDirectory( ) )
+                daoUtil.setBoolean( i++, filterParameters.isActiveDirectory( ) );
+        
         if ( filterParameters.getDirectoryId( ) > 0 ) {
             daoUtil.setInt( i++, filterParameters.getDirectoryId( ) );
+            
             if ( filterParameters.getStateId( ) > 0 )
                 daoUtil.setInt( i++, filterParameters.getStateId( ) );
         }

@@ -21,6 +21,7 @@ public class RecordAssignmentFilter {
     private int _nStateId ; // specify a particular state to filter records
     private String _strOrderBy ; // sort records
     private boolean _bAsc ; // sort records order (ASC = true)
+    private boolean _bIsActiveDirectory; //For getting record from only active directory
 
     /**
      * get User Unit Id list
@@ -166,6 +167,25 @@ public class RecordAssignmentFilter {
     public void setAsc(boolean _bAsc) {
         this._bAsc = _bAsc;
     }
+
+    /**
+     * Get active directory filter state
+     * @return 
+     */
+    public boolean isActiveDirectory()
+    {
+        return _bIsActiveDirectory;
+    }
+
+    /**
+     * Set active directory filter state
+     * @param bIsActiveDirectory 
+     */
+    public void setActiveDirectory( boolean bIsActiveDirectory )
+    {
+        _bIsActiveDirectory = bIsActiveDirectory;
+    }
+    
     
     
     
