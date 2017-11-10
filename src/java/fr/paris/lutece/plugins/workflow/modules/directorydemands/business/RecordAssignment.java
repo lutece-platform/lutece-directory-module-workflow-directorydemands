@@ -33,24 +33,23 @@
  */
 package fr.paris.lutece.plugins.workflow.modules.directorydemands.business;
 
-import fr.paris.lutece.plugins.unittree.business.unit.Unit;
 import java.sql.Timestamp;
 
+import fr.paris.lutece.plugins.unittree.business.unit.Unit;
+
 /**
- * This is the business class for the object RecordAssignment
+ * This class represents the assignment of a {@link fr.paris.lutece.plugins.directory.business.Record Record} to a
+ * {@link fr.paris.lutece.plugins.unittree.business.unit.Unit Unit}
  */
 public class RecordAssignment
 {
-    private final int CONSTANT_DEFAULT_ID = -1;
+    private static final int UNIT_DEFAULT_ID = -1;
 
-    // Variables declarations
     private int _nId;
     private int _nIdRecord;
     private Unit _assignedUnit;
     private Unit _assignorUnit;
     private Timestamp _dateAssignmentDate;
-    private AssignmentType _assignmentType;
-    private boolean _bIsActive;
 
     /**
      * Constructor
@@ -60,14 +59,14 @@ public class RecordAssignment
         this._assignedUnit = new Unit( );
         this._assignorUnit = new Unit( );
 
-        _assignedUnit.setIdUnit( CONSTANT_DEFAULT_ID );
-        _assignorUnit.setIdUnit( CONSTANT_DEFAULT_ID );
+        _assignedUnit.setIdUnit( UNIT_DEFAULT_ID );
+        _assignorUnit.setIdUnit( UNIT_DEFAULT_ID );
     }
 
     /**
-     * Returns the Id
+     * Gives the id
      * 
-     * @return The Id
+     * @return The id
      */
     public int getId( )
     {
@@ -75,10 +74,10 @@ public class RecordAssignment
     }
 
     /**
-     * Sets the Id
+     * Sets the id
      * 
      * @param nId
-     *            The Id
+     *            The id to set
      */
     public void setId( int nId )
     {
@@ -86,9 +85,9 @@ public class RecordAssignment
     }
 
     /**
-     * Returns the IdRecord
+     * Gives the record id
      * 
-     * @return The IdRecord
+     * @return The record id
      */
     public int getIdRecord( )
     {
@@ -96,10 +95,10 @@ public class RecordAssignment
     }
 
     /**
-     * Sets the IdRecord
+     * Sets the record id
      * 
      * @param nIdRecord
-     *            The IdRecord
+     *            The record to set
      */
     public void setIdRecord( int nIdRecord )
     {
@@ -107,9 +106,9 @@ public class RecordAssignment
     }
 
     /**
-     * Returns the assignedUnit
+     * Gives the assigned unit
      * 
-     * @return The assignedUnit
+     * @return The assigned unit
      */
     public Unit getAssignedUnit( )
     {
@@ -117,10 +116,10 @@ public class RecordAssignment
     }
 
     /**
-     * Sets the assigneeUnit
+     * Sets the assigned unit
      * 
      * @param assignedUnit
-     *            The assigneeUnit
+     *            The assigned unit to set
      */
     public void setAssignedUnit( Unit assignedUnit )
     {
@@ -128,9 +127,9 @@ public class RecordAssignment
     }
 
     /**
-     * Returns the assignorUnit
+     * Gives the assignor unit
      * 
-     * @return The assignorUnit
+     * @return The assignor unit
      */
     public Unit getAssignorUnit( )
     {
@@ -138,10 +137,10 @@ public class RecordAssignment
     }
 
     /**
-     * Sets the assignerUnit
+     * Sets the assignor unit
      * 
      * @param assignorUnit
-     *            The assignerUnit
+     *            The assignor unit to set
      */
     public void setAssignorUnit( Unit assignorUnit )
     {
@@ -149,9 +148,9 @@ public class RecordAssignment
     }
 
     /**
-     * Returns the AssignmentDate
+     * Gives the assignment date
      * 
-     * @return The AssignmentDate
+     * @return The assignment date
      */
     public Timestamp getAssignmentDate( )
     {
@@ -159,10 +158,10 @@ public class RecordAssignment
     }
 
     /**
-     * Sets the AssignmentDate
+     * Sets the assignment date
      * 
      * @param dateAssignmentDate
-     *            The AssignmentDate
+     *            The assignment date to set
      */
     public void setAssignmentDate( Timestamp dateAssignmentDate )
     {
@@ -170,51 +169,9 @@ public class RecordAssignment
     }
 
     /**
-     * Get the assignment type
+     * Gives the assigned unit id
      * 
-     * @return the assignment type instance of enum
-     */
-    public AssignmentType getAssignmentType( )
-    {
-        return _assignmentType;
-    }
-
-    /**
-     * Set the assignment type
-     * 
-     * @param _assignmentType
-     *            the assignment type instance of enum
-     */
-    public void setAssignmentType( AssignmentType _assignmentType )
-    {
-        this._assignmentType = _assignmentType;
-    }
-
-    /**
-     * Return the is active boolean
-     * 
-     * @return true if active, false otherwise
-     */
-    public boolean isActive( )
-    {
-        return _bIsActive;
-    }
-
-    /**
-     * Set the active boolean
-     * 
-     * @param isActive
-     *            the active boolean
-     */
-    public void setActive( boolean isActive )
-    {
-        _bIsActive = isActive;
-    }
-
-    /**
-     * Returns the IdAssignedUnit
-     * 
-     * @return The IdAssignedUnit
+     * @return The assigned unit id
      */
     public int getIdAssignedUnit( )
     {
@@ -222,10 +179,10 @@ public class RecordAssignment
     }
 
     /**
-     * Sets the IdAssignedUnit
+     * Sets the assigned unit id
      * 
      * @param nIdAssignedUnit
-     *            The IdAssignedUnit
+     *            The assigned unit id to set
      */
     public void setIdAssignedUnit( int nIdAssignedUnit )
     {
@@ -233,9 +190,9 @@ public class RecordAssignment
     }
 
     /**
-     * Returns the IdAssignorUnit
+     * Gives the assignor unit id
      * 
-     * @return The IdAssignorUnit
+     * @return The assignor unit id
      */
     public int getIdAssignorUnit( )
     {
@@ -243,10 +200,10 @@ public class RecordAssignment
     }
 
     /**
-     * Sets the IdAssignorUnit
+     * Sets the assignor unit id
      * 
      * @param nIdAssignorUnit
-     *            The IdAssignorUnit
+     *            The assignor unit id to set
      */
     public void setIdAssignorUnit( int nIdAssignorUnit )
     {

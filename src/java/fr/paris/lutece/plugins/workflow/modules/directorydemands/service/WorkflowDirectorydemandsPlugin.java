@@ -36,20 +36,18 @@ package fr.paris.lutece.plugins.workflow.modules.directorydemands.service;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
 
-import java.util.Locale;
-
 /**
- * Ticketing POC GRU module
+ * This class represents this plugin
  */
 public class WorkflowDirectorydemandsPlugin extends Plugin
 {
     /**
-     * Name of the Workflow ticketing module
+     * Name of the Workflow Directory demands plugin
      */
     public static final String PLUGIN_NAME = "workflow-directorydemands";
 
     /**
-     * Transaction manage bean name for services of this plugin
+     * Name of the transaction manager bean for this plugin
      */
     public static final String BEAN_TRANSACTION_MANAGER = PLUGIN_NAME + ".transactionManager";
 
@@ -59,24 +57,13 @@ public class WorkflowDirectorydemandsPlugin extends Plugin
     @Override
     public void init( )
     {
+        // Nothing to do
     }
 
     /**
-     * Get the locale used by this plugin
-     * 
-     * @param locale
-     *            The locale preferred by the user
-     * @return The locale used by this plugin
-     */
-    public static Locale getPluginLocale( Locale locale )
-    {
-        return locale;
-    }
-
-    /**
-     * Get the ticketing POC GRU module
+     * Gives this plugin
      *
-     * @return The ticketing POC GRU module
+     * @return This plugin
      */
     public static Plugin getPlugin( )
     {

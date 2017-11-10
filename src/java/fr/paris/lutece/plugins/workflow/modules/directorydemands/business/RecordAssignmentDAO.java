@@ -50,33 +50,24 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
 {
 
     // Constants
-
-    private static final String SQL_QUERY_NEW_PK = "SELECT max( id ) FROM directory_record_unit_assignment";
-    private static final String SQL_QUERY_SELECTALL = "SELECT id, directory_record_unit_assignment.id_record, id_assignor_unit, id_assigned_unit, assignment_date, assignment_type, is_active,"
+    private static final String SQL_QUERY_SELECTALL = "SELECT id, unittree_unit_assignment.id_resource, id_assignor_unit, id_assigned_unit, assignment_date, assignment_type, is_active,"
             + " u_assignor.id_parent as id_parent_assignor_unit, u_assignor.label as label_assignor_unit, u_assignor.description as description_assignor_unit,"
             + " u_assigned.id_parent as id_parent_assigned_unit, u_assigned.label as label_assigned_unit, u_assigned.description as description_assigned_unit"
-            + " FROM directory_record_unit_assignment  LEFT JOIN  unittree_unit u_assignor on u_assignor.id_unit = directory_record_unit_assignment.id_assignor_unit   left JOIN  unittree_unit u_assigned on u_assigned.id_unit = directory_record_unit_assignment.id_assigned_unit  ";
-    private static final String SQL_QUERY_SELECT = SQL_QUERY_SELECTALL + " WHERE id = ?";
-    private static final String SQL_QUERY_SELECT_CURRENT = SQL_QUERY_SELECTALL + " WHERE id_record = ? AND is_active = 1 ORDER BY assignment_date DESC";
-    private static final String SQL_QUERY_SELECT_BY_ID_RECORD = SQL_QUERY_SELECTALL + " WHERE id_record = ?  ORDER BY assignment_date ASC";
-    private static final String SQL_QUERY_INSERT = "INSERT INTO directory_record_unit_assignment ( id, id_record, id_assigned_unit, id_assignor_unit, assignment_date, assignment_type, is_active ) VALUES ( ?, ?, ?, ?, ?, ?, ? ) ";
-    private static final String SQL_QUERY_DELETE = "DELETE FROM directory_record_unit_assignment WHERE id = ? ";
-    private static final String SQL_QUERY_DESACTIVATE = "UPDATE directory_record_unit_assignment SET is_active = 0 WHERE id = ? ";
-    private static final String SQL_QUERY_UPDATE = "UPDATE directory_record_unit_assignment SET id = ?, id_record = ?, id_assigned_unit = ?, id_assignor_unit = ? , assignment_date = ?, assignment_type = ?, is_active = ? WHERE id = ?";
+            + " FROM unittree_unit_assignment  LEFT JOIN  unittree_unit u_assignor on u_assignor.id_unit = unittree_unit_assignment.id_assignor_unit   left JOIN  unittree_unit u_assigned on u_assigned.id_unit = unittree_unit_assignment.id_assigned_unit  ";
 
     // SQL parts to filter recordAssignments
-    private static final String SQL_WHERE_BASE = " WHERE 1 " ;
+    private static final String SQL_WHERE_BASE = " WHERE resource_type = 'DIRECTORY_RECORD' ";
     private static final String SQL_ADD_CLAUSE =  " AND ( " ;
     private static final String SQL_END_ADD_CLAUSE =  " ) " ;
     
     private static final String SQL_USER_UNIT_WHERE_PART1 = " id_assigned_unit in (?" ;
     private static final String SQL_USER_UNIT_WHERE_PART2 = ") " ;
     
-    private static final String SQL_ACTIVE_RECORDS_ONLY_WHERE_PART = " directory_record_unit_assignment.is_active = 1 ";
-    
+    private static final String SQL_ACTIVE_RECORDS_ONLY_WHERE_PART = " unittree_unit_assignment.is_active = 1 ";
+
     private static final String SQL_FILTER_PERIOD_WHERE_PART = " directory_record.date_creation  >= date_add( current_timestamp , INTERVAL -? DAY) ";
 
-    private static final String SQL_DIRECTORY_RECORD_FROM_PART = "  LEFT JOIN directory_record  on directory_record.id_record = directory_record_unit_assignment.id_record ";
+    private static final String SQL_DIRECTORY_RECORD_FROM_PART = "  LEFT JOIN directory_record  on directory_record.id_record = unittree_unit_assignment.id_resource ";
     private static final String SQL_DIRECTORY_RECORD_WHERE_PART = " directory_record.id_directory = ? ";
 
     private static final String SQL_DIRECTORY_FROM_PART = "  LEFT JOIN directory_directory  on directory_directory.id_directory = directory_record.id_directory ";
@@ -93,161 +84,7 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
     
     private static final String PARAMETER_SORT_BY_CREATED = "created" ;
     private static final String PARAMETER_SORT_BY_ASSIGNED = "assigned" ;
-    
-    
 
-    /**
-     * Generates a new primary key
-     * 
-     * @param plugin
-     *            The Plugin
-     * @return The new primary key
-     */
-    public int newPrimaryKey( Plugin plugin )
-    {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK );
-        daoUtil.executeQuery( );
-
-        int nKey = ( daoUtil.next( ) ) ? daoUtil.getInt( 1 ) + 1 : 1;
-        daoUtil.free( );
-
-        return nKey;
-    }
-
-    /**
-     * {@inheritDoc }
-     */
-    @Override
-    public void insert( RecordAssignment recordAssignment, Plugin plugin )
-    {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin );
-
-        recordAssignment.setId( newPrimaryKey( plugin ) );
-        int nIndex = 1;
-        daoUtil.setInt( nIndex++, recordAssignment.getId( ) );
-        daoUtil.setInt( nIndex++, recordAssignment.getIdRecord( ) );
-        daoUtil.setInt( nIndex++, recordAssignment.getAssignedUnit( ).getIdUnit( ) );
-        daoUtil.setInt( nIndex++, recordAssignment.getAssignorUnit( ).getIdUnit( ) );
-        daoUtil.setTimestamp( nIndex++, recordAssignment.getAssignmentDate( ) );
-        daoUtil.setString( nIndex++, recordAssignment.getAssignmentType( ).getAssignmentTypeCode( ) );
-        daoUtil.setBoolean( nIndex, recordAssignment.isActive( ) );
-
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
-    }
-
-    /**
-     * {@inheritDoc }
-     */
-    @Override
-    public RecordAssignment load( int nId, Plugin plugin )
-    {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin );
-        daoUtil.setInt( 1, nId );
-        daoUtil.executeQuery( );
-
-        RecordAssignment recordAssignment = null;
-
-        if ( daoUtil.next( ) )
-        {
-            recordAssignment = dataToRecordAssignment( daoUtil );
-        }
-
-        daoUtil.free( );
-
-        return recordAssignment;
-    }
-
-    /**
-     * {@inheritDoc }
-     */
-    @Override
-    public RecordAssignment loadCurrentAssignment( int nIdRecord, Plugin plugin )
-    {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_CURRENT, plugin );
-        daoUtil.setInt( 1, nIdRecord );
-        daoUtil.executeQuery( );
-
-        RecordAssignment recordAssignment = null;
-
-        if ( daoUtil.next( ) )
-        {
-            recordAssignment = dataToRecordAssignment( daoUtil );
-        }
-
-        daoUtil.free( );
-
-        return recordAssignment;
-    }
-
-    /**
-     * {@inheritDoc }
-     */
-    @Override
-    public void delete( int nRecordAssignmentId, Plugin plugin )
-    {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin );
-        daoUtil.setInt( 1, nRecordAssignmentId );
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
-    }
-
-    /**
-     * {@inheritDoc }
-     */
-    @Override
-    public void desactivate( RecordAssignment recordAssignment, Plugin plugin )
-    {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DESACTIVATE, plugin );
-
-        int nIndex = 1;
-        daoUtil.setInt( nIndex, recordAssignment.getId( ) );
-
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
-    }
-
-    /**
-     * {@inheritDoc }
-     */
-    @Override
-    public void store( RecordAssignment recordAssignment, Plugin plugin )
-    {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin );
-
-        int nIndex = 1;
-        daoUtil.setInt( nIndex++, recordAssignment.getId( ) );
-        daoUtil.setInt( nIndex++, recordAssignment.getIdRecord( ) );
-        daoUtil.setInt( nIndex++, recordAssignment.getAssignedUnit( ).getIdUnit( ) );
-        daoUtil.setInt( nIndex++, recordAssignment.getAssignorUnit( ).getIdUnit( ) );
-        daoUtil.setTimestamp( nIndex++, recordAssignment.getAssignmentDate( ) );
-        daoUtil.setString( nIndex++, recordAssignment.getAssignmentType( ).getAssignmentTypeCode( ) );
-        daoUtil.setInt( nIndex, recordAssignment.getId( ) );
-        daoUtil.setBoolean( nIndex, recordAssignment.isActive( ) );
-
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
-    }
-
-    /**
-     * {@inheritDoc }
-     */
-    @Override
-    public List<RecordAssignment> selectRecordAssignmentsList( Plugin plugin )
-    {
-        List<RecordAssignment> listRecordAssignments = new ArrayList<>( );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin );
-        daoUtil.executeQuery( );
-
-        while ( daoUtil.next( ) )
-        {
-            listRecordAssignments.add( dataToRecordAssignment( daoUtil ) );
-        }
-
-        daoUtil.free( );
-
-        return listRecordAssignments;
-    }
 
     /**
      * {@inheritDoc }
@@ -393,27 +230,6 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<RecordAssignment> selectRecordAssignmentsByRecordId( int nIdRecord, Plugin plugin )
-    {
-        List<RecordAssignment> listRecordAssignments = new ArrayList<>( );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_ID_RECORD, plugin );
-        daoUtil.setInt( 1, nIdRecord );
-        daoUtil.executeQuery( );
-
-        while ( daoUtil.next( ) )
-        {
-            listRecordAssignments.add( dataToRecordAssignment( daoUtil ) );
-        }
-
-        daoUtil.free( );
-
-        return listRecordAssignments;
-    }
-    
-    /**
      * Creates a {@code RecordAssignment} object from the data of the specified {@code DAOUtil}
      * 
      * @param daoUtil
@@ -424,10 +240,8 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
     {
         RecordAssignment recordAssignment = new RecordAssignment( );
         recordAssignment.setId( daoUtil.getInt( "id" ) );
-        recordAssignment.setIdRecord( daoUtil.getInt( "id_record" ) );
+        recordAssignment.setIdRecord( daoUtil.getInt( "id_resource" ) );
         recordAssignment.setAssignmentDate( daoUtil.getTimestamp( "assignment_date" ) );
-        recordAssignment.setAssignmentType( AssignmentType.getFromCode( daoUtil.getString( "assignment_type" ) ) );
-        recordAssignment.setActive( daoUtil.getBoolean( "is_active" ) );
 
         Unit unitAssignor = recordAssignment.getAssignorUnit( );
         unitAssignor.setIdUnit( daoUtil.getInt( "id_assignor_unit" ) );

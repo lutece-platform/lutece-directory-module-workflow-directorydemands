@@ -54,13 +54,14 @@ import fr.paris.lutece.plugins.identitystore.web.rs.dto.AttributeDto;
 import fr.paris.lutece.plugins.identitystore.web.rs.dto.IdentityDto;
 import fr.paris.lutece.plugins.identitystore.web.service.IdentityService;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.config.UnitSelectionFromIdentityStoreConfig;
-import fr.paris.lutece.plugins.workflow.modules.directorydemands.exception.AssignmentNotPossibleException;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.exception.UnitCodeNotFoundException;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.service.IUnitCodeService;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.service.WorkflowDirectorydemandsPlugin;
-import fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task.selection.IConfigurationHandler;
-import fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task.selection.ITaskFormHandler;
-import fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task.selection.IUnitSelection;
+import fr.paris.lutece.plugins.workflow.modules.unittree.exception.AssignmentNotPossibleException;
+import fr.paris.lutece.plugins.workflow.modules.unittree.service.task.selection.IConfigurationHandler;
+import fr.paris.lutece.plugins.workflow.modules.unittree.service.task.selection.ITaskFormHandler;
+import fr.paris.lutece.plugins.workflow.modules.unittree.service.task.selection.IUnitSelection;
+import fr.paris.lutece.plugins.workflow.modules.unittree.service.task.selection.impl.AbstractEmptyConfigurationHandler;
 import fr.paris.lutece.plugins.workflowcore.service.task.ITask;
 import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.plugin.Plugin;
@@ -125,7 +126,7 @@ public class UnitSelectionFromIdentityStore implements IUnitSelection
      * {@inheritDoc}
      */
     @Override
-    public int select( int nIdResource, HttpServletRequest request, ITask task ) throws AssignmentNotPossibleException
+    public int select( int nIdResource, String strResourceType, HttpServletRequest request, ITask task ) throws AssignmentNotPossibleException
     {
         Record record = RecordHome.findByPrimaryKey( nIdResource, _plugin );
         String strConnectionId = findFieldValue( _config.getDirectoryEntryTitle( ), record );
@@ -271,7 +272,7 @@ public class UnitSelectionFromIdentityStore implements IUnitSelection
          * {@inheritDoc}
          */
         @Override
-        public String getDisplayedForm( int nIdResource, Locale locale, ITask task )
+        public String getDisplayedForm( int nIdResource, String strResourceType, Locale locale, ITask task )
         {
             return StringUtils.EMPTY;
         }

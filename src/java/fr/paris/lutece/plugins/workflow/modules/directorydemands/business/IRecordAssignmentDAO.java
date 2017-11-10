@@ -35,94 +35,15 @@
 package fr.paris.lutece.plugins.workflow.modules.directorydemands.business;
 
 import fr.paris.lutece.portal.service.plugin.Plugin;
-import java.util.HashMap;
 import java.util.List;
 
 /**
- * IRecordAssignmentDAO Interface
+ * This interface provides Data Access methods for RecordAssignment objects
  */
 
 public interface IRecordAssignmentDAO
 {
-
-    /**
-     * Insert a new record in the table.
-     * 
-     * @param recordAssignment
-     *            instance of the RecordAssignment object to inssert
-     * @param plugin
-     *            the Plugin
-     */
-
-    void insert( RecordAssignment recordAssignment, Plugin plugin );
-
-    /**
-     * Update the record in the table
-     * 
-     * @param recordAssignment
-     *            the reference of the RecordAssignment
-     * @param plugin
-     *            the Plugin
-     */
-
-    void store( RecordAssignment recordAssignment, Plugin plugin );
-
-    /**
-     * Delete a record from the table
-     * 
-     * @param nIdRecordAssignment
-     *            int identifier of the RecordAssignment to delete
-     * @param plugin
-     *            the Plugin
-     */
-
-    void delete( int nIdRecordAssignment, Plugin plugin );
-
-    /**
-     * Desactivate a record from the table
-     * 
-     * @param recordAssignment
-     *            int identifier of the RecordAssignment to desactivate
-     * @param plugin
-     *            the Plugin
-     */
-
-    void desactivate( RecordAssignment recordAssignment, Plugin plugin );
-
-    // /////////////////////////////////////////////////////////////////////////
-    // Finders
-
-    /**
-     * Load the data from the table
-     * 
-     * @param nKey
-     *            The identifier of the recordAssignment
-     * @param plugin
-     *            the Plugin
-     * @return The instance of the recordAssignment
-     */
-
-    RecordAssignment load( int nKey, Plugin plugin );
-
-    /**
-     * Loads the current record assignment for the specified record id
-     * 
-     * @param nIdRecord
-     *            The record id
-     * @param plugin
-     *            the Plugin
-     * @return The last record assignment
-     */
-    RecordAssignment loadCurrentAssignment( int nIdRecord, Plugin plugin );
-
-    /**
-     * Load the data of all the recordAssignment objects and returns them as a List
-     * 
-     * @param plugin
-     *            the Plugin
-     * @return The List which contains the data of all the recordAssignment objects
-     */
-    List<RecordAssignment> selectRecordAssignmentsList( Plugin plugin );
+    String BEAN_NAME = "workflow-directorydemands.recordAssignmentDAO";
 
     /**
      * Load the data of a filtred list of the recordAssignment objects and returns them as a List
@@ -148,16 +69,5 @@ public interface IRecordAssignmentDAO
      * @return The List which contains the data of all the recordAssignment objects
      */
     List<RecordAssignment> selectRecordAssignmentsFiltredList( RecordAssignmentFilter filterParameters, Plugin plugin );
-
-    /**
-     * Loads the record assignment associated to the specified record if
-     * 
-     * @param nIdRecord
-     *            the record id
-     * @param plugin
-     *            the plugin
-     * @return the list of record assignments
-     */
-    List<RecordAssignment> selectRecordAssignmentsByRecordId( int nIdRecord, Plugin plugin );
 
 }
