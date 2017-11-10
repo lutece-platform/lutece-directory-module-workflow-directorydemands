@@ -1,4 +1,37 @@
 /*
+ * Copyright (c) 2002-2017, Mairie de Paris
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ *  1. Redistributions of source code must retain the above copyright notice
+ *     and the following disclaimer.
+ *
+ *  2. Redistributions in binary form must reproduce the above copyright notice
+ *     and the following disclaimer in the documentation and/or other materials
+ *     provided with the distribution.
+ *
+ *  3. Neither the name of 'Mairie de Paris' nor 'Lutece' nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * License 1.0
+ */
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -12,23 +45,25 @@ import java.util.List;
  *
  * @author leridons
  */
-public class RecordAssignmentFilter {
-    
+public class RecordAssignmentFilter
+{
+
     private List<Integer> _userUnitIdList = new ArrayList<>( ); // user unit Ids (from unittree)
-    private boolean _nActiveRecordsOnly ; //active records only (true/false)
-    private int _nNumberOfDays ; // filter records by period : NONE, LAST_DAY, LAST_WEEK, LAST_MONTH
-    private int _nDirectoryId ; // specify a particular directory to filter records
-    private int _nStateId ; // specify a particular state to filter records
-    private String _strOrderBy ; // sort records
-    private boolean _bAsc ; // sort records order (ASC = true)
-    private boolean _bIsActiveDirectory; //For getting record from only active directory
+    private boolean _nActiveRecordsOnly; // active records only (true/false)
+    private int _nNumberOfDays; // filter records by period : NONE, LAST_DAY, LAST_WEEK, LAST_MONTH
+    private int _nDirectoryId; // specify a particular directory to filter records
+    private int _nStateId; // specify a particular state to filter records
+    private String _strOrderBy; // sort records
+    private boolean _bAsc; // sort records order (ASC = true)
+    private boolean _bIsActiveDirectory; // For getting record from only active directory
 
     /**
      * get User Unit Id list
      * 
      * @return the user Unit Id
      */
-    public List<Integer> getUserUnitIdList() {
+    public List<Integer> getUserUnitIdList( )
+    {
         return _userUnitIdList;
     }
 
@@ -37,27 +72,28 @@ public class RecordAssignmentFilter {
      * 
      * @param userUnitIdList
      */
-    public void setUserUnitIdList( List<Integer> userUnitIdList ) {
+    public void setUserUnitIdList( List<Integer> userUnitIdList )
+    {
         this._userUnitIdList = userUnitIdList;
     }
-    
+
     /**
-     * add a UserUnitId 
+     * add a UserUnitId
      * 
-     * @param id 
-     *          the userUnit Id
+     * @param id
+     *            the userUnit Id
      */
     public void addUserUnitId( int id )
     {
-        this._userUnitIdList.add( id ) ;
+        this._userUnitIdList.add( id );
     }
 
     /**
      * get if is ActiveRecordsOnly
      * 
-     * @return 
+     * @return
      */
-    public boolean isActiveRecordsOnly( ) 
+    public boolean isActiveRecordsOnly( )
     {
         return _nActiveRecordsOnly;
     }
@@ -65,9 +101,9 @@ public class RecordAssignmentFilter {
     /**
      * set ActiveRecordsOnly
      * 
-     * @param activeRecordsOnly 
+     * @param activeRecordsOnly
      */
-    public void setActiveRecordsOnly(boolean activeRecordsOnly ) 
+    public void setActiveRecordsOnly( boolean activeRecordsOnly )
     {
         this._nActiveRecordsOnly = activeRecordsOnly;
     }
@@ -75,9 +111,9 @@ public class RecordAssignmentFilter {
     /**
      * get NumberOfDays
      * 
-     * @return 
+     * @return
      */
-    public int getNumberOfDays( ) 
+    public int getNumberOfDays( )
     {
         return _nNumberOfDays;
     }
@@ -85,18 +121,19 @@ public class RecordAssignmentFilter {
     /**
      * set NumberOfDays
      * 
-     * @param numberOfDays 
+     * @param numberOfDays
      */
-    public void setNumberOfDays(int numberOfDays ) 
+    public void setNumberOfDays( int numberOfDays )
     {
         this._nNumberOfDays = numberOfDays;
     }
 
     /**
      * get DirectoryId
-     * @return 
+     * 
+     * @return
      */
-    public int getDirectoryId( ) 
+    public int getDirectoryId( )
     {
         return _nDirectoryId;
     }
@@ -104,9 +141,9 @@ public class RecordAssignmentFilter {
     /**
      * set DirectoryId
      * 
-     * @param directoryId 
+     * @param directoryId
      */
-    public void setDirectoryId(int directoryId ) 
+    public void setDirectoryId( int directoryId )
     {
         this._nDirectoryId = directoryId;
     }
@@ -114,38 +151,39 @@ public class RecordAssignmentFilter {
     /**
      * get StateId
      * 
-     * @return 
+     * @return
      */
-    public int getStateId( ) 
+    public int getStateId( )
     {
         return _nStateId;
     }
 
     /**
-     * set StateId 
-     * @param stateId 
+     * set StateId
+     * 
+     * @param stateId
      */
-    public void setStateId(int stateId ) 
+    public void setStateId( int stateId )
     {
         this._nStateId = stateId;
     }
 
     /**
-    * get OrderBy
-    * 
-    * @return the order by statement
-    */
-    public String getOrderBy( ) 
+     * get OrderBy
+     * 
+     * @return the order by statement
+     */
+    public String getOrderBy( )
     {
         return _strOrderBy;
     }
-    
+
     /**
      * set OrderBy statement
      * 
-     * @param orderBy 
+     * @param orderBy
      */
-    public void setOrderBy(String orderBy ) 
+    public void setOrderBy( String orderBy )
     {
         this._strOrderBy = orderBy;
     }
@@ -153,40 +191,41 @@ public class RecordAssignmentFilter {
     /**
      * get the Asc order
      * 
-     * @return 
+     * @return
      */
-    public boolean isAsc() {
+    public boolean isAsc( )
+    {
         return _bAsc;
     }
 
     /**
      * set the Asc order
      * 
-     * @param _bAsc 
+     * @param _bAsc
      */
-    public void setAsc(boolean _bAsc) {
+    public void setAsc( boolean _bAsc )
+    {
         this._bAsc = _bAsc;
     }
 
     /**
      * Get active directory filter state
-     * @return 
+     * 
+     * @return
      */
-    public boolean isActiveDirectory()
+    public boolean isActiveDirectory( )
     {
         return _bIsActiveDirectory;
     }
 
     /**
      * Set active directory filter state
-     * @param bIsActiveDirectory 
+     * 
+     * @param bIsActiveDirectory
      */
     public void setActiveDirectory( boolean bIsActiveDirectory )
     {
         _bIsActiveDirectory = bIsActiveDirectory;
     }
-    
-    
-    
-    
+
 }

@@ -45,7 +45,6 @@ import org.apache.commons.lang.StringUtils;
 /**
  * This class provides Data Access methods for RecordAssignment objects
  */
-
 public class RecordAssignmentDAO implements IRecordAssignmentDAO
 {
 
@@ -57,12 +56,12 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
 
     // SQL parts to filter recordAssignments
     private static final String SQL_WHERE_BASE = " WHERE resource_type = 'DIRECTORY_RECORD' ";
-    private static final String SQL_ADD_CLAUSE =  " AND ( " ;
-    private static final String SQL_END_ADD_CLAUSE =  " ) " ;
-    
-    private static final String SQL_USER_UNIT_WHERE_PART1 = " id_assigned_unit in (?" ;
-    private static final String SQL_USER_UNIT_WHERE_PART2 = ") " ;
-    
+    private static final String SQL_ADD_CLAUSE = " AND ( ";
+    private static final String SQL_END_ADD_CLAUSE = " ) ";
+
+    private static final String SQL_USER_UNIT_WHERE_PART1 = " id_assigned_unit in (?";
+    private static final String SQL_USER_UNIT_WHERE_PART2 = ") ";
+
     private static final String SQL_ACTIVE_RECORDS_ONLY_WHERE_PART = " unittree_unit_assignment.is_active = 1 ";
 
     private static final String SQL_FILTER_PERIOD_WHERE_PART = " directory_record.date_creation  >= date_add( current_timestamp , INTERVAL -? DAY) ";
@@ -72,7 +71,7 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
 
     private static final String SQL_DIRECTORY_FROM_PART = "  LEFT JOIN directory_directory  on directory_directory.id_directory = directory_record.id_directory ";
     private static final String SQL_DIRECTORY_WHERE_PART = " directory_directory.is_enabled = ? ";
-    
+
     private static final String SQL_STATE_FROM_PART = " LEFT JOIN workflow_resource_workflow on directory_record.id_record = workflow_resource_workflow.id_resource ";
     private static final String SQL_STATE_WHERE_PART = "  workflow_resource_workflow.id_state = ? ";
 
@@ -81,140 +80,139 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
     private static final String SQL_ORDER_BY_ASSIGNED = " order by u_assigned.label ";
     private static final String SQL_DESC = " DESC ";
     private static final String SQL_ASC = " ASC ";
-    
-    private static final String PARAMETER_SORT_BY_CREATED = "created" ;
-    private static final String PARAMETER_SORT_BY_ASSIGNED = "assigned" ;
 
+    private static final String PARAMETER_SORT_BY_CREATED = "created";
+    private static final String PARAMETER_SORT_BY_ASSIGNED = "assigned";
 
     /**
      * {@inheritDoc }
      */
     @Override
-
     public List<RecordAssignment> selectRecordAssignmentsFiltredList( RecordAssignmentFilter filterParameters, Plugin plugin )
     {
         List<RecordAssignment> listRecordAssignments = new ArrayList<>( );
-                
+
         StringBuilder sql = new StringBuilder( SQL_QUERY_SELECTALL );
         StringBuilder whereClause = new StringBuilder( SQL_WHERE_BASE );
 
         boolean DirectoryRecordJoinAdded = false;
-        
+
         // User unit
-        if ( ! filterParameters.getUserUnitIdList( ).isEmpty( ) )
+        if ( !filterParameters.getUserUnitIdList( ).isEmpty( ) )
         {
             whereClause.append( SQL_ADD_CLAUSE );
-            String strUnitWhereClause = SQL_USER_UNIT_WHERE_PART1 ;
-            
+            String strUnitWhereClause = SQL_USER_UNIT_WHERE_PART1;
+
             StringBuilder additionnalParameters = new StringBuilder( );
-            if (filterParameters.getUserUnitIdList( ).size( ) > 1 ) {
-                for (int i=0; i< filterParameters.getUserUnitIdList( ).size( ) -1; i++) 
+            if ( filterParameters.getUserUnitIdList( ).size( ) > 1 )
+            {
+                for ( int i = 0; i < filterParameters.getUserUnitIdList( ).size( ) - 1; i++ )
                 {
-                    additionnalParameters.append(  ", ?");
+                    additionnalParameters.append( ", ?" );
                 }
             }
             strUnitWhereClause += additionnalParameters + SQL_USER_UNIT_WHERE_PART2;
             whereClause.append( strUnitWhereClause );
-            whereClause.append( SQL_END_ADD_CLAUSE ) ;            
+            whereClause.append( SQL_END_ADD_CLAUSE );
         }
 
         // ACTIVE_RECORDS_ONLY
         if ( filterParameters.isActiveRecordsOnly( ) )
         {
-            whereClause.append ( SQL_ADD_CLAUSE );
-            whereClause.append ( SQL_ACTIVE_RECORDS_ONLY_WHERE_PART );
-            whereClause.append ( SQL_END_ADD_CLAUSE );
+            whereClause.append( SQL_ADD_CLAUSE );
+            whereClause.append( SQL_ACTIVE_RECORDS_ONLY_WHERE_PART );
+            whereClause.append( SQL_END_ADD_CLAUSE );
         }
 
         // period
         if ( filterParameters.getNumberOfDays( ) > 0 )
         {
 
-                sql.append( SQL_DIRECTORY_RECORD_FROM_PART ) ; 
-                DirectoryRecordJoinAdded = true;
-                whereClause.append( SQL_ADD_CLAUSE );
-                whereClause.append( SQL_FILTER_PERIOD_WHERE_PART );
-                whereClause.append( SQL_END_ADD_CLAUSE );
+            sql.append( SQL_DIRECTORY_RECORD_FROM_PART );
+            DirectoryRecordJoinAdded = true;
+            whereClause.append( SQL_ADD_CLAUSE );
+            whereClause.append( SQL_FILTER_PERIOD_WHERE_PART );
+            whereClause.append( SQL_END_ADD_CLAUSE );
         }
-        
+
         // active directory
-        if ( filterParameters.isActiveDirectory() )
+        if ( filterParameters.isActiveDirectory( ) )
         {
-                if ( !DirectoryRecordJoinAdded ) {
-                    sql.append( SQL_DIRECTORY_RECORD_FROM_PART ) ;
-                    DirectoryRecordJoinAdded = true;
-                }
-                sql.append( SQL_DIRECTORY_FROM_PART ) ; 
-                whereClause.append( SQL_ADD_CLAUSE );
-                whereClause.append( SQL_DIRECTORY_WHERE_PART );
-                whereClause.append( SQL_END_ADD_CLAUSE );
+            if ( !DirectoryRecordJoinAdded )
+            {
+                sql.append( SQL_DIRECTORY_RECORD_FROM_PART );
+                DirectoryRecordJoinAdded = true;
+            }
+            sql.append( SQL_DIRECTORY_FROM_PART );
+            whereClause.append( SQL_ADD_CLAUSE );
+            whereClause.append( SQL_DIRECTORY_WHERE_PART );
+            whereClause.append( SQL_END_ADD_CLAUSE );
         }
 
         // directory ( + state )
         if ( filterParameters.getDirectoryId( ) > 0 )
         {
 
-            if ( !DirectoryRecordJoinAdded ) {
-                    sql.append( SQL_DIRECTORY_RECORD_FROM_PART ) ;
-                }
-            whereClause.append( SQL_ADD_CLAUSE ) ;
-            whereClause.append( SQL_DIRECTORY_RECORD_WHERE_PART ) ;
-            whereClause.append( SQL_END_ADD_CLAUSE ) ;   
-            
-                    
-            
-            
-            // state 
+            if ( !DirectoryRecordJoinAdded )
+            {
+                sql.append( SQL_DIRECTORY_RECORD_FROM_PART );
+            }
+            whereClause.append( SQL_ADD_CLAUSE );
+            whereClause.append( SQL_DIRECTORY_RECORD_WHERE_PART );
+            whereClause.append( SQL_END_ADD_CLAUSE );
+
+            // state
             if ( filterParameters.getStateId( ) > 0 )
             {
-                sql.append( SQL_STATE_FROM_PART ) ;
-                whereClause.append( SQL_ADD_CLAUSE ) ;
-                whereClause.append( SQL_STATE_WHERE_PART ) ;
-                whereClause.append( SQL_END_ADD_CLAUSE ) ;          
-            }            
+                sql.append( SQL_STATE_FROM_PART );
+                whereClause.append( SQL_ADD_CLAUSE );
+                whereClause.append( SQL_STATE_WHERE_PART );
+                whereClause.append( SQL_END_ADD_CLAUSE );
+            }
         }
-        
-        String strOrderBy = SQL_DEFAULT_ORDER_BY + SQL_DESC ;
-        if ( !StringUtils.isBlank( filterParameters.getOrderBy( ) ) )  
+
+        String strOrderBy = SQL_DEFAULT_ORDER_BY + SQL_DESC;
+        if ( !StringUtils.isBlank( filterParameters.getOrderBy( ) ) )
         {
             String strParam = filterParameters.getOrderBy( );
             if ( PARAMETER_SORT_BY_CREATED.equals( strParam ) )
             {
-                strOrderBy = SQL_ORDER_BY_CREATED + (filterParameters.isAsc( )?SQL_ASC:SQL_DESC);                        
+                strOrderBy = SQL_ORDER_BY_CREATED + ( filterParameters.isAsc( ) ? SQL_ASC : SQL_DESC );
             }
-            else if ( PARAMETER_SORT_BY_ASSIGNED.equals( strParam ) ) 
-            {
-                strOrderBy = SQL_ORDER_BY_ASSIGNED + (filterParameters.isAsc( )?SQL_ASC:SQL_DESC);                        
-            }
-                
-        }
-        
-        // prepare & execute query
-        DAOUtil daoUtil = new DAOUtil( sql.toString( ) + whereClause.toString( ) + strOrderBy , plugin );
+            else
+                if ( PARAMETER_SORT_BY_ASSIGNED.equals( strParam ) )
+                {
+                    strOrderBy = SQL_ORDER_BY_ASSIGNED + ( filterParameters.isAsc( ) ? SQL_ASC : SQL_DESC );
+                }
 
-        int i=1;
-        if ( !filterParameters.getUserUnitIdList( ).isEmpty( ) ) 
+        }
+
+        // prepare & execute query
+        DAOUtil daoUtil = new DAOUtil( sql.toString( ) + whereClause.toString( ) + strOrderBy, plugin );
+
+        int i = 1;
+        if ( !filterParameters.getUserUnitIdList( ).isEmpty( ) )
         {
-            for (Integer unitId : filterParameters.getUserUnitIdList( )) 
+            for ( Integer unitId : filterParameters.getUserUnitIdList( ) )
             {
-                daoUtil.setInt(i++, unitId );
+                daoUtil.setInt( i++, unitId );
             }
         }
-        
+
         if ( filterParameters.getNumberOfDays( ) > 0 )
             daoUtil.setInt( i++, filterParameters.getNumberOfDays( ) );
-        
+
         if ( filterParameters.isActiveDirectory( ) )
-                daoUtil.setBoolean( i++, filterParameters.isActiveDirectory( ) );
-        
-        if ( filterParameters.getDirectoryId( ) > 0 ) {
+            daoUtil.setBoolean( i++, filterParameters.isActiveDirectory( ) );
+
+        if ( filterParameters.getDirectoryId( ) > 0 )
+        {
             daoUtil.setInt( i++, filterParameters.getDirectoryId( ) );
-            
+
             if ( filterParameters.getStateId( ) > 0 )
                 daoUtil.setInt( i++, filterParameters.getStateId( ) );
         }
-            
-            
+
         // execute query
         daoUtil.executeQuery( );
 
