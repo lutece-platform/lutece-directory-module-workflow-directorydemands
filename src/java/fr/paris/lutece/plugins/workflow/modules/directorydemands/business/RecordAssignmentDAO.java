@@ -34,6 +34,7 @@
 
 package fr.paris.lutece.plugins.workflow.modules.directorydemands.business;
 
+import fr.paris.lutece.plugins.directory.business.Record;
 import fr.paris.lutece.plugins.unittree.business.unit.Unit;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.util.sql.DAOUtil;
@@ -50,18 +51,29 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
 
     // Constants
     private static final String SQL_QUERY_SELECTALL = "SELECT id, unittree_unit_assignment.id_resource, id_assignor_unit, id_assigned_unit, assignment_date, assignment_type, is_active,"
-            + " u_assignor.id_parent as id_parent_assignor_unit, u_assignor.label as label_assignor_unit, u_assignor.description as description_assignor_unit,"
-            + " u_assigned.id_parent as id_parent_assigned_unit, u_assigned.label as label_assigned_unit, u_assigned.description as description_assigned_unit"
-            + " FROM unittree_unit_assignment  LEFT JOIN  unittree_unit u_assignor on u_assignor.id_unit = unittree_unit_assignment.id_assignor_unit   left JOIN  unittree_unit u_assigned on u_assigned.id_unit = unittree_unit_assignment.id_assigned_unit  ";
-
+            + " u_assignor.id_parent as id_parent_assignor_unit, u_assignor.label as label_assignor_unit, u_assignor.description as description_assignor_unit, "
+            + " u_assigned.id_parent as id_parent_assigned_unit, u_assigned.label as label_assigned_unit, u_assigned.description as description_assigned_unit, "
+            + " directory_record.date_creation "
+            + " FROM unittree_unit_assignment " 
+            + " LEFT JOIN  unittree_unit u_assignor on u_assignor.id_unit = unittree_unit_assignment.id_assignor_unit " 
+            + " LEFT JOIN  unittree_unit u_assigned on u_assigned.id_unit = unittree_unit_assignment.id_assigned_unit  ";
+    private static final String SQL_SUBQUERY_SELECT_ID_RESOURCE = " SELECT id_resource  FROM unittree_unit_assignment "
+            + "LEFT JOIN directory_record  on directory_record.id_record = unittree_unit_assignment.id_resource "
+            + "LEFT JOIN directory_directory  on directory_directory.id_directory = directory_record.id_directory  " ;
+    
     // SQL parts to filter recordAssignments
-    private static final String SQL_WHERE_BASE = " WHERE resource_type = 'DIRECTORY_RECORD' ";
+    private static final String SQL_WHERE_BASE = "WHERE  1 ";
+            
     private static final String SQL_ADD_CLAUSE = " AND ( ";
     private static final String SQL_END_ADD_CLAUSE = " ) ";
 
     private static final String SQL_USER_UNIT_WHERE_PART1 = " id_assigned_unit in (?";
     private static final String SQL_USER_UNIT_WHERE_PART2 = ") ";
 
+    private static final String SQL_FILTER_BY_RESOURCE_TYPE = " unittree_unit_assignment.resource_type = '" + Record.WORKFLOW_RESOURCE_TYPE + "' ";
+    private static final String SQL_FILTER_BY_RESOURCE_ID = " unittree_unit_assignment.id_resource in ( " ;
+    private static final String SQL_FILTER_BY_RESOURCE_ID_END = " ) " ;
+    
     private static final String SQL_ACTIVE_RECORDS_ONLY_WHERE_PART = " unittree_unit_assignment.is_active = 1 ";
 
     private static final String SQL_FILTER_PERIOD_WHERE_PART = " directory_record.date_creation  >= date_add( current_timestamp , INTERVAL -? DAY) ";
@@ -76,7 +88,7 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
     private static final String SQL_STATE_WHERE_PART = "  workflow_resource_workflow.id_state = ? ";
 
     private static final String SQL_DEFAULT_ORDER_BY = " order by assignment_date ";
-    private static final String SQL_ORDER_BY_CREATED = " order by assignment_date ";
+    private static final String SQL_ORDER_BY_CREATED = " order by directory_record.date_creation ";
     private static final String SQL_ORDER_BY_ASSIGNED = " order by u_assigned.label ";
     private static final String SQL_DESC = " DESC ";
     private static final String SQL_ASC = " ASC ";
@@ -93,14 +105,22 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
         List<RecordAssignment> listRecordAssignments = new ArrayList<>( );
 
         StringBuilder sql = new StringBuilder( SQL_QUERY_SELECTALL );
+        StringBuilder sql_subquerySelectIdResource = new StringBuilder( SQL_SUBQUERY_SELECT_ID_RESOURCE ) ; 
+        
         StringBuilder whereClause = new StringBuilder( SQL_WHERE_BASE );
 
         boolean DirectoryRecordJoinAdded = false;
 
-        // User unit
+        // filter by resource type
+        whereClause.append( SQL_ADD_CLAUSE ).append(SQL_FILTER_BY_RESOURCE_TYPE ).append( SQL_END_ADD_CLAUSE );
+        
+        // filter by resource Id ...
+        sql_subquerySelectIdResource.append(SQL_WHERE_BASE);
+        
+        // filter resource Id by... User unit
         if ( !filterParameters.getUserUnitIdList( ).isEmpty( ) )
         {
-            whereClause.append( SQL_ADD_CLAUSE );
+            sql_subquerySelectIdResource.append( SQL_ADD_CLAUSE );
             String strUnitWhereClause = SQL_USER_UNIT_WHERE_PART1;
 
             StringBuilder additionnalParameters = new StringBuilder( );
@@ -112,30 +132,30 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
                 }
             }
             strUnitWhereClause += additionnalParameters + SQL_USER_UNIT_WHERE_PART2;
-            whereClause.append( strUnitWhereClause );
-            whereClause.append( SQL_END_ADD_CLAUSE );
+            sql_subquerySelectIdResource.append( strUnitWhereClause );
+            sql_subquerySelectIdResource.append( SQL_END_ADD_CLAUSE );
         }
 
-        // ACTIVE_RECORDS_ONLY
+        // filter resource Id by... ACTIVE_RECORDS_ONLY
         if ( filterParameters.isActiveRecordsOnly( ) )
         {
-            whereClause.append( SQL_ADD_CLAUSE );
-            whereClause.append( SQL_ACTIVE_RECORDS_ONLY_WHERE_PART );
-            whereClause.append( SQL_END_ADD_CLAUSE );
+            sql_subquerySelectIdResource.append( SQL_ADD_CLAUSE );
+            sql_subquerySelectIdResource.append( SQL_ACTIVE_RECORDS_ONLY_WHERE_PART );
+            sql_subquerySelectIdResource.append( SQL_END_ADD_CLAUSE );
         }
 
-        // period
+        // filter resource Id by... period
         if ( filterParameters.getNumberOfDays( ) > 0 )
         {
 
             sql.append( SQL_DIRECTORY_RECORD_FROM_PART );
             DirectoryRecordJoinAdded = true;
-            whereClause.append( SQL_ADD_CLAUSE );
-            whereClause.append( SQL_FILTER_PERIOD_WHERE_PART );
-            whereClause.append( SQL_END_ADD_CLAUSE );
+            sql_subquerySelectIdResource.append( SQL_ADD_CLAUSE );
+            sql_subquerySelectIdResource.append( SQL_FILTER_PERIOD_WHERE_PART );
+            sql_subquerySelectIdResource.append( SQL_END_ADD_CLAUSE );
         }
 
-        // active directory
+        // filter resource Id by... active directory
         if ( filterParameters.isActiveDirectory( ) )
         {
             if ( !DirectoryRecordJoinAdded )
@@ -144,12 +164,12 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
                 DirectoryRecordJoinAdded = true;
             }
             sql.append( SQL_DIRECTORY_FROM_PART );
-            whereClause.append( SQL_ADD_CLAUSE );
-            whereClause.append( SQL_DIRECTORY_WHERE_PART );
-            whereClause.append( SQL_END_ADD_CLAUSE );
+            sql_subquerySelectIdResource.append( SQL_ADD_CLAUSE );
+            sql_subquerySelectIdResource.append( SQL_DIRECTORY_WHERE_PART );
+            sql_subquerySelectIdResource.append( SQL_END_ADD_CLAUSE );
         }
 
-        // directory ( + state )
+        // filter resource Id by... directory ( + state )
         if ( filterParameters.getDirectoryId( ) > 0 )
         {
 
@@ -157,20 +177,29 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
             {
                 sql.append( SQL_DIRECTORY_RECORD_FROM_PART );
             }
-            whereClause.append( SQL_ADD_CLAUSE );
-            whereClause.append( SQL_DIRECTORY_RECORD_WHERE_PART );
-            whereClause.append( SQL_END_ADD_CLAUSE );
+            sql_subquerySelectIdResource.append( SQL_ADD_CLAUSE );
+            sql_subquerySelectIdResource.append( SQL_DIRECTORY_RECORD_WHERE_PART );
+            sql_subquerySelectIdResource.append( SQL_END_ADD_CLAUSE );
 
             // state
             if ( filterParameters.getStateId( ) > 0 )
             {
                 sql.append( SQL_STATE_FROM_PART );
-                whereClause.append( SQL_ADD_CLAUSE );
-                whereClause.append( SQL_STATE_WHERE_PART );
-                whereClause.append( SQL_END_ADD_CLAUSE );
+                sql_subquerySelectIdResource.append( SQL_ADD_CLAUSE );
+                sql_subquerySelectIdResource.append( SQL_STATE_WHERE_PART );
+                sql_subquerySelectIdResource.append( SQL_END_ADD_CLAUSE );
             }
         }
 
+        
+        // add subquery to the where clause
+        whereClause.append( SQL_ADD_CLAUSE )
+                .append( SQL_FILTER_BY_RESOURCE_ID )
+                .append( sql_subquerySelectIdResource )
+                .append( SQL_FILTER_BY_RESOURCE_ID_END )
+                .append( SQL_END_ADD_CLAUSE );
+        
+        
         String strOrderBy = SQL_DEFAULT_ORDER_BY + SQL_DESC;
         if ( !StringUtils.isBlank( filterParameters.getOrderBy( ) ) )
         {
@@ -179,11 +208,10 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
             {
                 strOrderBy = SQL_ORDER_BY_CREATED + ( filterParameters.isAsc( ) ? SQL_ASC : SQL_DESC );
             }
-            else
-                if ( PARAMETER_SORT_BY_ASSIGNED.equals( strParam ) )
-                {
+            else if ( PARAMETER_SORT_BY_ASSIGNED.equals( strParam ) )
+            {
                     strOrderBy = SQL_ORDER_BY_ASSIGNED + ( filterParameters.isAsc( ) ? SQL_ASC : SQL_DESC );
-                }
+            }
 
         }
 
@@ -252,7 +280,7 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
         unitAssigned.setIdParent( daoUtil.getInt( "id_parent_assigned_unit" ) );
         unitAssigned.setLabel( daoUtil.getString( "label_assigned_unit" ) );
         unitAssigned.setDescription( daoUtil.getString( "description_assigned_unit" ) );
-
+        
         return recordAssignment;
     }
 
