@@ -49,7 +49,8 @@ public class RecordAssignmentFilter
 {
 
     private List<Integer> _userUnitIdList = new ArrayList<>( ); // user unit Ids (from unittree)
-    private boolean _nActiveRecordsOnly; // active records only (true/false)
+    private boolean _nActiveAssignmentRecordsOnly; // active Assignment records only (true/false)
+    private boolean _nLastActiveAssignmentRecordsOnly; // last active Assignment records only (true/false)
     private int _nNumberOfDays; // filter records by period : NONE, LAST_DAY, LAST_WEEK, LAST_MONTH
     private int _nDirectoryId; // specify a particular directory to filter records
     private int _nStateId; // specify a particular state to filter records
@@ -93,9 +94,9 @@ public class RecordAssignmentFilter
      * 
      * @return
      */
-    public boolean isActiveRecordsOnly( )
+    public boolean isActiveAssignmentRecordsOnly( )
     {
-        return _nActiveRecordsOnly;
+        return _nActiveAssignmentRecordsOnly;
     }
 
     /**
@@ -103,9 +104,29 @@ public class RecordAssignmentFilter
      * 
      * @param activeRecordsOnly
      */
-    public void setActiveRecordsOnly( boolean activeRecordsOnly )
+    public void setActiveAssignmentRecordsOnly( boolean activeRecordsOnly )
     {
-        this._nActiveRecordsOnly = activeRecordsOnly;
+        this._nActiveAssignmentRecordsOnly = activeRecordsOnly;
+    }
+
+    /**
+     * get if is Last ActiveRecordsOnly
+     * 
+     * @return
+     */
+    public boolean isLastActiveAssignmentRecordsOnly( )
+    {
+        return _nLastActiveAssignmentRecordsOnly;
+    }
+
+    /**
+     * set LastActiveRecordsOnly
+     * 
+     * @param lastActiveRecordsOnly
+     */
+    public void setLastActiveAssignmentRecordsOnly( boolean lastActiveRecordsOnly )
+    {
+        this._nLastActiveAssignmentRecordsOnly = lastActiveRecordsOnly;
     }
 
     /**

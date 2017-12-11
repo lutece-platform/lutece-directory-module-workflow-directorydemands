@@ -74,8 +74,9 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
     private static final String SQL_FILTER_BY_RESOURCE_ID = " unittree_unit_assignment.id_resource in ( " ;
     private static final String SQL_FILTER_BY_RESOURCE_ID_END = " ) " ;
     
-    private static final String SQL_ACTIVE_RECORDS_ONLY_WHERE_PART = " unittree_unit_assignment.is_active = 1 ";
-
+    private static final String SQL_ACTIVE_ASSIGNMENTS_ONLY_WHERE_PART = " unittree_unit_assignment.is_active = 1 ";    
+    private static final String SQL_LAST_ACTIVE_ASSIGNMENTS_ONLY_WHERE_PART = " unittree_unit_assignment.assignment_date = (select max(assignment_date) from unittree_unit_assignment uua where uua.id_resource = unittree_unit_assignment.id_resource and uua.is_active=1 )";
+    
     private static final String SQL_FILTER_PERIOD_WHERE_PART = " directory_record.date_creation  >= date_add( current_timestamp , INTERVAL -? DAY) ";
 
     private static final String SQL_DIRECTORY_RECORD_FROM_PART = "  LEFT JOIN directory_record  on directory_record.id_record = unittree_unit_assignment.id_resource ";
@@ -137,17 +138,16 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
         }
 
         // filter resource Id by... ACTIVE_RECORDS_ONLY
-        if ( filterParameters.isActiveRecordsOnly( ) )
+        if ( filterParameters.isActiveAssignmentRecordsOnly( ) )
         {
             sql_subquerySelectIdResource.append( SQL_ADD_CLAUSE );
-            sql_subquerySelectIdResource.append( SQL_ACTIVE_RECORDS_ONLY_WHERE_PART );
+            sql_subquerySelectIdResource.append( SQL_ACTIVE_ASSIGNMENTS_ONLY_WHERE_PART );
             sql_subquerySelectIdResource.append( SQL_END_ADD_CLAUSE );
         }
-
+        
         // filter resource Id by... period
         if ( filterParameters.getNumberOfDays( ) > 0 )
         {
-
             sql.append( SQL_DIRECTORY_RECORD_FROM_PART );
             DirectoryRecordJoinAdded = true;
             sql_subquerySelectIdResource.append( SQL_ADD_CLAUSE );
@@ -199,7 +199,14 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
                 .append( SQL_FILTER_BY_RESOURCE_ID_END )
                 .append( SQL_END_ADD_CLAUSE );
         
-        
+        // filter resource Id by... LAST_ACTIVE_RECORDS_ONLY
+        if ( filterParameters.isLastActiveAssignmentRecordsOnly( ) )
+        {
+            whereClause.append( SQL_ADD_CLAUSE )
+                    .append( SQL_LAST_ACTIVE_ASSIGNMENTS_ONLY_WHERE_PART )
+                    .append( SQL_END_ADD_CLAUSE );
+        }
+
         String strOrderBy = SQL_DEFAULT_ORDER_BY + SQL_DESC;
         if ( !StringUtils.isBlank( filterParameters.getOrderBy( ) ) )
         {
