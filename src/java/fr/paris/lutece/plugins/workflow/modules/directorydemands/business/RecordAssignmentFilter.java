@@ -54,6 +54,7 @@ public class RecordAssignmentFilter
     private int _nNumberOfDays; // filter records by period : NONE, LAST_DAY, LAST_WEEK, LAST_MONTH
     private int _nDirectoryId; // specify a particular directory to filter records
     private int _nStateId; // specify a particular state to filter records
+    private int _nAssignedUnitId; // specify a particular Assigned Unit to filter records
     private String _strOrderBy; // sort records
     private boolean _bAsc; // sort records order (ASC = true)
     private boolean _bIsActiveDirectory; // For getting record from only active directory
@@ -187,6 +188,26 @@ public class RecordAssignmentFilter
     public void setStateId( int stateId )
     {
         this._nStateId = stateId;
+    }
+
+    /**
+     * get the Assigned Unit id
+     * 
+     * @return the Assigned Unit id
+     */
+    public int getAssignedUnitId( )
+    {
+        return _nAssignedUnitId;
+    }
+
+    /**
+     * set the AssignedUnit
+     * 
+     * @param nAssignedUnit
+     */
+    public void setAssignedUnitId( int nAssignedUnit )
+    {
+        this._nAssignedUnitId = nAssignedUnit;
     }
 
     /**

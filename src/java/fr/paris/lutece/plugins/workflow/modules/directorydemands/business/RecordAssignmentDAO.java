@@ -87,6 +87,8 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
 
     private static final String SQL_STATE_FROM_PART = " LEFT JOIN workflow_resource_workflow on directory_record.id_record = workflow_resource_workflow.id_resource ";
     private static final String SQL_STATE_WHERE_PART = "  workflow_resource_workflow.id_state = ? ";
+    
+    private static final String SQL_ASSIGNED_UNIT_WHERE_PART = " u_assigned.id_unit = ? ";
 
     private static final String SQL_DEFAULT_ORDER_BY = " order by assignment_date ";
     private static final String SQL_ORDER_BY_CREATED = " order by directory_record.date_creation ";
@@ -190,6 +192,14 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
                 sql_subquerySelectIdResource.append( SQL_END_ADD_CLAUSE );
             }
         }
+        
+        // filter resource Id by Assigned Unit id
+        if ( filterParameters.getAssignedUnitId( ) > 0 )
+        {
+            sql_subquerySelectIdResource.append( SQL_ADD_CLAUSE );
+            sql_subquerySelectIdResource.append( SQL_ASSIGNED_UNIT_WHERE_PART );
+            sql_subquerySelectIdResource.append( SQL_END_ADD_CLAUSE );
+        }
 
         
         // add subquery to the where clause
@@ -246,6 +256,11 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
 
             if ( filterParameters.getStateId( ) > 0 )
                 daoUtil.setInt( i++, filterParameters.getStateId( ) );
+        }
+        
+        if ( filterParameters.getAssignedUnitId( ) > 0 )
+        {
+            daoUtil.setInt( i++, filterParameters.getAssignedUnitId( ) );
         }
 
         // execute query
