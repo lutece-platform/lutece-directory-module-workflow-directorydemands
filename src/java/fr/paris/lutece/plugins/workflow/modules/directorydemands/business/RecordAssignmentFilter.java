@@ -214,8 +214,7 @@ public class RecordAssignmentFilter
     /**
      * Get the list of Record Field values
      * 
-     * @return the listRecordField
-     *          The list of Record Field
+     * @return the listRecordField The list of Record Field
      */
     public List<RecordFieldItem> getListRecordFieldItem( )
     {
@@ -225,8 +224,8 @@ public class RecordAssignmentFilter
     /**
      * Set the the list of Record Field values
      * 
-     * @param listRecordFieldItem 
-     *          The list of Record Field values to set
+     * @param listRecordFieldItem
+     *            The list of Record Field values to set
      */
     public void setListRecordFieldItem( List<RecordFieldItem> listRecordFieldItem )
     {

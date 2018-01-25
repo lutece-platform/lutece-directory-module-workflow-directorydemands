@@ -91,7 +91,7 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
     private static final String SQL_STATE_WHERE_PART = "  workflow_resource_workflow.id_state = ? ";
 
     private static final String SQL_ASSIGNED_UNIT_WHERE_PART = " u_assigned.id_unit = ? ";
-    
+
     private static final String SQL_RECORD_FIELD_GLOBAL_WHERE_PART = " id_record IN ";
     private static final String SQL_RECORD_FIELD_WHERE_PART = " SELECT DISTINCT id_record FROM directory_record_field WHERE record_field_value = ? ";
 
@@ -103,7 +103,7 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
 
     private static final String PARAMETER_SORT_BY_CREATED = "created";
     private static final String PARAMETER_SORT_BY_ASSIGNED = "assigned";
-    
+
     private static final String DEFAULT_RECORD_FIELD_VALUE = "-1";
 
     /**
@@ -208,7 +208,7 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
             sql_subquerySelectIdResource.append( SQL_ASSIGNED_UNIT_WHERE_PART );
             sql_subquerySelectIdResource.append( SQL_END_ADD_CLAUSE );
         }
-        
+
         // Filter on the record field values inside the RecordFieldItem
         List<RecordFieldItem> listRecordFieldItem = filterParameters.getListRecordFieldItem( );
         boolean bRecordFieldRequestClose = Boolean.FALSE;
@@ -222,7 +222,7 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
                     sql.append( SQL_DIRECTORY_RECORD_FROM_PART );
                     DirectoryRecordJoinAdded = true;
                 }
-                
+
                 if ( !bRecordFieldRequestClose )
                 {
                     sql_subquerySelectIdResource.append( SQL_ADD_CLAUSE );
@@ -240,7 +240,7 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
                 }
             }
         }
-        
+
         if ( bRecordFieldRequestClose )
         {
             sql_subquerySelectIdResource.append( SQL_END_ADD_CLAUSE );

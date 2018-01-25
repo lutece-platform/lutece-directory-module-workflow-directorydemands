@@ -43,23 +43,22 @@ public class RecordFieldItem
     // Variables
     private final int _nItemNumber;
     private String _strRecordFieldValue = StringUtils.EMPTY;
-    
+
     /**
      * Constructor
      * 
      * @param nItemNumber
-     *          The number of the RecordFieldItem
+     *            The number of the RecordFieldItem
      */
     public RecordFieldItem( int nItemNumber )
     {
         _nItemNumber = nItemNumber;
     }
-    
+
     /**
      * Return the number of the RecordFieldItem
      * 
-     * @return the nItemNumber
-     *          The number of the RecordFieldItem
+     * @return the nItemNumber The number of the RecordFieldItem
      */
     public int getItemNumber( )
     {
@@ -69,8 +68,7 @@ public class RecordFieldItem
     /**
      * Return the value of the RecordFieldItm
      * 
-     * @return the strRecordFieldValue
-     *          The value of the RecordFieldItem
+     * @return the strRecordFieldValue The value of the RecordFieldItem
      */
     public String getRecordFieldValue( )
     {
@@ -80,11 +78,11 @@ public class RecordFieldItem
     /**
      * Set the value of the RecordFieldItem
      * 
-     * @param strRecordFieldValue 
-     *          The strRecordFieldValue to set
+     * @param strRecordFieldValue
+     *            The strRecordFieldValue to set
      */
     public void setRecordFieldValue( String strRecordFieldValue )
     {
         _strRecordFieldValue = strRecordFieldValue;
-    }    
+    }
 }
