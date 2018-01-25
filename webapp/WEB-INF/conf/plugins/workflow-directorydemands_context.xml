@@ -30,6 +30,8 @@
         class="fr.paris.lutece.plugins.workflow.modules.directorydemands.business.RecordAssignmentDAO" />
     <bean id="workflow-directorydemands.unitCodeDAO"
         class="fr.paris.lutece.plugins.workflow.modules.directorydemands.business.unit.UnitCodeDAO" />
+    <bean id="workflow-directorydemands.recordUserAssignmentDAO"
+        class="fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.RecordUserAssignmentDAO" />
         
     <!-- Unit Code Attribute -->
     <bean id="workflow-directorydemands.unitCodeService" class="fr.paris.lutece.plugins.workflow.modules.directorydemands.service.unit.UnitCodeAttributeService" />
@@ -39,5 +41,21 @@
     <!-- Unit Selection -->
     <bean id="workflow-directorydemands.unitSelection.fromIdentityStore"
         class="fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task.selection.impl.UnitSelectionFromIdentityStore" />
+
+    <!-- Task Assign record to current user -->
+    <bean id="workflow-directorydemands.taskAssignRecordToCurrentUser"
+            class="fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task.TaskAssignRecordToCurrentUser"
+            scope="prototype" />
+    <bean id="workflow-directorydemands.taskTypeAssignRecordToCurrentUser"
+            class="fr.paris.lutece.plugins.workflowcore.business.task.TaskType"
+            p:key="taskAssignRecordToCurrentUser"
+            p:titleI18nKey="module.workflow.directorydemands.task_assign_record_to_current_user.title"
+            p:beanName="workflow-directorydemands.taskAssignRecordToCurrentUser"
+            p:taskForAutomaticAction="false"
+            p:configRequired="false"
+            p:formTaskRequired="false"   />
+    <bean id="workflow-unittree.assignRecordToCurrentUserTaskComponent"
+        class="fr.paris.lutece.plugins.workflow.modules.directorydemands.web.task.AssignRecordToCurrentUserTaskComponent"
+        p:taskType-ref="workflow-directorydemands.taskTypeAssignRecordToCurrentUser" />
 
 </beans>
