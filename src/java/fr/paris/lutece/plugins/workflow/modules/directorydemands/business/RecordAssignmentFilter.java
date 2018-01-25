@@ -55,6 +55,7 @@ public class RecordAssignmentFilter
     private int _nDirectoryId; // specify a particular directory to filter records
     private int _nStateId; // specify a particular state to filter records
     private int _nAssignedUnitId; // specify a particular Assigned Unit to filter records
+    private List<RecordFieldItem> _listRecordFieldItem = new ArrayList<>( ); // specify a particular a list of record field values to filter records
     private String _strOrderBy; // sort records
     private boolean _bAsc; // sort records order (ASC = true)
     private boolean _bIsActiveDirectory; // For getting record from only active directory
@@ -208,6 +209,28 @@ public class RecordAssignmentFilter
     public void setAssignedUnitId( int nAssignedUnit )
     {
         this._nAssignedUnitId = nAssignedUnit;
+    }
+
+    /**
+     * Get the list of Record Field values
+     * 
+     * @return the listRecordField
+     *          The list of Record Field
+     */
+    public List<RecordFieldItem> getListRecordFieldItem( )
+    {
+        return _listRecordFieldItem;
+    }
+
+    /**
+     * Set the the list of Record Field values
+     * 
+     * @param listRecordFieldItem 
+     *          The list of Record Field values to set
+     */
+    public void setListRecordFieldItem( List<RecordFieldItem> listRecordFieldItem )
+    {
+        this._listRecordFieldItem = listRecordFieldItem;
     }
 
     /**
