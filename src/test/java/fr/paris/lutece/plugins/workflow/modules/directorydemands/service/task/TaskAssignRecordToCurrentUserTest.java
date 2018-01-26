@@ -45,6 +45,8 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import fr.paris.lutece.plugins.directory.business.Record;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.RecordUserAssignmentDAOTest;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.RecordUserAssignmentHome;
+import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.information.MockTaskInformation;
+import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.information.TaskInformation;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.util.IdGenerator;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.business.user.AdminUserHome;
@@ -53,6 +55,8 @@ import fr.paris.lutece.test.LuteceTestCase;
 
 public class TaskAssignRecordToCurrentUserTest extends LuteceTestCase
 {
+    private static final String TASK_INFORMATION_ASSIGNED_USER = "ASSIGNED_USER";
+
     private static final Locale _locale = Locale.getDefault( );
 
     private AdminUser _user1;
@@ -187,6 +191,28 @@ public class TaskAssignRecordToCurrentUserTest extends LuteceTestCase
 
         RecordUserAssignmentHome.remove( record1 );
         RecordUserAssignmentHome.remove( record2 );
+    }
+
+    public void testTaskInformationAdded( ) throws Exception
+    {
+        AdminAuthenticationService.getInstance( ).registerUser( _request, _user1 );
+        Record record = createRecord( );
+        TaskInformation taskInformation = MockTaskInformation.createWithNoPieceOfInformation( );
+        _task.processTask( record, _request, _locale );
+
+        _task.fillTaskInformation( taskInformation );
+
+        assertThatTaskInformationContainsTheUserName( taskInformation, _user1 );
+
+        RecordUserAssignmentHome.remove( record );
+    }
+
+    public void assertThatTaskInformationContainsTheUserName( TaskInformation taskInformation, AdminUser user )
+    {
+        String strUserName = user.getFirstName( ) + " " + user.getLastName( );
+        String strUserNameFromTaskInformation = taskInformation.getValue( TASK_INFORMATION_ASSIGNED_USER );
+
+        assertThat( strUserNameFromTaskInformation, is( strUserName ) );
     }
 
     public void testGetTitle( )

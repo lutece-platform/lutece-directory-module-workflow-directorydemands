@@ -39,6 +39,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import fr.paris.lutece.plugins.directory.business.Record;
 import fr.paris.lutece.plugins.directory.business.RecordHome;
+import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.information.TaskInformation;
+import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.information.TaskInformationHome;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.service.WorkflowDirectorydemandsPlugin;
 import fr.paris.lutece.plugins.workflowcore.business.resource.ResourceHistory;
 import fr.paris.lutece.plugins.workflowcore.service.resource.IResourceHistoryService;
@@ -63,6 +65,7 @@ public abstract class AbstractTaskRecordRelated extends SimpleTask
         Record record = findRecordByIdHistory( nIdResourceHistory );
 
         processTask( record, request, locale );
+        createTaskInformation( nIdResourceHistory );
     }
 
     /**
@@ -86,6 +89,19 @@ public abstract class AbstractTaskRecordRelated extends SimpleTask
     }
 
     /**
+     * Creates a {@code TaskInformation} object
+     * 
+     * @param nIdResourceHistory
+     *            the resource history id associated to the created {@code TaskInformation}
+     */
+    private void createTaskInformation( int nIdResourceHistory )
+    {
+        TaskInformation taskInformation = new TaskInformation( nIdResourceHistory, getId( ) );
+        fillTaskInformation( taskInformation );
+        TaskInformationHome.create( taskInformation );
+    }
+
+    /**
      * Process the task
      * 
      * @param record
@@ -96,4 +112,12 @@ public abstract class AbstractTaskRecordRelated extends SimpleTask
      *            the locale
      */
     protected abstract void processTask( Record record, HttpServletRequest request, Locale locale );
+
+    /**
+     * Fills the specified {@code TaskInformation}
+     * 
+     * @param taskInformation
+     *            the {@code TaskInformation} to fill
+     */
+    protected abstract void fillTaskInformation( TaskInformation taskInformation );
 }

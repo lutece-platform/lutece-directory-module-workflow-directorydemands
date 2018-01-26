@@ -31,62 +31,69 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task;
+package fr.paris.lutece.plugins.workflow.modules.directorydemands.web.task;
 
-import fr.paris.lutece.plugins.directory.business.Record;
-import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.RecordUserAssignmentHome;
-import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.information.TaskInformation;
-import fr.paris.lutece.portal.business.user.AdminUser;
-import fr.paris.lutece.portal.service.admin.AdminUserService;
-import fr.paris.lutece.portal.service.i18n.I18nService;
-
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.information.TaskInformation;
+import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.information.TaskInformationHome;
+import fr.paris.lutece.plugins.workflowcore.business.config.ITaskConfig;
+import fr.paris.lutece.plugins.workflowcore.service.task.ITask;
+import fr.paris.lutece.plugins.workflowcore.web.task.SimpleTaskComponent;
+import fr.paris.lutece.portal.service.template.AppTemplateService;
+import fr.paris.lutece.util.html.HtmlTemplate;
+
 /**
- * This class is a task to assign a record to the current user
+ * this class is an abstract task component for the module
  *
  */
-public class TaskAssignRecordToCurrentUser extends AbstractTaskRecordRelated
+public abstract class AbstractDirectoryDemandsTaskComponent extends SimpleTaskComponent
 {
-    private static final String TASK_INFORMATION_ASSIGNED_USER = "ASSIGNED_USER";
-    private static final String USER_NAME_SEPARATOR = " ";
-
-    // Messages
-    private static final String MESSAGE_ASSIGN_RECORD_TO_CURRENT_USER = "module.workflow.directorydemands.task_assign_record_to_current_user.title";
-
-    private AdminUser _user;
+    private static final String MARK_TASK_INFORMATION = "taskInformation";
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void processTask( Record record, HttpServletRequest request, Locale locale )
+    public String getDisplayTaskInformation( int nIdHistory, HttpServletRequest request, Locale locale, ITask task )
     {
-        _user = AdminUserService.getAdminUser( request );
+        TaskInformation taskInformation = TaskInformationHome.find( nIdHistory, task.getId( ) );
 
-        RecordUserAssignmentHome.remove( record );
-        RecordUserAssignmentHome.create( record, _user );
+        Map<String, Object> model = new HashMap<String, Object>( );
+        model.put( MARK_TASK_INFORMATION, taskInformation );
+
+        HtmlTemplate template = AppTemplateService.getTemplate( getTaskInformationTemplate( ), locale, model );
+
+        return template.getHtml( );
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void fillTaskInformation( TaskInformation taskInformation )
+    public String getTaskInformationXml( int nIdHistory, HttpServletRequest request, Locale locale, ITask task )
     {
-        String sbUserName = new StringBuilder( _user.getFirstName( ) ).append( USER_NAME_SEPARATOR ).append( _user.getLastName( ) ).toString( );
-
-        taskInformation.add( TASK_INFORMATION_ASSIGNED_USER, sbUserName );
+        return null;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String getTitle( Locale locale )
+    public String validateConfig( ITaskConfig config, HttpServletRequest request )
     {
-        return I18nService.getLocalizedString( MESSAGE_ASSIGN_RECORD_TO_CURRENT_USER, locale );
+        return null;
     }
+
+    /**
+     * Gives the template used to display task information
+     * 
+     * @return the template
+     */
+    protected abstract String getTaskInformationTemplate( );
+
 }

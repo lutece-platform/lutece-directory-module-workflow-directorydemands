@@ -31,24 +31,17 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.workflow.modules.directorydemands.web.task;
+package fr.paris.lutece.plugins.workflowcore.business.resource;
 
-/**
- * This class is a task component for the {@link fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task.TaskAssignRecordToCurrentUser
- * TaskAssignRecordToCurrentUser} class
- *
- */
-public class AssignRecordToCurrentUserTaskComponent extends AbstractDirectoryDemandsTaskComponent
+import fr.paris.lutece.plugins.workflow.modules.directorydemands.util.IdGenerator;
+
+public class MockResourceHistory
 {
-    private static final String TEMPLATE_INFORMATION = "admin/plugins/workflow/modules/directorydemands/task_assign_record_to_current_user_information.html";
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected String getTaskInformationTemplate( )
+    public static ResourceHistory create( )
     {
-        return TEMPLATE_INFORMATION;
-    }
+        ResourceHistory resourceHistory = new ResourceHistory( );
+        resourceHistory.setId( IdGenerator.generateId( ) );
 
+        return resourceHistory;
+    }
 }

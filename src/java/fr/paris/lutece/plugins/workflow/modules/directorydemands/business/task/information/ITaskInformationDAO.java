@@ -31,24 +31,39 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.workflow.modules.directorydemands.web.task;
+
+package fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.information;
+
+import fr.paris.lutece.portal.service.plugin.Plugin;
 
 /**
- * This class is a task component for the {@link fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task.TaskAssignRecordToCurrentUser
- * TaskAssignRecordToCurrentUser} class
- *
+ * This interface provides Data Access methods for {@link TaskInformation} objects
  */
-public class AssignRecordToCurrentUserTaskComponent extends AbstractDirectoryDemandsTaskComponent
+public interface ITaskInformationDAO
 {
-    private static final String TEMPLATE_INFORMATION = "admin/plugins/workflow/modules/directorydemands/task_assign_record_to_current_user_information.html";
+    String BEAN_NAME = "workflow-directorydemands.taskInformationDAO";
 
     /**
-     * {@inheritDoc}
+     * Inserts a new record in the table.
+     * 
+     * @param taskInformation
+     *            the task information to insert
+     * @param plugin
+     *            the Plugin
      */
-    @Override
-    protected String getTaskInformationTemplate( )
-    {
-        return TEMPLATE_INFORMATION;
-    }
+    void insert( TaskInformation taskInformation, Plugin plugin );
+
+    /**
+     * Loads the data from the table
+     * 
+     * @param nIdHistory
+     *            The history id
+     * @param nIdTask
+     *            The task id
+     * @param plugin
+     *            the Plugin
+     * @return The task information
+     */
+    TaskInformation load( int nIdHistory, int nIdTask, Plugin plugin );
 
 }
