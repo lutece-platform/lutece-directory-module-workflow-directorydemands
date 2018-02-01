@@ -56,6 +56,7 @@ public class RecordAssignmentFilter
     private int _nStateId; // specify a particular state to filter records
     private int _nAssignedUnitId; // specify a particular Assigned Unit to filter records
     private List<RecordFieldItem> _listRecordFieldItem = new ArrayList<>( ); // specify a particular a list of record field values to filter records
+    private int _nAssignedUserId; // specify a particular user to filter records
     private String _strOrderBy; // sort records
     private boolean _bAsc; // sort records order (ASC = true)
     private boolean _bIsActiveDirectory; // For getting record from only active directory
@@ -233,6 +234,28 @@ public class RecordAssignmentFilter
     }
 
     /**
+     * Return the identifier of the assigned user to filter on
+     * 
+     * @return the nAssignedUserId
+     *          The identifier of the assigned user to filter on
+     */
+    public int getAssignedUserId( )
+    {
+        return _nAssignedUserId;
+    }
+
+    /**
+     * Set the identifier of the assigned user to filter on
+     * 
+     * @param nAssignedUserId 
+     *          The nAssignedUserId to set
+     */
+    public void setAssignedUserId( int nAssignedUserId )
+    {
+        this._nAssignedUserId = nAssignedUserId;
+    }
+
+    /**
      * get OrderBy
      * 
      * @return the order by statement
@@ -292,4 +315,27 @@ public class RecordAssignmentFilter
         _bIsActiveDirectory = bIsActiveDirectory;
     }
 
+    /**
+     * Clone the RecordAssignmentFilter
+     * 
+     * @return the clone of the current RecordAssignmentFilter
+     */
+    public RecordAssignmentFilter clone( )
+    {
+        RecordAssignmentFilter recordAssignmentFilterClone = new RecordAssignmentFilter( );
+        recordAssignmentFilterClone.setActiveAssignmentRecordsOnly( _nActiveAssignmentRecordsOnly );
+        recordAssignmentFilterClone.setActiveDirectory( _bIsActiveDirectory );
+        recordAssignmentFilterClone.setAsc( _bAsc );
+        recordAssignmentFilterClone.setAssignedUnitId( _nAssignedUnitId );
+        recordAssignmentFilterClone.setAssignedUserId( _nAssignedUserId );
+        recordAssignmentFilterClone.setDirectoryId( _nDirectoryId );
+        recordAssignmentFilterClone.setLastActiveAssignmentRecordsOnly( _nLastActiveAssignmentRecordsOnly );
+        recordAssignmentFilterClone.setListRecordFieldItem( _listRecordFieldItem );
+        recordAssignmentFilterClone.setNumberOfDays( _nNumberOfDays );
+        recordAssignmentFilterClone.setOrderBy( _strOrderBy );
+        recordAssignmentFilterClone.setStateId( _nStateId );
+        recordAssignmentFilterClone.setUserUnitIdList( _userUnitIdList );
+        
+        return recordAssignmentFilterClone;
+    }
 }

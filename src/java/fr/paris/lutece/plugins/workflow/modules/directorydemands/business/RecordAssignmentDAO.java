@@ -91,6 +91,9 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
     private static final String SQL_STATE_WHERE_PART = "  workflow_resource_workflow.id_state = ? ";
 
     private static final String SQL_ASSIGNED_UNIT_WHERE_PART = " u_assigned.id_unit = ? ";
+    
+    private static final String SQL_ASSIGNED_USER_FROM_PART = " LEFT JOIN workflow_directorydemands_record_user_assignment on directory_record.id_record = workflow_directorydemands_record_user_assignment.id_record ";
+    private static final String SQL_ASSIGNED_USER_WHERE_PART = " workflow_directorydemands_record_user_assignment.id_user = ? ";
 
     private static final String SQL_RECORD_FIELD_GLOBAL_WHERE_PART = " id_record IN ";
     private static final String SQL_RECORD_FIELD_WHERE_PART = " SELECT DISTINCT id_record FROM directory_record_field WHERE record_field_value = ? ";
@@ -245,6 +248,20 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
         {
             sql_subquerySelectIdResource.append( SQL_END_ADD_CLAUSE );
         }
+        
+        // filter resource Id by Assigned User id
+        if ( filterParameters.getAssignedUserId( ) > 0 )
+        {
+            if ( !DirectoryRecordJoinAdded )
+            {
+                sql.append( SQL_ASSIGNED_USER_FROM_PART );
+                DirectoryRecordJoinAdded = true;
+            }
+            sql.append( SQL_ASSIGNED_USER_FROM_PART );
+            sql_subquerySelectIdResource.append( SQL_ADD_CLAUSE );
+            sql_subquerySelectIdResource.append( SQL_ASSIGNED_USER_WHERE_PART );
+            sql_subquerySelectIdResource.append( SQL_END_ADD_CLAUSE );
+        }
 
         // add subquery to the where clause
         whereClause.append( SQL_ADD_CLAUSE ).append( SQL_FILTER_BY_RESOURCE_ID ).append( sql_subquerySelectIdResource ).append( SQL_FILTER_BY_RESOURCE_ID_END )
@@ -310,6 +327,11 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
             {
                 daoUtil.setString( i++, strRecordFieldItemValue );
             }
+        }
+        
+        if ( filterParameters.getAssignedUserId( ) > 0 )
+        {
+            daoUtil.setInt( i++, filterParameters.getAssignedUserId( ) );
         }
 
         // execute query
