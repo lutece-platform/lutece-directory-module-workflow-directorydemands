@@ -236,8 +236,7 @@ public class RecordAssignmentFilter
     /**
      * Return the identifier of the assigned user to filter on
      * 
-     * @return the nAssignedUserId
-     *          The identifier of the assigned user to filter on
+     * @return the nAssignedUserId The identifier of the assigned user to filter on
      */
     public int getAssignedUserId( )
     {
@@ -247,8 +246,8 @@ public class RecordAssignmentFilter
     /**
      * Set the identifier of the assigned user to filter on
      * 
-     * @param nAssignedUserId 
-     *          The nAssignedUserId to set
+     * @param nAssignedUserId
+     *            The nAssignedUserId to set
      */
     public void setAssignedUserId( int nAssignedUserId )
     {
@@ -335,7 +334,7 @@ public class RecordAssignmentFilter
         recordAssignmentFilterClone.setOrderBy( _strOrderBy );
         recordAssignmentFilterClone.setStateId( _nStateId );
         recordAssignmentFilterClone.setUserUnitIdList( _userUnitIdList );
-        
+
         return recordAssignmentFilterClone;
     }
 }

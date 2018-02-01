@@ -91,7 +91,7 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
     private static final String SQL_STATE_WHERE_PART = "  workflow_resource_workflow.id_state = ? ";
 
     private static final String SQL_ASSIGNED_UNIT_WHERE_PART = " u_assigned.id_unit = ? ";
-    
+
     private static final String SQL_ASSIGNED_USER_FROM_PART = " LEFT JOIN workflow_directorydemands_record_user_assignment on directory_record.id_record = workflow_directorydemands_record_user_assignment.id_record ";
     private static final String SQL_ASSIGNED_USER_WHERE_PART = " workflow_directorydemands_record_user_assignment.id_user = ? ";
 
@@ -248,7 +248,7 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
         {
             sql_subquerySelectIdResource.append( SQL_END_ADD_CLAUSE );
         }
-        
+
         // filter resource Id by Assigned User id
         if ( filterParameters.getAssignedUserId( ) > 0 )
         {
@@ -328,7 +328,7 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
                 daoUtil.setString( i++, strRecordFieldItemValue );
             }
         }
-        
+
         if ( filterParameters.getAssignedUserId( ) > 0 )
         {
             daoUtil.setInt( i++, filterParameters.getAssignedUserId( ) );
