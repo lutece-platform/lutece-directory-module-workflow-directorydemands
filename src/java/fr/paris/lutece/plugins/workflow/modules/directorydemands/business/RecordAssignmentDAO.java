@@ -36,6 +36,7 @@ package fr.paris.lutece.plugins.workflow.modules.directorydemands.business;
 
 import fr.paris.lutece.plugins.directory.business.Record;
 import fr.paris.lutece.plugins.unittree.business.unit.Unit;
+import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.util.sql.DAOUtil;
 
@@ -53,10 +54,13 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
     private static final String SQL_QUERY_SELECTALL = "SELECT id, unittree_unit_assignment.id_resource, id_assignor_unit, id_assigned_unit, assignment_date, assignment_type, is_active,"
             + " u_assignor.id_parent as id_parent_assignor_unit, u_assignor.label as label_assignor_unit, u_assignor.description as description_assignor_unit, "
             + " u_assigned.id_parent as id_parent_assigned_unit, u_assigned.label as label_assigned_unit, u_assigned.description as description_assigned_unit, "
-            + " directory_record.date_creation "
+            + " directory_record.date_creation, "
+            + " core_admin_user.id_user, core_admin_user.last_name, core_admin_user.first_name, core_admin_user.email "
             + " FROM unittree_unit_assignment "
             + " LEFT JOIN  unittree_unit u_assignor on u_assignor.id_unit = unittree_unit_assignment.id_assignor_unit "
-            + " LEFT JOIN  unittree_unit u_assigned on u_assigned.id_unit = unittree_unit_assignment.id_assigned_unit  ";
+            + " LEFT JOIN  unittree_unit u_assigned on u_assigned.id_unit = unittree_unit_assignment.id_assigned_unit  "
+            + " LEFT JOIN workflow_directorydemands_record_user_assignment wdrua ON wdrua.id_record = unittree_unit_assignment.id_resource "
+            + " LEFT JOIN core_admin_user ON wdrua.id_user = core_admin_user.id_user ";
     private static final String SQL_SUBQUERY_SELECT_ID_RESOURCE = " SELECT id_resource  FROM unittree_unit_assignment "
             + "LEFT JOIN directory_record  on directory_record.id_record = unittree_unit_assignment.id_resource "
             + "LEFT JOIN directory_directory  on directory_directory.id_directory = directory_record.id_directory  ";
@@ -374,6 +378,12 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
         unitAssigned.setLabel( daoUtil.getString( "label_assigned_unit" ) );
         unitAssigned.setDescription( daoUtil.getString( "description_assigned_unit" ) );
 
+        AdminUser userAssigned = recordAssignment.getAssignedUser( );
+        userAssigned.setUserId( daoUtil.getInt( "id_user" ) );
+        userAssigned.setLastName( daoUtil.getString( "last_name" ) );
+        userAssigned.setFirstName( daoUtil.getString( "first_name" ) );
+        userAssigned.setEmail( daoUtil.getString( "email" ) );
+        
         return recordAssignment;
     }
 
