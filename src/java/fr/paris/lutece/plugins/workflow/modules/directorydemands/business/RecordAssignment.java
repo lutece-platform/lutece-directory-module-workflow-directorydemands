@@ -36,6 +36,7 @@ package fr.paris.lutece.plugins.workflow.modules.directorydemands.business;
 import java.sql.Timestamp;
 
 import fr.paris.lutece.plugins.unittree.business.unit.Unit;
+import fr.paris.lutece.portal.business.user.AdminUser;
 
 /**
  * This class represents the assignment of a {@link fr.paris.lutece.plugins.directory.business.Record Record} to a
@@ -50,6 +51,7 @@ public class RecordAssignment
     private Unit _assignedUnit;
     private Unit _assignorUnit;
     private Timestamp _dateAssignmentDate;
+    private AdminUser _assignedUser;
 
     /**
      * Constructor
@@ -58,6 +60,7 @@ public class RecordAssignment
     {
         this._assignedUnit = new Unit( );
         this._assignorUnit = new Unit( );
+        this._assignedUser = new AdminUser( );
 
         _assignedUnit.setIdUnit( UNIT_DEFAULT_ID );
         _assignorUnit.setIdUnit( UNIT_DEFAULT_ID );
@@ -209,5 +212,23 @@ public class RecordAssignment
     {
         _assignorUnit.setIdUnit( nIdAssignorUnit );
     }
+
+    /**
+     * Get the assigned user
+     * @return the adminUser who is assigned to record
+     */
+    public AdminUser getAssignedUser() {
+        return _assignedUser;
+    }
+
+    /**
+     * Set the assigned admin user
+     * @param _assignedUser the admin user who is assigned to record.
+     */
+    public void setAssignedUser(AdminUser _assignedUser) {
+        this._assignedUser = _assignedUser;
+    }
+    
+    
 
 }
