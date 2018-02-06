@@ -383,7 +383,7 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
         userAssigned.setLastName( daoUtil.getString( "last_name" ) );
         userAssigned.setFirstName( daoUtil.getString( "first_name" ) );
         userAssigned.setEmail( daoUtil.getString( "email" ) );
-        
+
         return recordAssignment;
     }
 

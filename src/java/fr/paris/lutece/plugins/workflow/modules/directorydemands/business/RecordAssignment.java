@@ -215,20 +215,23 @@ public class RecordAssignment
 
     /**
      * Get the assigned user
+     * 
      * @return the adminUser who is assigned to record
      */
-    public AdminUser getAssignedUser() {
+    public AdminUser getAssignedUser( )
+    {
         return _assignedUser;
     }
 
     /**
      * Set the assigned admin user
-     * @param _assignedUser the admin user who is assigned to record.
+     * 
+     * @param _assignedUser
+     *            the admin user who is assigned to record.
      */
-    public void setAssignedUser(AdminUser _assignedUser) {
+    public void setAssignedUser( AdminUser _assignedUser )
+    {
         this._assignedUser = _assignedUser;
     }
-    
-    
 
 }
