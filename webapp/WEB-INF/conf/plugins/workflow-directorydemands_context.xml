@@ -49,8 +49,24 @@
             p:taskForAutomaticAction="false"
             p:configRequired="false"
             p:formTaskRequired="false"   />
-    <bean id="workflow-unittree.assignRecordToCurrentUserTaskComponent"
+    <bean id="workflow-directorydemands.assignRecordToCurrentUserTaskComponent"
         class="fr.paris.lutece.plugins.workflow.modules.directorydemands.web.task.AssignRecordToCurrentUserTaskComponent"
         p:taskType-ref="workflow-directorydemands.taskTypeAssignRecordToCurrentUser" />
+
+    <!-- Task Remove record assignment -->
+    <bean id="workflow-directorydemands.taskRemoveRecordAssignment"
+            class="fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task.TaskRemoveRecordAssignment"
+            scope="prototype" />
+    <bean id="workflow-directorydemands.taskTypeRemoveRecordAssignment"
+            class="fr.paris.lutece.plugins.workflowcore.business.task.TaskType"
+            p:key="taskRemoveRecordAssignment"
+            p:titleI18nKey="module.workflow.directorydemands.task_remove_record_assignment.title"
+            p:beanName="workflow-directorydemands.taskRemoveRecordAssignment"
+            p:taskForAutomaticAction="true"
+            p:configRequired="false"
+            p:formTaskRequired="false"   />
+    <bean id="workflow-directorydemands.removeRecordAssignmentTaskComponent"
+        class="fr.paris.lutece.plugins.workflow.modules.directorydemands.web.task.RemoveRecordAssignmentTaskComponent"
+        p:taskType-ref="workflow-directorydemands.taskTypeRemoveRecordAssignment" />
 
 </beans>

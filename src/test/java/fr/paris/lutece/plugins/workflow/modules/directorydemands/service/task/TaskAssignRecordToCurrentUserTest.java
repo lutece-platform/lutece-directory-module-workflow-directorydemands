@@ -42,14 +42,15 @@ import java.util.Locale;
 
 import org.springframework.mock.web.MockHttpServletRequest;
 
+import fr.paris.lutece.plugins.directory.business.MockRecord;
 import fr.paris.lutece.plugins.directory.business.Record;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.RecordUserAssignmentDAOTest;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.RecordUserAssignmentHome;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.information.MockTaskInformation;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.information.TaskInformation;
-import fr.paris.lutece.plugins.workflow.modules.directorydemands.util.IdGenerator;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.business.user.AdminUserHome;
+import fr.paris.lutece.portal.business.user.MockAdminUser;
 import fr.paris.lutece.portal.service.admin.AdminAuthenticationService;
 import fr.paris.lutece.test.LuteceTestCase;
 
@@ -70,31 +71,12 @@ public class TaskAssignRecordToCurrentUserTest extends LuteceTestCase
     {
         super.setUp( );
 
-        _user1 = createUser( );
-        _user2 = createUser( );
-
-        AdminUserHome.create( _user1 );
-        AdminUserHome.create( _user2 );
+        _user1 = MockAdminUser.insertUserInDatabase( );
+        _user2 = MockAdminUser.insertUserInDatabase( );
 
         _task = new TaskAssignRecordToCurrentUser( );
         _request = new MockHttpServletRequest( );
         _daoTest = new RecordUserAssignmentDAOTest( );
-    }
-
-    private AdminUser createUser( )
-    {
-        int nId = IdGenerator.generateId( );
-        String strTestValue = String.valueOf( nId );
-
-        AdminUser user = new AdminUser( );
-        user.setUserId( nId );
-        user.setStatus( AdminUser.ACTIVE_CODE );
-        user.setAccessCode( strTestValue );
-        user.setLastName( strTestValue );
-        user.setFirstName( strTestValue );
-        user.setEmail( strTestValue );
-
-        return user;
     }
 
     @Override
@@ -109,7 +91,7 @@ public class TaskAssignRecordToCurrentUserTest extends LuteceTestCase
     public void testAssignOneRecordToOneUser( ) throws Exception
     {
         AdminAuthenticationService.getInstance( ).registerUser( _request, _user1 );
-        Record record = createRecord( );
+        Record record = MockRecord.create( );
 
         _task.processTask( record, _request, _locale );
 
@@ -121,19 +103,11 @@ public class TaskAssignRecordToCurrentUserTest extends LuteceTestCase
         RecordUserAssignmentHome.remove( record );
     }
 
-    private Record createRecord( )
-    {
-        Record record = new Record( );
-        record.setIdRecord( IdGenerator.generateId( ) );
-
-        return record;
-    }
-
     public void testAssignTwoRecordToOneUser( ) throws Exception
     {
         AdminAuthenticationService.getInstance( ).registerUser( _request, _user1 );
-        Record record1 = createRecord( );
-        Record record2 = createRecord( );
+        Record record1 = MockRecord.create( );
+        Record record2 = MockRecord.create( );
 
         _task.processTask( record1, _request, _locale );
         _task.processTask( record2, _request, _locale );
@@ -152,7 +126,7 @@ public class TaskAssignRecordToCurrentUserTest extends LuteceTestCase
     public void testAssignOneRecordToTwoUser( ) throws Exception
     {
         AdminAuthenticationService.getInstance( ).registerUser( _request, _user1 );
-        Record record = createRecord( );
+        Record record = MockRecord.create( );
 
         _task.processTask( record, _request, _locale );
 
@@ -172,8 +146,8 @@ public class TaskAssignRecordToCurrentUserTest extends LuteceTestCase
     public void testAssignOneRecordToTwoUserEach( ) throws Exception
     {
         AdminAuthenticationService.getInstance( ).registerUser( _request, _user1 );
-        Record record1 = createRecord( );
-        Record record2 = createRecord( );
+        Record record1 = MockRecord.create( );
+        Record record2 = MockRecord.create( );
 
         _task.processTask( record1, _request, _locale );
 
@@ -196,7 +170,7 @@ public class TaskAssignRecordToCurrentUserTest extends LuteceTestCase
     public void testTaskInformationAdded( ) throws Exception
     {
         AdminAuthenticationService.getInstance( ).registerUser( _request, _user1 );
-        Record record = createRecord( );
+        Record record = MockRecord.create( );
         TaskInformation taskInformation = MockTaskInformation.createWithNoPieceOfInformation( );
         _task.processTask( record, _request, _locale );
 

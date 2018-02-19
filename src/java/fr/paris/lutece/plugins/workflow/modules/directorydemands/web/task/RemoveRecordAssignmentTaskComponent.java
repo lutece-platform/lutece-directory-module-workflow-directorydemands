@@ -31,55 +31,24 @@
  *
  * License 1.0
  */
-
-package fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.information;
-
-import fr.paris.lutece.plugins.workflow.modules.unittree.service.WorkflowUnittreePlugin;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
+package fr.paris.lutece.plugins.workflow.modules.directorydemands.web.task;
 
 /**
- * This class provides instances management methods (create, find, ...) for {@link TaskInformation} objects
+ * This class is a task component for the {@link fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task.TaskRemoveRecordAssignment
+ * TaskRemoveRecordAssignment} class
+ *
  */
-
-public final class TaskInformationHome
+public class RemoveRecordAssignmentTaskComponent extends AbstractDirectoryDemandsTaskComponent
 {
-    // Static variable pointed at the DAO instance
-    private static ITaskInformationDAO _dao = SpringContextService.getBean( ITaskInformationDAO.BEAN_NAME );
+    private static final String TEMPLATE_INFORMATION = "admin/plugins/workflow/modules/directorydemands/task_remove_record_assignment_information.html";
 
     /**
-     * Private constructor
+     * {@inheritDoc}
      */
-    private TaskInformationHome( )
+    @Override
+    protected String getTaskInformationTemplate( )
     {
-
-    }
-
-    /**
-     * Creates a task information
-     * 
-     * @param taskInformation
-     *            The task information to create
-     * @return The task information which has been created
-     */
-    public static TaskInformation create( TaskInformation taskInformation )
-    {
-        _dao.insert( taskInformation, WorkflowUnittreePlugin.getPlugin( ) );
-
-        return taskInformation;
-    }
-
-    /**
-     * Finds the task information for the specified couple {history id, task id}
-     * 
-     * @param nIdHistory
-     *            the history id
-     * @param nIdTask
-     *            the task id
-     * @return the task information
-     */
-    public static TaskInformation find( int nIdHistory, int nIdTask )
-    {
-        return _dao.load( nIdHistory, nIdTask, WorkflowUnittreePlugin.getPlugin( ) );
+        return TEMPLATE_INFORMATION;
     }
 
 }

@@ -31,55 +31,51 @@
  *
  * License 1.0
  */
+package fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task;
 
-package fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.information;
+import java.util.Locale;
 
-import fr.paris.lutece.plugins.workflow.modules.unittree.service.WorkflowUnittreePlugin;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
+import javax.servlet.http.HttpServletRequest;
+
+import fr.paris.lutece.plugins.directory.business.Record;
+import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.RecordUserAssignmentHome;
+import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.information.TaskInformation;
+import fr.paris.lutece.portal.service.i18n.I18nService;
 
 /**
- * This class provides instances management methods (create, find, ...) for {@link TaskInformation} objects
+ * This class is a task to remove the assignment of a record to a user
+ *
  */
-
-public final class TaskInformationHome
+public class TaskRemoveRecordAssignment extends AbstractTaskRecordRelated
 {
-    // Static variable pointed at the DAO instance
-    private static ITaskInformationDAO _dao = SpringContextService.getBean( ITaskInformationDAO.BEAN_NAME );
+    // Messages
+    private static final String MESSAGE_REMOVE_RECORD_ASSIGNMENT = "module.workflow.directorydemands.task_remove_record_assignment.title";
 
     /**
-     * Private constructor
+     * {@inheritDoc}
      */
-    private TaskInformationHome( )
+    @Override
+    public String getTitle( Locale locale )
     {
-
+        return I18nService.getLocalizedString( MESSAGE_REMOVE_RECORD_ASSIGNMENT, locale );
     }
 
     /**
-     * Creates a task information
-     * 
-     * @param taskInformation
-     *            The task information to create
-     * @return The task information which has been created
+     * {@inheritDoc}
      */
-    public static TaskInformation create( TaskInformation taskInformation )
+    @Override
+    protected void processTask( Record record, HttpServletRequest request, Locale locale )
     {
-        _dao.insert( taskInformation, WorkflowUnittreePlugin.getPlugin( ) );
-
-        return taskInformation;
+        RecordUserAssignmentHome.remove( record );
     }
 
     /**
-     * Finds the task information for the specified couple {history id, task id}
-     * 
-     * @param nIdHistory
-     *            the history id
-     * @param nIdTask
-     *            the task id
-     * @return the task information
+     * {@inheritDoc}
      */
-    public static TaskInformation find( int nIdHistory, int nIdTask )
+    @Override
+    protected void fillTaskInformation( TaskInformation taskInformation )
     {
-        return _dao.load( nIdHistory, nIdTask, WorkflowUnittreePlugin.getPlugin( ) );
+        // nothing to fill
     }
 
 }

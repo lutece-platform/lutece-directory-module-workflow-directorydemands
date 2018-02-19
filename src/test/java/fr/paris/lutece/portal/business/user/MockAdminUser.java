@@ -31,55 +31,33 @@
  *
  * License 1.0
  */
+package fr.paris.lutece.portal.business.user;
 
-package fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.information;
+import fr.paris.lutece.plugins.workflow.modules.directorydemands.util.IdGenerator;
 
-import fr.paris.lutece.plugins.workflow.modules.unittree.service.WorkflowUnittreePlugin;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
-
-/**
- * This class provides instances management methods (create, find, ...) for {@link TaskInformation} objects
- */
-
-public final class TaskInformationHome
+public class MockAdminUser
 {
-    // Static variable pointed at the DAO instance
-    private static ITaskInformationDAO _dao = SpringContextService.getBean( ITaskInformationDAO.BEAN_NAME );
-
-    /**
-     * Private constructor
-     */
-    private TaskInformationHome( )
+    public static AdminUser create( )
     {
+        int nId = IdGenerator.generateId( );
+        String strTestValue = String.valueOf( nId );
 
+        AdminUser user = new AdminUser( );
+        user.setUserId( nId );
+        user.setStatus( AdminUser.ACTIVE_CODE );
+        user.setAccessCode( strTestValue );
+        user.setLastName( strTestValue );
+        user.setFirstName( strTestValue );
+        user.setEmail( strTestValue );
+
+        return user;
     }
 
-    /**
-     * Creates a task information
-     * 
-     * @param taskInformation
-     *            The task information to create
-     * @return The task information which has been created
-     */
-    public static TaskInformation create( TaskInformation taskInformation )
+    public static AdminUser insertUserInDatabase( )
     {
-        _dao.insert( taskInformation, WorkflowUnittreePlugin.getPlugin( ) );
+        AdminUser user = create( );
+        AdminUserHome.create( user );
 
-        return taskInformation;
+        return user;
     }
-
-    /**
-     * Finds the task information for the specified couple {history id, task id}
-     * 
-     * @param nIdHistory
-     *            the history id
-     * @param nIdTask
-     *            the task id
-     * @return the task information
-     */
-    public static TaskInformation find( int nIdHistory, int nIdTask )
-    {
-        return _dao.load( nIdHistory, nIdTask, WorkflowUnittreePlugin.getPlugin( ) );
-    }
-
 }

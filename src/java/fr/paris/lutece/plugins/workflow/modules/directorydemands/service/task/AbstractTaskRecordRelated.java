@@ -54,6 +54,9 @@ import fr.paris.lutece.portal.service.spring.SpringContextService;
  */
 public abstract class AbstractTaskRecordRelated extends SimpleTask
 {
+    private static final String NO_INFORMATION = "(no information)";
+
+    // Services
     private static final IResourceHistoryService _resourceHistoryService = SpringContextService.getBean( ResourceHistoryService.BEAN_SERVICE );
 
     /**
@@ -98,7 +101,22 @@ public abstract class AbstractTaskRecordRelated extends SimpleTask
     {
         TaskInformation taskInformation = new TaskInformation( nIdResourceHistory, getId( ) );
         fillTaskInformation( taskInformation );
+        manageNoInformation( taskInformation );
         TaskInformationHome.create( taskInformation );
+    }
+
+    /**
+     * Manages the case there is no information in the specified {@code TaskInformation}
+     * 
+     * @param taskInformation
+     *            the {@code TaskInformation}
+     */
+    private void manageNoInformation( TaskInformation taskInformation )
+    {
+        if ( taskInformation.getKeys( ).isEmpty( ) )
+        {
+            taskInformation.add( NO_INFORMATION, NO_INFORMATION );
+        }
     }
 
     /**

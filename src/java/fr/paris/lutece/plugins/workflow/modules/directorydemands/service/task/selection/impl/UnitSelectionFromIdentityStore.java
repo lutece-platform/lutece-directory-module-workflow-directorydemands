@@ -33,8 +33,10 @@
  */
 package fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task.selection.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -53,8 +55,10 @@ import fr.paris.lutece.plugins.directory.business.RecordHome;
 import fr.paris.lutece.plugins.identitystore.web.rs.dto.AttributeDto;
 import fr.paris.lutece.plugins.identitystore.web.rs.dto.IdentityDto;
 import fr.paris.lutece.plugins.identitystore.web.service.IdentityService;
+import fr.paris.lutece.plugins.unittree.business.unit.Unit;
 import fr.paris.lutece.plugins.unittree.modules.gra.exception.UnitCodeNotFoundException;
 import fr.paris.lutece.plugins.unittree.modules.gra.service.IUnitCodeService;
+import fr.paris.lutece.plugins.unittree.service.unit.IUnitService;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.config.UnitSelectionFromIdentityStoreConfig;
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.service.WorkflowDirectorydemandsPlugin;
 import fr.paris.lutece.plugins.workflow.modules.unittree.exception.AssignmentNotPossibleException;
@@ -65,6 +69,8 @@ import fr.paris.lutece.plugins.workflow.modules.unittree.service.task.selection.
 import fr.paris.lutece.plugins.workflowcore.service.task.ITask;
 import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.plugin.Plugin;
+import fr.paris.lutece.portal.service.template.AppTemplateService;
+import fr.paris.lutece.util.html.HtmlTemplate;
 
 /**
  * This class is a unit selection using IdentityStore
@@ -80,6 +86,8 @@ public class UnitSelectionFromIdentityStore implements IUnitSelection
     private IdentityService _identityService;
     @Inject
     private IUnitCodeService _unitCodeService;
+    @Inject
+    private IUnitService _unitService;
 
     private final IConfigurationHandler _configurationHandler = new ConfigurationHandler( );
     private final ITaskFormHandler _taskFormHandler = new TaskFormHandler( );
@@ -254,10 +262,13 @@ public class UnitSelectionFromIdentityStore implements IUnitSelection
      * This class is a form handler for the {@link UnitSelectionFromIdentityStore} class
      *
      */
-    private static class TaskFormHandler implements ITaskFormHandler
+    private class TaskFormHandler implements ITaskFormHandler
     {
         // Messages
         private static final String MESSAGE_TITLE = "module.workflow.directorydemands.unit_selection.from_ids.form.title";
+
+        // Markers
+        private static final String MARK_ASSIGNED_UNIT = "assigned_unit";
 
         /**
          * {@inheritDoc}
@@ -272,9 +283,17 @@ public class UnitSelectionFromIdentityStore implements IUnitSelection
          * {@inheritDoc}
          */
         @Override
-        public String getDisplayedForm( int nIdResource, String strResourceType, Locale locale, ITask task )
+        public String getDisplayedForm( int nIdResource, String strResourceType, Locale locale, ITask task ) throws AssignmentNotPossibleException
         {
-            return StringUtils.EMPTY;
+            Unit unitAssigned = _unitService.getUnit( select( nIdResource, strResourceType, null, task ), false );
+
+            Map<String, Object> model = new HashMap<String, Object>( );
+
+            model.put( MARK_ASSIGNED_UNIT, unitAssigned );
+
+            HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_AUTOMATIC_TASK_FORM, locale, model );
+
+            return template.getHtml( );
         }
 
     }

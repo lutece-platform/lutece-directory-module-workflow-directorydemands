@@ -57,18 +57,6 @@ public class RecordUserAssignmentDAOTest extends LuteceTestCase
 
     private IRecordUserAssignmentDAO _dao = new RecordUserAssignmentDAO( );
 
-    @Override
-    protected void setUp( ) throws Exception
-    {
-        super.setUp( );
-    }
-
-    @Override
-    protected void tearDown( ) throws Exception
-    {
-        super.tearDown( );
-    }
-
     public void testAssignOneRecordToOneUser( )
     {
         Record record = createRecord( );

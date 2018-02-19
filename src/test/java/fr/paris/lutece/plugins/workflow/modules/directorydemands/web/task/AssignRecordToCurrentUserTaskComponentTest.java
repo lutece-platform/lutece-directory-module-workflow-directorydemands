@@ -52,6 +52,7 @@ import fr.paris.lutece.test.LuteceTestCase;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 public class AssignRecordToCurrentUserTaskComponentTest extends LuteceTestCase
@@ -100,7 +101,7 @@ public class AssignRecordToCurrentUserTaskComponentTest extends LuteceTestCase
     {
         String strDisplayedTaskInformation = getDisplayTaskInformation( );
 
-        assertThat( strDisplayedTaskInformation, is( notNullValue( ) ) );
+        assertThat( strDisplayedTaskInformation, is( nullValue( ) ) );
     }
 
     private String getDisplayTaskInformation( )
