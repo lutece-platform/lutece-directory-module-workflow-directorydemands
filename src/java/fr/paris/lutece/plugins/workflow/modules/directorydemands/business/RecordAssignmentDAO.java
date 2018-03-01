@@ -34,15 +34,16 @@
 
 package fr.paris.lutece.plugins.workflow.modules.directorydemands.business;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+
 import fr.paris.lutece.plugins.directory.business.Record;
 import fr.paris.lutece.plugins.unittree.business.unit.Unit;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.util.sql.DAOUtil;
-
-import java.util.ArrayList;
-import java.util.List;
-import org.apache.commons.lang.StringUtils;
 
 /**
  * This class provides Data Access methods for RecordAssignment objects
@@ -209,7 +210,7 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
         }
 
         // filter resource Id by Assigned Unit id
-        if ( filterParameters.getAssignedUnitId( ) > 0 )
+        if ( filterParameters.getAssignedUnitId( ) > -1 )
         {
             sql_subquerySelectIdResource.append( SQL_ADD_CLAUSE );
             sql_subquerySelectIdResource.append( SQL_ASSIGNED_UNIT_WHERE_PART );
@@ -254,7 +255,8 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
         }
 
         // filter resource Id by Assigned User id
-        if ( filterParameters.getAssignedUserId( ) > 0 )
+        List<Integer> listAssignedUserId = filterParameters.getListAssignedUserId( );
+        if ( listAssignedUserId != null && !listAssignedUserId.isEmpty( ) )
         {
             if ( !DirectoryRecordJoinAdded )
             {
@@ -262,9 +264,12 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
                 DirectoryRecordJoinAdded = true;
             }
             sql.append( SQL_ASSIGNED_USER_FROM_PART );
-            sql_subquerySelectIdResource.append( SQL_ADD_CLAUSE );
-            sql_subquerySelectIdResource.append( SQL_ASSIGNED_USER_WHERE_PART );
-            sql_subquerySelectIdResource.append( SQL_END_ADD_CLAUSE );
+            for ( int i = 0; i < listAssignedUserId.size( ); i++ )
+            {
+                sql_subquerySelectIdResource.append( SQL_ADD_CLAUSE );
+                sql_subquerySelectIdResource.append( SQL_ASSIGNED_USER_WHERE_PART );
+                sql_subquerySelectIdResource.append( SQL_END_ADD_CLAUSE );
+            }
         }
 
         // add subquery to the where clause
@@ -319,7 +324,7 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
                 daoUtil.setInt( i++, filterParameters.getStateId( ) );
         }
 
-        if ( filterParameters.getAssignedUnitId( ) > 0 )
+        if ( filterParameters.getAssignedUnitId( ) > -1 )
         {
             daoUtil.setInt( i++, filterParameters.getAssignedUnitId( ) );
         }
@@ -333,9 +338,12 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
             }
         }
 
-        if ( filterParameters.getAssignedUserId( ) > 0 )
+        if ( listAssignedUserId != null && !listAssignedUserId.isEmpty( ) )
         {
-            daoUtil.setInt( i++, filterParameters.getAssignedUserId( ) );
+            for ( Integer nAssignedUserId : listAssignedUserId )
+            {
+                daoUtil.setInt( i++, nAssignedUserId );
+            }
         }
 
         // execute query

@@ -41,6 +41,8 @@ package fr.paris.lutece.plugins.workflow.modules.directorydemands.business;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.math.NumberUtils;
+
 /**
  *
  * @author leridons
@@ -54,9 +56,9 @@ public class RecordAssignmentFilter
     private int _nNumberOfDays; // filter records by period : NONE, LAST_DAY, LAST_WEEK, LAST_MONTH
     private int _nDirectoryId; // specify a particular directory to filter records
     private int _nStateId; // specify a particular state to filter records
-    private int _nAssignedUnitId; // specify a particular Assigned Unit to filter records
+    private int _nAssignedUnitId = NumberUtils.INTEGER_MINUS_ONE; // specify a particular Assigned Unit to filter records
     private List<RecordFieldItem> _listRecordFieldItem = new ArrayList<>( ); // specify a particular a list of record field values to filter records
-    private int _nAssignedUserId; // specify a particular user to filter records
+    private List<Integer> _listAssignedUserId = new ArrayList<>( ); // specify particular users to filter records
     private String _strOrderBy; // sort records
     private boolean _bAsc; // sort records order (ASC = true)
     private boolean _bIsActiveDirectory; // For getting record from only active directory
@@ -234,24 +236,24 @@ public class RecordAssignmentFilter
     }
 
     /**
-     * Return the identifier of the assigned user to filter on
+     * Return the list of the identifier of the assigned user to filter on
      * 
-     * @return the nAssignedUserId The identifier of the assigned user to filter on
+     * @return the list of the identifier of the assigned user to filter on
      */
-    public int getAssignedUserId( )
+    public List<Integer> getListAssignedUserId( )
     {
-        return _nAssignedUserId;
+        return _listAssignedUserId;
     }
 
     /**
-     * Set the identifier of the assigned user to filter on
+     * Set the list of user identifier to filter on
      * 
-     * @param nAssignedUserId
-     *            The nAssignedUserId to set
+     * @param listAssignedUserId
+     *            The list of assigned user id to set
      */
-    public void setAssignedUserId( int nAssignedUserId )
+    public void setListAssignedUserId( List<Integer> listAssignedUserId )
     {
-        this._nAssignedUserId = nAssignedUserId;
+        this._listAssignedUserId = listAssignedUserId;
     }
 
     /**
@@ -326,7 +328,7 @@ public class RecordAssignmentFilter
         recordAssignmentFilterClone.setActiveDirectory( _bIsActiveDirectory );
         recordAssignmentFilterClone.setAsc( _bAsc );
         recordAssignmentFilterClone.setAssignedUnitId( _nAssignedUnitId );
-        recordAssignmentFilterClone.setAssignedUserId( _nAssignedUserId );
+        recordAssignmentFilterClone.setListAssignedUserId( _listAssignedUserId );
         recordAssignmentFilterClone.setDirectoryId( _nDirectoryId );
         recordAssignmentFilterClone.setLastActiveAssignmentRecordsOnly( _nLastActiveAssignmentRecordsOnly );
         recordAssignmentFilterClone.setListRecordFieldItem( _listRecordFieldItem );
