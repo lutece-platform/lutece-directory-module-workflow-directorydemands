@@ -62,20 +62,20 @@ public class RecordAssignmentFilter
     private String _strOrderBy; // sort records
     private boolean _bAsc; // sort records order (ASC = true)
     private boolean _bIsActiveDirectory; // For getting record from only active directory
-    
+
     /**
      * Default constructor
      */
     public RecordAssignmentFilter( )
     {
-        
+
     }
-    
+
     /**
      * Copy constructor
      * 
      * @param recordAssignmentFilter
-     *          The RecordAssignmentFilter to copy
+     *            The RecordAssignmentFilter to copy
      */
     public RecordAssignmentFilter( RecordAssignmentFilter recordAssignmentFilter )
     {
