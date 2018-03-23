@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2017, Mairie de Paris
+ * Copyright (c) 2002-2018, Mairie de Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,35 +31,13 @@
  *
  * License 1.0
  */
+package fr.paris.lutece.plugins.workflow.modules.directorydemands.utils;
 
-package fr.paris.lutece.plugins.workflow.modules.directorydemands.business;
-
-import fr.paris.lutece.portal.service.plugin.Plugin;
-import java.util.List;
-
-/**
- * This interface provides Data Access methods for RecordAssignment objects
- */
-
-public interface IRecordAssignmentDAO
+public class Constants
 {
-    String BEAN_NAME = "workflow-directorydemands.recordAssignmentDAO";
+    public static final String PLUGIN_PATH = "workflow/directorydemands/";
 
-    /**
-     * Load the data of a filtred list of the recordAssignment objects and returns them as a List
-     * 
-     * FILTER MAP DEFINITION KEYS USER_UNIT_ID = assigned unit id (from unittree) RECURSIVE_SEARCH_DEPTH = depth of recursive search of the children units of
-     * the assigned unit 1 : no sub units 2 : sub units 3 : sub-sub units ACTIVE_RECORDS = active records (1:active, 0:inactive) FILTER_PERIOD = get only
-     * records created since N days -1 : none N : records created since N day DIRECTORY_ID = specify a particular directory to filter records STATE_ID = specify
-     * a particular state to filter records
-     *
-     * 
-     * @param filterParameters
-     *            map of the fitlering parameters
-     * @param plugin
-     *            the Plugin
-     * @return The List which contains the data of all the recordAssignment objects
-     */
-    List<RecordAssignment> selectRecordAssignmentsFiltredList( RecordAssignmentFilter filterParameters, Plugin plugin );
-
+    // Assignment rest service
+    public static final String ASSIGNMENT_PATH = "assignment/";
+    public static final String REASSIGN_PATH = "reassignment/";
 }

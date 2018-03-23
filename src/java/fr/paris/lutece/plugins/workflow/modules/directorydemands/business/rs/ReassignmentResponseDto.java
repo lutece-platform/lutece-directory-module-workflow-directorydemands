@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2017, Mairie de Paris
+ * Copyright (c) 2002-2018, Mairie de Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,35 +31,57 @@
  *
  * License 1.0
  */
+package fr.paris.lutece.plugins.workflow.modules.directorydemands.business.rs;
 
-package fr.paris.lutece.plugins.workflow.modules.directorydemands.business;
-
-import fr.paris.lutece.portal.service.plugin.Plugin;
 import java.util.List;
 
 /**
- * This interface provides Data Access methods for RecordAssignment objects
+ * This class provides a response for the reassignment rest service
  */
-
-public interface IRecordAssignmentDAO
+public class ReassignmentResponseDto
 {
-    String BEAN_NAME = "workflow-directorydemands.recordAssignmentDAO";
+    private String _strMessage;
+    private List<String> _listErrorConnectionId;
 
     /**
-     * Load the data of a filtred list of the recordAssignment objects and returns them as a List
+     * Get the message
      * 
-     * FILTER MAP DEFINITION KEYS USER_UNIT_ID = assigned unit id (from unittree) RECURSIVE_SEARCH_DEPTH = depth of recursive search of the children units of
-     * the assigned unit 1 : no sub units 2 : sub units 3 : sub-sub units ACTIVE_RECORDS = active records (1:active, 0:inactive) FILTER_PERIOD = get only
-     * records created since N days -1 : none N : records created since N day DIRECTORY_ID = specify a particular directory to filter records STATE_ID = specify
-     * a particular state to filter records
-     *
-     * 
-     * @param filterParameters
-     *            map of the fitlering parameters
-     * @param plugin
-     *            the Plugin
-     * @return The List which contains the data of all the recordAssignment objects
+     * @return the message
      */
-    List<RecordAssignment> selectRecordAssignmentsFiltredList( RecordAssignmentFilter filterParameters, Plugin plugin );
+    public String getMessage( )
+    {
+        return _strMessage;
+    }
 
+    /**
+     * Set the message
+     * 
+     * @param strMessage
+     *            the message
+     */
+    public void setMessage( String strMessage )
+    {
+        this._strMessage = strMessage;
+    }
+
+    /**
+     * Get the list of connection id in error
+     * 
+     * @return the list of connection id in error
+     */
+    public List<String> getListErrorConnectionId( )
+    {
+        return _listErrorConnectionId;
+    }
+
+    /**
+     * Set the list of connection id in error
+     * 
+     * @param _listErrorConnectionId
+     *            the list on
+     */
+    public void setListErrorConnectionId( List<String> _listErrorConnectionId )
+    {
+        this._listErrorConnectionId = _listErrorConnectionId;
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2017, Mairie de Paris
+ * Copyright (c) 2002-2018, Mairie de Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,35 +31,47 @@
  *
  * License 1.0
  */
-
-package fr.paris.lutece.plugins.workflow.modules.directorydemands.business;
-
-import fr.paris.lutece.portal.service.plugin.Plugin;
-import java.util.List;
+package fr.paris.lutece.plugins.workflow.modules.directorydemands.business.rs;
 
 /**
- * This interface provides Data Access methods for RecordAssignment objects
+ * This class provides a custom exception when no connection ids are provided by the client in the ReassignementRest service.
  */
-
-public interface IRecordAssignmentDAO
+public class ConnectionIdsNotProvidedException extends Exception
 {
-    String BEAN_NAME = "workflow-directorydemands.recordAssignmentDAO";
+    /**
+     * Generated serial ID
+     */
+    private static final long serialVersionUID = 4587278974855585273L;
 
     /**
-     * Load the data of a filtred list of the recordAssignment objects and returns them as a List
-     * 
-     * FILTER MAP DEFINITION KEYS USER_UNIT_ID = assigned unit id (from unittree) RECURSIVE_SEARCH_DEPTH = depth of recursive search of the children units of
-     * the assigned unit 1 : no sub units 2 : sub units 3 : sub-sub units ACTIVE_RECORDS = active records (1:active, 0:inactive) FILTER_PERIOD = get only
-     * records created since N days -1 : none N : records created since N day DIRECTORY_ID = specify a particular directory to filter records STATE_ID = specify
-     * a particular state to filter records
-     *
-     * 
-     * @param filterParameters
-     *            map of the fitlering parameters
-     * @param plugin
-     *            the Plugin
-     * @return The List which contains the data of all the recordAssignment objects
+     * Constructor
      */
-    List<RecordAssignment> selectRecordAssignmentsFiltredList( RecordAssignmentFilter filterParameters, Plugin plugin );
+    public ConnectionIdsNotProvidedException( )
+    {
+        super( );
+    }
 
+    /**
+     * Constructor
+     * 
+     * @param strMessage
+     *            the message associated to the exception
+     */
+    public ConnectionIdsNotProvidedException( String strMessage )
+    {
+        super( strMessage );
+    }
+
+    /**
+     * Constructor
+     * 
+     * @param strMessage
+     *            the message associated to the exception
+     * @param exception
+     *            the original exception
+     */
+    public ConnectionIdsNotProvidedException( String strMessage, Exception exception )
+    {
+        super( strMessage, exception );
+    }
 }

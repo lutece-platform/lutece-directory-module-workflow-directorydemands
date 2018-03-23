@@ -28,3 +28,17 @@ CREATE TABLE workflow_task_directorydemands_information (
   information_key VARCHAR(255) NOT NULL,
   information_value VARCHAR(255) NULL
 );
+
+
+/*==================================================================*/
+/* Table structure for table workflow_directorydemands_reassignment_resource_history   */
+/*==================================================================*/
+DROP TABLE IF EXISTS workflow_directorydemands_reassignment_resource_history;
+CREATE TABLE workflow_directorydemands_reassignment_resource_history (
+id_reassignment_resource_history int AUTO_INCREMENT,
+id_resource int default '0' NOT NULL,
+resource_type varchar(255) default '',
+content long varchar,
+creation_date timestamp,
+PRIMARY KEY (id_reassignment_resource_history)
+);
