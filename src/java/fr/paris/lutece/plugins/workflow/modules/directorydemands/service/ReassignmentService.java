@@ -76,7 +76,7 @@ public class ReassignmentService
     private IdentityService _identityService;
     @Inject
     private IUnitCodeService _unitCodeService;
-    @Named( "directory.recordService" )
+
     // Properties
     private static final String PROPERTY_ENTRY_TITLE_CONNECTION_ID = AppPropertiesService.getProperty(
             "workflow-directorydemands.unit.selection.from.identitystore.directory.entry.title", StringUtils.EMPTY );
