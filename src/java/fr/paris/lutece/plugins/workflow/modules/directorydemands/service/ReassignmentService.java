@@ -64,6 +64,8 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * This class provides methods to reassignate resource to units
  */
@@ -74,14 +76,14 @@ public class ReassignmentService
     private IdentityService _identityService;
     @Inject
     private IUnitCodeService _unitCodeService;
-    @Named( "directory.recordService" )
+
     // Properties
-    private static final String PROPERTY_ENTRY_TITLE_CONNECTION_ID = AppPropertiesService
-            .getProperty( "workflow-directorydemands.unit.selection.from.identitystore.directory.entry.title" );
-    private static final String PROPERTY_IDS_APPLICATION_CODE = AppPropertiesService
-            .getProperty( "workflow-directorydemands.unit.selection.from.identitystore.applicationCode" );
-    private static final String PROPERTY_IDS_ASSIGNMENT_ATTRIBUTE = AppPropertiesService
-            .getProperty( "workflow-directorydemands.unit.selection.from.identitystore.identitystore.attribute.key" );
+    private static final String PROPERTY_ENTRY_TITLE_CONNECTION_ID = AppPropertiesService.getProperty(
+            "workflow-directorydemands.unit.selection.from.identitystore.directory.entry.title", StringUtils.EMPTY );
+    private static final String PROPERTY_IDS_APPLICATION_CODE = AppPropertiesService.getProperty(
+            "workflow-directorydemands.unit.selection.from.identitystore.applicationCode", StringUtils.EMPTY );
+    private static final String PROPERTY_IDS_ASSIGNMENT_ATTRIBUTE = AppPropertiesService.getProperty(
+            "workflow-directorydemands.unit.selection.from.identitystore.identitystore.attribute.key", StringUtils.EMPTY );
 
     /**
      * Reassign all the records created by given strConnectionId to new units; based on identity service attribute value
@@ -96,8 +98,9 @@ public class ReassignmentService
 
         // First get all the record ids created by the given user connection id
         EntryFilter entryFilter = new EntryFilter( );
+        entryFilter.setIsComment( EntryFilter.FILTER_FALSE );
         List<IEntry> listEntries = EntryHome.getEntryList( entryFilter, WorkflowDirectorydemandsPlugin.getPlugin( ) );
-        listEntries = listEntries.stream( ).filter( entry -> entry.getTitle( ).equals( PROPERTY_ENTRY_TITLE_CONNECTION_ID ) ).collect( Collectors.toList( ) );
+        listEntries = listEntries.stream( ).filter( entry -> PROPERTY_ENTRY_TITLE_CONNECTION_ID.equals( entry.getTitle( ) ) ).collect( Collectors.toList( ) );
 
         Set<Integer> listRecordIdOfUser = new HashSet<>( );
         for ( IEntry entry : listEntries )
