@@ -112,6 +112,7 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
     private static final String PARAMETER_SORT_BY_CREATED = "created";
     private static final String PARAMETER_SORT_BY_ASSIGNED = "assigned";
 
+    private static final int DEFAULT_USER_UNIT_ID = -1;
     private static final String DEFAULT_RECORD_FIELD_VALUE = "-1";
 
     /**
@@ -136,11 +137,11 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
         sql_subquerySelectIdResource.append( SQL_WHERE_BASE );
 
         // filter resource Id by... User unit
+        sql_subquerySelectIdResource.append( SQL_ADD_CLAUSE );
+        String strUnitWhereClause = SQL_USER_UNIT_WHERE_PART1;
+
         if ( !filterParameters.getUserUnitIdList( ).isEmpty( ) )
         {
-            sql_subquerySelectIdResource.append( SQL_ADD_CLAUSE );
-            String strUnitWhereClause = SQL_USER_UNIT_WHERE_PART1;
-
             StringBuilder additionnalParameters = new StringBuilder( );
             if ( filterParameters.getUserUnitIdList( ).size( ) > 1 )
             {
@@ -149,10 +150,17 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
                     additionnalParameters.append( ", ?" );
                 }
             }
+
             strUnitWhereClause += additionnalParameters + SQL_USER_UNIT_WHERE_PART2;
-            sql_subquerySelectIdResource.append( strUnitWhereClause );
-            sql_subquerySelectIdResource.append( SQL_END_ADD_CLAUSE );
         }
+        else
+        {
+            filterParameters.getUserUnitIdList( ).add( DEFAULT_USER_UNIT_ID );
+            strUnitWhereClause += SQL_USER_UNIT_WHERE_PART2;
+        }
+        
+        sql_subquerySelectIdResource.append( strUnitWhereClause );
+        sql_subquerySelectIdResource.append( SQL_END_ADD_CLAUSE );
 
         // filter resource Id by... ACTIVE_RECORDS_ONLY
         if ( filterParameters.isActiveAssignmentRecordsOnly( ) )
