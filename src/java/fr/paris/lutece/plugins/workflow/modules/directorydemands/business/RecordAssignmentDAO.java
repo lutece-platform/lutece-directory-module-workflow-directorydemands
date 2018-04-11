@@ -158,7 +158,7 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
             filterParameters.getUserUnitIdList( ).add( DEFAULT_USER_UNIT_ID );
             strUnitWhereClause += SQL_USER_UNIT_WHERE_PART2;
         }
-        
+
         sql_subquerySelectIdResource.append( strUnitWhereClause );
         sql_subquerySelectIdResource.append( SQL_END_ADD_CLAUSE );
 
