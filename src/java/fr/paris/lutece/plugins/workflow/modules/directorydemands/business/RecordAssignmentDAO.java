@@ -124,11 +124,10 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
         List<RecordAssignment> listRecordAssignments = new ArrayList<>( );
 
         StringBuilder sql = new StringBuilder( SQL_QUERY_SELECTALL );
+        sql.append( SQL_DIRECTORY_RECORD_FROM_PART );
         StringBuilder sql_subquerySelectIdResource = new StringBuilder( SQL_SUBQUERY_SELECT_ID_RESOURCE );
 
         StringBuilder whereClause = new StringBuilder( SQL_WHERE_BASE );
-
-        boolean DirectoryRecordJoinAdded = false;
 
         // filter by resource type
         whereClause.append( SQL_ADD_CLAUSE ).append( SQL_FILTER_BY_RESOURCE_TYPE ).append( SQL_END_ADD_CLAUSE );
@@ -173,8 +172,6 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
         // filter resource Id by... period
         if ( filterParameters.getNumberOfDays( ) > 0 )
         {
-            sql.append( SQL_DIRECTORY_RECORD_FROM_PART );
-            DirectoryRecordJoinAdded = true;
             sql_subquerySelectIdResource.append( SQL_ADD_CLAUSE );
             sql_subquerySelectIdResource.append( SQL_FILTER_PERIOD_WHERE_PART );
             sql_subquerySelectIdResource.append( SQL_END_ADD_CLAUSE );
@@ -183,11 +180,6 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
         // filter resource Id by... active directory
         if ( filterParameters.isActiveDirectory( ) )
         {
-            if ( !DirectoryRecordJoinAdded )
-            {
-                sql.append( SQL_DIRECTORY_RECORD_FROM_PART );
-                DirectoryRecordJoinAdded = true;
-            }
             sql.append( SQL_DIRECTORY_FROM_PART );
             sql_subquerySelectIdResource.append( SQL_ADD_CLAUSE );
             sql_subquerySelectIdResource.append( SQL_DIRECTORY_WHERE_PART );
@@ -197,12 +189,6 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
         // filter resource Id by... directory ( + state )
         if ( filterParameters.getDirectoryId( ) > 0 )
         {
-
-            if ( !DirectoryRecordJoinAdded )
-            {
-                sql.append( SQL_DIRECTORY_RECORD_FROM_PART );
-                DirectoryRecordJoinAdded = true;
-            }
             sql_subquerySelectIdResource.append( SQL_ADD_CLAUSE );
             sql_subquerySelectIdResource.append( SQL_DIRECTORY_RECORD_WHERE_PART );
             sql_subquerySelectIdResource.append( SQL_END_ADD_CLAUSE );
@@ -233,12 +219,6 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
             String strRecordFieldItemValue = recordFieldItem.getRecordFieldValue( );
             if ( StringUtils.isNotBlank( strRecordFieldItemValue ) && !DEFAULT_RECORD_FIELD_VALUE.equals( strRecordFieldItemValue ) )
             {
-                if ( !DirectoryRecordJoinAdded )
-                {
-                    sql.append( SQL_DIRECTORY_RECORD_FROM_PART );
-                    DirectoryRecordJoinAdded = true;
-                }
-
                 if ( !bRecordFieldRequestClose )
                 {
                     sql_subquerySelectIdResource.append( SQL_ADD_CLAUSE );
@@ -266,12 +246,8 @@ public class RecordAssignmentDAO implements IRecordAssignmentDAO
         List<Integer> listAssignedUserId = filterParameters.getListAssignedUserId( );
         if ( listAssignedUserId != null && !listAssignedUserId.isEmpty( ) )
         {
-            if ( !DirectoryRecordJoinAdded )
-            {
-                sql.append( SQL_ASSIGNED_USER_FROM_PART );
-                DirectoryRecordJoinAdded = true;
-            }
             sql.append( SQL_ASSIGNED_USER_FROM_PART );
+
             for ( int i = 0; i < listAssignedUserId.size( ); i++ )
             {
                 sql_subquerySelectIdResource.append( SQL_ADD_CLAUSE );
