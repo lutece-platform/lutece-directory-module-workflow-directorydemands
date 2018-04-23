@@ -117,12 +117,19 @@ public class ReassignmentService
 
         // Get the new user unit code
         IdentityDto identity = _identityService.getIdentity( strConnectionId, null, PROPERTY_IDS_APPLICATION_CODE );
-        AttributeDto attributeDto = identity.getAttributes( ).get( PROPERTY_IDS_ASSIGNMENT_ATTRIBUTE );
+        AttributeDto attributeDto = null;
 
         // Get the next assigned unit for the user
         Integer nIdUnit = null;
         try
         {
+            attributeDto = identity.getAttributes( ).get( PROPERTY_IDS_ASSIGNMENT_ATTRIBUTE );
+            if ( attributeDto == null )
+            {
+                AppLogService.error( "Identity with connection id " + strConnectionId + " has no assignment attribute filled" );
+                throw new AssignmentNotPossibleException( );
+            }
+
             nIdUnit = _unitCodeService.getIdUnitFromUnitCode( attributeDto.getValue( ) );
             Unit newAssignedUnit = UnitHome.findByPrimaryKey( nIdUnit );
 
