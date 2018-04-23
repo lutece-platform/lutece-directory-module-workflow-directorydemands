@@ -115,6 +115,24 @@ public class ReassignmentService
                     .addAll( listRecordFields.stream( ).map( recordField -> recordField.getRecord( ).getIdRecord( ) ).collect( Collectors.toList( ) ) );
         }
 
+        if ( !listRecordIdOfUser.isEmpty( ) )
+        {
+            reassignRecords( strConnectionId, listRecordIdOfUser );
+        }
+    }
+
+    /**
+     * Reassign the specified records to the new unit. The new unit is found from the identity.
+     * 
+     * @param strConnectionId
+     *            the connection id used to find the identity
+     * @param listRecordIdOfUser
+     *            the records to reassign
+     * @throws AssignmentNotPossibleException
+     *             if the new unit cannot be found
+     */
+    private void reassignRecords( String strConnectionId, Set<Integer> listRecordIdOfUser ) throws AssignmentNotPossibleException
+    {
         // Get the new user unit code
         IdentityDto identity = _identityService.getIdentity( strConnectionId, null, PROPERTY_IDS_APPLICATION_CODE );
         AttributeDto attributeDto = null;
