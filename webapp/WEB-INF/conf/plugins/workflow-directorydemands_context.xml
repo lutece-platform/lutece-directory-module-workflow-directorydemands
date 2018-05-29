@@ -9,43 +9,17 @@
        http://www.springframework.org/schema/context/spring-context-3.0.xsd
        http://www.springframework.org/schema/tx
        http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
-
-    <!-- IdentityService -->
-    <bean id="workflow-directorydemands.identitystore.httpTransport" class="fr.paris.lutece.plugins.identitystore.web.rs.service.IdentityTransportRest">
-        <property name="IdentityStoreEndPoint">
-            <value>http://localhost:8080/identitystore/rest/identitystore</value>
-        </property>
-    </bean>
-    <bean id="workflow-directorydemands.identitystore.service" class="fr.paris.lutece.plugins.identitystore.web.service.IdentityService">
-        <constructor-arg ref="workflow-directorydemands.identitystore.httpTransport"/>
-    </bean>
-
-    <!-- Rest -->
-    <bean id="workflow-directorydemands.assignmentRest"  class="fr.paris.lutece.plugins.workflow.modules.directorydemands.web.rs.AssignmentRest" />
     
-
-    <!-- Reassignment service -->
-    <bean id="workflow-directorydemands.reassignmentService"
-        class="fr.paris.lutece.plugins.workflow.modules.directorydemands.service.ReassignmentService" />
-   
     <!-- Transaction Manager -->
     <bean id="workflow-directorydemands.transactionManager" class="fr.paris.lutece.portal.service.database.DAOUtilTransactionManager"
         p:pluginName="workflow-directorydemands" />
 
     <!-- DAO -->
-    <bean id="workflow-directorydemands.recordAssignmentDAO"
-        class="fr.paris.lutece.plugins.workflow.modules.directorydemands.business.RecordAssignmentDAO" />
     <bean id="workflow-directorydemands.recordUserAssignmentDAO"
         class="fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.RecordUserAssignmentDAO" />
     <bean id="workflow-directorydemands.taskInformationDAO"
         class="fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.information.TaskInformationDAO" />
-    <bean id="workflow-directorydemands.reassignmentResourceHistoryDAO"
-        class="fr.paris.lutece.plugins.workflow.modules.directorydemands.business.ReassignmentResourceHistoryDAO" />
     
-    <!-- Unit Selection -->
-    <bean id="workflow-directorydemands.unitSelection.fromIdentityStore"
-        class="fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task.selection.impl.UnitSelectionFromIdentityStore" />
-
     <!-- Task Assign record to current user -->
     <bean id="workflow-directorydemands.taskAssignRecordToCurrentUser"
             class="fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task.TaskAssignRecordToCurrentUser"
@@ -77,10 +51,5 @@
     <bean id="workflow-directorydemands.removeRecordAssignmentTaskComponent"
         class="fr.paris.lutece.plugins.workflow.modules.directorydemands.web.task.RemoveRecordAssignmentTaskComponent"
         p:taskType-ref="workflow-directorydemands.taskTypeRemoveRecordAssignment" />
-
-    <!-- Overriding of workflow provider -->
-    <alias alias="workflow.workflowProvider" name="workflow-directorydemands.workflowProvider"/>
-    <bean id="workflow-directorydemands.workflowProvider"
-        class="fr.paris.lutece.plugins.workflow.modules.directorydemands.service.workflow.DirectorydemandsWorkflowProvider" />
 
 </beans>

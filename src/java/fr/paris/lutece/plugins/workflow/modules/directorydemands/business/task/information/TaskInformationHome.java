@@ -34,13 +34,12 @@
 
 package fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.information;
 
-import fr.paris.lutece.plugins.workflow.modules.unittree.service.WorkflowUnittreePlugin;
+import fr.paris.lutece.plugins.workflow.modules.directorydemands.service.WorkflowDirectorydemandsPlugin;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
 
 /**
  * This class provides instances management methods (create, find, ...) for {@link TaskInformation} objects
  */
-
 public final class TaskInformationHome
 {
     // Static variable pointed at the DAO instance
@@ -63,7 +62,7 @@ public final class TaskInformationHome
      */
     public static TaskInformation create( TaskInformation taskInformation )
     {
-        _dao.insert( taskInformation, WorkflowUnittreePlugin.getPlugin( ) );
+        _dao.insert( taskInformation, WorkflowDirectorydemandsPlugin.getPlugin( ) );
 
         return taskInformation;
     }
@@ -72,14 +71,14 @@ public final class TaskInformationHome
      * Finds the task information for the specified couple {history id, task id}
      * 
      * @param nIdHistory
-     *            the history id
+     *            The history id
      * @param nIdTask
-     *            the task id
+     *            The task id
      * @return the task information
      */
     public static TaskInformation find( int nIdHistory, int nIdTask )
     {
-        return _dao.load( nIdHistory, nIdTask, WorkflowUnittreePlugin.getPlugin( ) );
+        return _dao.load( nIdHistory, nIdTask, WorkflowDirectorydemandsPlugin.getPlugin( ) );
     }
 
 }
