@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS workflow_directorydemands_reassignment_resource_history;
