@@ -50,10 +50,10 @@ import fr.paris.lutece.portal.service.spring.SpringContextService;
 
 /**
  * This class is an abstract task related to a {@link Record}
- *
  */
 public abstract class AbstractTaskRecordRelated extends SimpleTask
 {
+    // Constants
     private static final String NO_INFORMATION = "(no information)";
 
     // Services
@@ -72,10 +72,10 @@ public abstract class AbstractTaskRecordRelated extends SimpleTask
     }
 
     /**
-     * Finds a record by using the specified resource history id
+     * Finds a record by using the specified resource history identifier
      * 
      * @param nIdResourceHistory
-     *            the resource history id
+     *            The resource history identifier
      * @return the found record or {@code null} if not found
      */
     private Record findRecordByIdHistory( int nIdResourceHistory )
@@ -95,7 +95,7 @@ public abstract class AbstractTaskRecordRelated extends SimpleTask
      * Creates a {@code TaskInformation} object
      * 
      * @param nIdResourceHistory
-     *            the resource history id associated to the created {@code TaskInformation}
+     *            The resource history identifier associated to the created {@code TaskInformation}
      */
     private void createTaskInformation( int nIdResourceHistory )
     {
@@ -109,7 +109,7 @@ public abstract class AbstractTaskRecordRelated extends SimpleTask
      * Manages the case there is no information in the specified {@code TaskInformation}
      * 
      * @param taskInformation
-     *            the {@code TaskInformation}
+     *            The {@code TaskInformation}
      */
     private void manageNoInformation( TaskInformation taskInformation )
     {
@@ -123,11 +123,11 @@ public abstract class AbstractTaskRecordRelated extends SimpleTask
      * Process the task
      * 
      * @param record
-     *            the record on which the task is processed
+     *            The record on which the task is processed
      * @param request
-     *            the request
+     *            The request used to process the task
      * @param locale
-     *            the locale
+     *            The locale used to process the task
      */
     protected abstract void processTask( Record record, HttpServletRequest request, Locale locale );
 
@@ -135,7 +135,7 @@ public abstract class AbstractTaskRecordRelated extends SimpleTask
      * Fills the specified {@code TaskInformation}
      * 
      * @param taskInformation
-     *            the {@code TaskInformation} to fill
+     *            The {@code TaskInformation} to fill
      */
     protected abstract void fillTaskInformation( TaskInformation taskInformation );
 }

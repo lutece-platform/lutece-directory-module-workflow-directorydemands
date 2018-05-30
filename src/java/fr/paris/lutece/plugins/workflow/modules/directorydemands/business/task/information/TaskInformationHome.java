@@ -31,7 +31,6 @@
  *
  * License 1.0
  */
-
 package fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.information;
 
 import fr.paris.lutece.plugins.workflow.modules.directorydemands.service.WorkflowDirectorydemandsPlugin;
@@ -58,7 +57,7 @@ public final class TaskInformationHome
      * 
      * @param taskInformation
      *            The task information to create
-     * @return The task information which has been created
+     * @return the task information which has been created
      */
     public static TaskInformation create( TaskInformation taskInformation )
     {
@@ -71,14 +70,13 @@ public final class TaskInformationHome
      * Finds the task information for the specified couple {history id, task id}
      * 
      * @param nIdHistory
-     *            The history id
+     *            The history identifier
      * @param nIdTask
-     *            The task id
+     *            The task identifier
      * @return the task information
      */
     public static TaskInformation find( int nIdHistory, int nIdTask )
     {
         return _dao.load( nIdHistory, nIdTask, WorkflowDirectorydemandsPlugin.getPlugin( ) );
     }
-
 }

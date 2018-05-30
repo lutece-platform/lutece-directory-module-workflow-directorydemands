@@ -42,6 +42,7 @@ import java.util.Map;
  */
 public class TaskInformation
 {
+    // Variables
     private final int _nIdHistory;
     private final int _nIdTask;
     private final Map<String, String> _items;
@@ -50,9 +51,9 @@ public class TaskInformation
      * Constructor
      * 
      * @param nIdHistory
-     *            the history id
+     *            The history identifier
      * @param nIdTask
-     *            the task id
+     *            The task identifier
      */
     public TaskInformation( int nIdHistory, int nIdTask )
     {
@@ -62,9 +63,9 @@ public class TaskInformation
     }
 
     /**
-     * Gives the history id
+     * Gives the history identifier
      * 
-     * @return The history id
+     * @return The history identifier
      */
     public int getIdHistory( )
     {
@@ -72,9 +73,9 @@ public class TaskInformation
     }
 
     /**
-     * Gives the task id
+     * Gives the task identifier
      * 
-     * @return The task id
+     * @return The task identifier
      */
     public int getIdTask( )
     {
@@ -85,9 +86,9 @@ public class TaskInformation
      * Adds a piece of information
      * 
      * @param strKey
-     *            the key of the piece of information
+     *            The key of the piece of information
      * @param strValue
-     *            the value of the piece of information
+     *            The value of the piece of information
      */
     public void add( String strKey, String strValue )
     {
@@ -98,8 +99,8 @@ public class TaskInformation
      * Gives the value of the piece of information with the specified key
      * 
      * @param strKey
-     *            the key
-     * @return the value
+     *            The key of the task information
+     * @return the value of the task information
      */
     public String getValue( String strKey )
     {

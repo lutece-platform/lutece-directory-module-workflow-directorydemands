@@ -63,7 +63,7 @@ public class WorkflowDirectorydemandsPlugin extends Plugin
     /**
      * Gives this plugin
      *
-     * @return This plugin
+     * @return this plugin
      */
     public static Plugin getPlugin( )
     {

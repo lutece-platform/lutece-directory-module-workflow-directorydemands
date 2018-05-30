@@ -36,10 +36,10 @@ package fr.paris.lutece.plugins.workflow.modules.directorydemands.web.task;
 /**
  * This class is a task component for the {@link fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task.TaskRemoveRecordAssignment
  * TaskRemoveRecordAssignment} class
- *
  */
 public class RemoveRecordAssignmentTaskComponent extends AbstractDirectoryDemandsTaskComponent
 {
+    // Templates
     private static final String TEMPLATE_INFORMATION = "admin/plugins/workflow/modules/directorydemands/task_remove_record_assignment_information.html";
 
     /**
@@ -50,5 +50,4 @@ public class RemoveRecordAssignmentTaskComponent extends AbstractDirectoryDemand
     {
         return TEMPLATE_INFORMATION;
     }
-
 }

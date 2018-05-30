@@ -48,11 +48,11 @@ import fr.paris.lutece.portal.service.template.AppTemplateService;
 import fr.paris.lutece.util.html.HtmlTemplate;
 
 /**
- * this class is an abstract task component for the module
- *
+ * This class is an abstract task component for the module
  */
 public abstract class AbstractDirectoryDemandsTaskComponent extends SimpleTaskComponent
 {
+    // Marks
     private static final String MARK_TASK_INFORMATION = "taskInformation";
 
     /**
@@ -99,8 +99,7 @@ public abstract class AbstractDirectoryDemandsTaskComponent extends SimpleTaskCo
     /**
      * Gives the template used to display task information
      * 
-     * @return the template
+     * @return the template of the task information
      */
     protected abstract String getTaskInformationTemplate( );
-
 }

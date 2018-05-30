@@ -89,7 +89,7 @@ public final class TaskInformationDAO implements ITaskInformationDAO
             }
 
             daoUtil.executeUpdate( );
-            daoUtil.close( );
+            daoUtil.free( );
         }
     }
 
@@ -121,9 +121,8 @@ public final class TaskInformationDAO implements ITaskInformationDAO
             taskInformation.add( daoUtil.getString( "information_key" ), daoUtil.getString( "information_value" ) );
         }
 
-        daoUtil.close( );
+        daoUtil.free( );
 
         return taskInformation;
     }
-
 }

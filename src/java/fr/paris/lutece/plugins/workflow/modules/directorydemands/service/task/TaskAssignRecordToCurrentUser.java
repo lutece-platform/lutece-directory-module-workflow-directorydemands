@@ -46,16 +46,17 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * This class is a task to assign a record to the current user
- *
  */
 public class TaskAssignRecordToCurrentUser extends AbstractTaskRecordRelated
 {
+    // Constants
     private static final String TASK_INFORMATION_ASSIGNED_USER = "ASSIGNED_USER";
     private static final String USER_NAME_SEPARATOR = " ";
 
     // Messages
     private static final String MESSAGE_ASSIGN_RECORD_TO_CURRENT_USER = "module.workflow.directorydemands.task_assign_record_to_current_user.title";
 
+    // Variables
     private AdminUser _user;
 
     /**

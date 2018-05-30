@@ -31,7 +31,6 @@
  *
  * License 1.0
  */
-
 package fr.paris.lutece.plugins.workflow.modules.directorydemands.business.task.information;
 
 import fr.paris.lutece.portal.service.plugin.Plugin;
@@ -41,15 +40,16 @@ import fr.paris.lutece.portal.service.plugin.Plugin;
  */
 public interface ITaskInformationDAO
 {
+    // Constants
     String BEAN_NAME = "workflow-directorydemands.taskInformationDAO";
 
     /**
      * Inserts a new record in the table.
      * 
      * @param taskInformation
-     *            the task information to insert
+     *            The task information to insert
      * @param plugin
-     *            the Plugin
+     *            The plugin to use to execute the query
      */
     void insert( TaskInformation taskInformation, Plugin plugin );
 
@@ -57,13 +57,12 @@ public interface ITaskInformationDAO
      * Loads the data from the table
      * 
      * @param nIdHistory
-     *            The history id
+     *            The history identifier
      * @param nIdTask
-     *            The task id
+     *            The task identifier
      * @param plugin
-     *            the Plugin
-     * @return The task information
+     *            The plugin to use to execute the query
+     * @return the task information
      */
     TaskInformation load( int nIdHistory, int nIdTask, Plugin plugin );
-
 }

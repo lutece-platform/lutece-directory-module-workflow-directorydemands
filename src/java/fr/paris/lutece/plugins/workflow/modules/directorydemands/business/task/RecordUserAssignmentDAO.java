@@ -40,10 +40,10 @@ import fr.paris.lutece.util.sql.DAOUtil;
 
 /**
  * This class is a DAO for {@code RecordUserAssignment} using an SQL database
- *
  */
 public final class RecordUserAssignmentDAO implements IRecordUserAssignmentDAO
 {
+    // Constants
     private static final String SQL_QUERY_INSERT = "INSERT INTO workflow_directorydemands_record_user_assignment ( id_record, id_user ) VALUES ( ?, ? ) ";
     private static final String SQL_QUERY_DELETE = "DELETE FROM workflow_directorydemands_record_user_assignment WHERE id_record = ? ";
 
@@ -74,5 +74,4 @@ public final class RecordUserAssignmentDAO implements IRecordUserAssignmentDAO
         daoUtil.executeUpdate( );
         daoUtil.free( );
     }
-
 }

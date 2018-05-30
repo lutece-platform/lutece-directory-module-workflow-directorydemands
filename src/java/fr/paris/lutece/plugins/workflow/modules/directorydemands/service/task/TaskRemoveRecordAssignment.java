@@ -44,7 +44,6 @@ import fr.paris.lutece.portal.service.i18n.I18nService;
 
 /**
  * This class is a task to remove the assignment of a record to a user
- *
  */
 public class TaskRemoveRecordAssignment extends AbstractTaskRecordRelated
 {
@@ -77,5 +76,4 @@ public class TaskRemoveRecordAssignment extends AbstractTaskRecordRelated
     {
         // nothing to fill
     }
-
 }

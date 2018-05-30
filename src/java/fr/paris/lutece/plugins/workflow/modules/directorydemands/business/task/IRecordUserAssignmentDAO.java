@@ -39,21 +39,21 @@ import fr.paris.lutece.portal.service.plugin.Plugin;
 
 /**
  * This interface represents a DAO for {@code RecordUserAssignment}
- *
  */
 public interface IRecordUserAssignmentDAO
 {
+    // Bean name
     String BEAN_NAME = "workflow-directorydemands.recordUserAssignmentDAO";
 
     /**
      * Inserts a {@code RecordUserAssignment}
      * 
      * @param record
-     *            the record associated to the assignment
+     *            The record associated to the assignment
      * @param user
-     *            the user associated to the assignment
+     *            The user associated to the assignment
      * @param plugin
-     *            the plugin
+     *            The plugin to use to execute the query
      */
     void insert( Record record, AdminUser user, Plugin plugin );
 
@@ -61,9 +61,9 @@ public interface IRecordUserAssignmentDAO
      * Deletes a {@code RecordUserAssignment}
      * 
      * @param record
-     *            the record associated to the assignment
+     *            The record associated to the assignment
      * @param plugin
-     *            the plugin
+     *            The plugin to use to execute the query
      */
     void delete( Record record, Plugin plugin );
 

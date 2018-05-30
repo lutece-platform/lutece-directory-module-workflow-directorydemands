@@ -36,10 +36,10 @@ package fr.paris.lutece.plugins.workflow.modules.directorydemands.web.task;
 /**
  * This class is a task component for the {@link fr.paris.lutece.plugins.workflow.modules.directorydemands.service.task.TaskAssignRecordToCurrentUser
  * TaskAssignRecordToCurrentUser} class
- *
  */
 public class AssignRecordToCurrentUserTaskComponent extends AbstractDirectoryDemandsTaskComponent
 {
+    // Templates
     private static final String TEMPLATE_INFORMATION = "admin/plugins/workflow/modules/directorydemands/task_assign_record_to_current_user_information.html";
 
     /**
@@ -50,5 +50,4 @@ public class AssignRecordToCurrentUserTaskComponent extends AbstractDirectoryDem
     {
         return TEMPLATE_INFORMATION;
     }
-
 }

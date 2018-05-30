@@ -41,12 +41,11 @@ import fr.paris.lutece.portal.service.spring.SpringContextService;
 
 /**
  * This class provides methods (create, delete, ...) for {@code RecordUserAssignment}
- *
  */
 public final class RecordUserAssignmentHome
 {
+    // Variables
     private static IRecordUserAssignmentDAO _dao = SpringContextService.getBean( IRecordUserAssignmentDAO.BEAN_NAME );
-
     private static final Plugin _plugin = WorkflowDirectorydemandsPlugin.getPlugin( );
 
     /**
@@ -61,9 +60,9 @@ public final class RecordUserAssignmentHome
      * Creates a {@code RecordUserAssignment}
      * 
      * @param record
-     *            the record associated to the assignment
+     *            The record associated to the assignment
      * @param user
-     *            the user associated to the assignment
+     *            The user associated to the assignment
      */
     public static void create( Record record, AdminUser user )
     {
@@ -74,11 +73,10 @@ public final class RecordUserAssignmentHome
      * Removes a {@code RecordUserAssignment}
      * 
      * @param record
-     *            the record associated to the assignment
+     *            The record associated to the assignment
      */
     public static void remove( Record record )
     {
         _dao.delete( record, _plugin );
     }
-
 }
