@@ -44,7 +44,7 @@
     
     <!-- Specific plugin CSS stylesheet -->
 	<admin-css-stylesheets>
-        <admin-css-stylesheet></admin-css-stylesheet>
+        <admin-css-stylesheet/>
     </admin-css-stylesheets>
     <css-stylesheets/>
 </plug-in>
